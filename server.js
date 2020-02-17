@@ -19,10 +19,10 @@ require("./config/facebookconfig");
 require("./config/googleconfig");
 //Configure isProduction variable
 
-//Initiate our app
-const app = express();
+//Initiate our server
+const server = express();
 const isProduction = process.env.NODE_ENV === "production";
-app.use(function(req, res, next) {
+server.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
@@ -33,7 +33,7 @@ app.use(function(req, res, next) {
 
 // enabling CORS for all requests
 // Add headers
-app.use(function(req, res, next) {
+server.use(function(req, res, next) {
   // Website you wish to allow to connect
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
 
@@ -57,15 +57,15 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use(require("morgan")("dev"));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, "public")));
-app.use("/facebook", facebook);
-app.use("/google", google);
+server.use(require("morgan")("dev"));
+server.use(bodyParser.urlencoded({ extended: false }));
+server.use(bodyParser.json());
+server.use(express.static(path.join(__dirname, "public")));
+server.use("/facebook", facebook);
+server.use("/google", google);
 
 //CORS Middleware
-app.use(function(req, res, next) {
+server.use(function(req, res, next) {
   //Enabling CORS
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
@@ -75,7 +75,7 @@ app.use(function(req, res, next) {
   );
   next();
 });
-app.use(
+server.use(
   session({
     secret: "passport-tutorial",
     cookie: { maxAge: 60000 },
@@ -83,14 +83,14 @@ app.use(
     saveUninitialized: false
   })
 );
-require("./routers/province.route")(app);
-require("./routers/user.router")(app);
-require("./routers/route-rail.route")(app);
+require("./routers/province.route")(server);
+require("./routers/user.router")(server);
+require("./routers/route-rail.route")(server);
 if (!isProduction) {
-  app.use(errorHandler());
+  server.use(errorHandler());
 }
 
-app.use(
+server.use(
   session({
     key: "user",
     secret: "somerandonstuffs",
@@ -115,7 +115,7 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
-app.post("/logintest", function(req, res, next) {
+server.post("/logintest", function(req, res, next) {
   passport.authenticate("local", function(err, user, info) {
     if (err) {
       return next(err);
@@ -164,7 +164,7 @@ passport.use(
   )
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
+server.use(passport.initialize());
+server.use(passport.session());
 
-app.listen(8000, () => console.log("Server running on http://localhost:8000/"));
+server.listen(8000, () => console.log("Server running on http://localhost:8000/"));
