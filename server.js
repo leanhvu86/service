@@ -86,6 +86,7 @@ server.use(
 require("./routers/province.route")(server);
 require("./routers/user.router")(server);
 require("./routers/route-rail.route")(server);
+require("./routers/token.router")(server);
 if (!isProduction) {
   server.use(errorHandler());
 }

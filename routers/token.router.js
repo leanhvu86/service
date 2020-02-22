@@ -75,13 +75,14 @@
 // module.exports = app;
 
 module.exports = app => {
-  const users = require("../controllers/users");
-  app.post("/register", users.create);
+  const tokens = require("../controllers/tokens");
+  app.post("/deleteToken", tokens.deleteToken);
 
-  app.post("/login", users.login);
-  app.post("/test", users.test);
-  app.post("/loginv2", users.login);
-
-  app.get("/logout", users.logout);
-
+  // app.post("/login", users.login);
+  // app.post("/test", users.test);
+  // app.post("/loginv2", users.login);
+  //
+  // app.get("/logout", users.logout);
+  //
+  app.post("/currentAuthen", tokens.currentAuthen);
 };
