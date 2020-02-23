@@ -25,28 +25,47 @@ exports.currentAuthen =
   });
 
 
-exports.deleteToken = (req, res) => {
-    const {body: {token}} = req;
-    console.log(token);
-    Tokens.findByIdAndRemove({Token:token})
-        .then(tokens => {
-            if(!tokens) {
-                return res.status(404).send({
-                    message: "Note not found with id1 " + token
+exports.deleteToken =  (auth.optional,
+    (req, res, next) => {
+        const {body: {token}} = req;
+        console.log(token);
+        Tokens.findOne({ token: token }, function(err, tokenSchema) {
+            if (err) {
+                return res.send({
+                    status: 401,
+                    message: "Error"
                 });
             }
-            res.send({message: "token deleted successfully!"});
-        }).catch(err => {
-        if(err.kind === 'ObjectId' || err.name === 'NotFound') {
-            return res.status(404).send({
-                message: "Note not found with id " + token
-            });
-        }
-        return res.status(500).send({
-            message: "Could not delete token with id " + token
-        });
-    });
-};
+            /*if (!userSchema) {
+                return res.send({
+                    status: 401,
+                    message: "Username or password invalid"
+                });
+            }
+            if (!userSchema.validatePassword(user.password)) {
+                return res.send({
+                    status: 401,
+                    message: "Username or password invalid"
+                });
+            }*/
+            console.log(tokenSchema._id);
+            if (tokenSchema) {
+                Tokens.deleteOne({_id: tokenSchema._id}, function (err, result) {
+
+                    if (err) {
+
+                        console.log("error query");
+
+                    } else {
+
+                        console.log(result);
+
+                    }
+
+                });
+            }
+        })
+});
 /*
 exports.deleteToken =
     (auth.optional,
