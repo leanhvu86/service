@@ -14,7 +14,8 @@ require("./models/User");
 require("./db/db");
 require("./config/passport");
 require("./models/province");
-require("./models/route_rail")
+require("./models/route_rail");
+require("./models/country");
 require("./config/facebookconfig");
 require("./config/googleconfig");
 //Configure isProduction variable
@@ -87,6 +88,7 @@ require("./routers/province.route")(server);
 require("./routers/user.router")(server);
 require("./routers/route-rail.route")(server);
 require("./routers/token.router")(server);
+require("./routers/country.route")(server);
 if (!isProduction) {
   server.use(errorHandler());
 }

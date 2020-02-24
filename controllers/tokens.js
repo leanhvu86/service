@@ -45,7 +45,7 @@ exports.deleteToken =  (auth.optional,
             if (!userSchema.validatePassword(user.password)) {
                 return res.send({
                     status: 401,
-                    message: "Username or password invalid"
+                    message: "Username or passwordno invalid"
                 });
             }*/
             console.log(tokenSchema._id);
