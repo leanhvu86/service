@@ -11,15 +11,18 @@ exports.currentAuthen =
   async (req, res, next) => {
 
     const {body: {token}} = req;
-    return Tokens.find({ Token: token })
+    return Tokens.find({ token: token })
         .then((tokens) => {
             if (!tokens) {
                 return res.status(400).send({
                     message: "can not found current user"
                 });
             }
-
-            return res.status(200).send({token:tokens.token}
+            console.log(tokens);
+            return res.send({
+                token:tokens,
+                status:200
+            }
             );
         });
   });

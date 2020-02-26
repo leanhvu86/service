@@ -53,13 +53,30 @@ exports.create =
     );
   });
 
-exports.test = (req, res, next) => {
-  console.log("testet");
-  return res.status(422).json({
-    errors: {
-      password: "is required"
-    }
-  });
+exports.testEmail = (req, res, next) => {
+  console.log("testet" +req.body.email);
+    Users.findOne({ email: req.body.email }, function(err, userSchema) {
+        if (err) {
+            return res.send({
+                status: 401,
+                message: "Error"
+            });
+        }
+        console.log("UserName: " + userSchema.email);
+        console.log("Password:" + userSchema.password);
+        if (userSchema) {
+            return res.send({
+                status: 200,
+                user: userSchema,
+                message: "Account đã tồn tại"
+            });
+        } else {
+            return res.send({
+                status: 403,
+                message: "Account không tìm thấy"
+            });
+        }
+    });
 };
 //POST login route (optional, everyone has access)
 exports.login =

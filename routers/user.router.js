@@ -79,7 +79,7 @@ module.exports = app => {
   app.post("/register", users.create);
 
   app.post("/login", users.login);
-  app.post("/test", users.test);
+  app.post("/testEmail", users.testEmail);
   app.post("/loginv2", users.login);
 
   app.get("/logout", users.logout);
