@@ -31,7 +31,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/routers" />
+    <property name="last_opened_file_path" value="F:/front-end/cloudinary/cloudinary_angular/projects/angular-cld/samples/photo_album" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
@@ -108,6 +108,13 @@
       <workItem from="1582592552459" duration="5087000" />
       <workItem from="1582612393220" duration="3396000" />
       <workItem from="1582686000887" duration="5442000" />
+      <workItem from="1582700758129" duration="621000" />
+      <workItem from="1582713918294" duration="2523000" />
+      <workItem from="1582738958579" duration="2414000" />
+      <workItem from="1582765507155" duration="3707000" />
+      <workItem from="1582781847820" duration="631000" />
+      <workItem from="1582801628556" duration="2177000" />
+      <workItem from="1582816310300" duration="1407000" />
     </task>
     <servers />
   </component>
@@ -123,10 +130,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="426" y="179" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.738@0.0.1366.738" timestamp="1579656389505" />
-    <state x="463" y="111" key="FileChooserDialogImpl" timestamp="1581563439526">
+    <state x="463" y="111" key="FileChooserDialogImpl" timestamp="1582770340153">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="463" y="111" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1581563439526" />
+    <state x="463" y="111" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1582770340153" />
     <state x="184" y="12" key="SettingsEditor" timestamp="1582572391176">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
