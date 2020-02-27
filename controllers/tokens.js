@@ -51,18 +51,25 @@ exports.deleteToken =  (auth.optional,
                     message: "Username or passwordno invalid"
                 });
             }*/
-            console.log(tokenSchema._id);
+
             if (tokenSchema) {
+                console.log(tokenSchema._id);
                 Tokens.deleteOne({_id: tokenSchema._id}, function (err, result) {
 
                     if (err) {
 
                         console.log("error query");
-
+                        return res.send({
+                            status: 401,
+                            message: "Error"
+                        });
                     } else {
 
                         console.log(result);
-
+                        return res.send({
+                            status: 200,
+                            message: "Xóa token thành công"
+                        });
                     }
 
                 });
