@@ -101,7 +101,8 @@ exports.createMultiple = (req, res) => {
             console.log(err);
         } else{
             res.status(200).send({
-                message:'Luu Multiple thanh cong'
+                message:'Luu Multiple thanh cong',
+                recipes:recipes
             })
             console.log("recipes Added Successfully");
         }

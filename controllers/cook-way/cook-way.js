@@ -89,7 +89,8 @@ exports.createMultiple = (req, res) => {
             console.log(err);
         } else{
             res.status(200).send({
-                message:'Luu Multiple thanh cong'
+                message:'Luu Multiple thanh cong',
+                cookWays:cookWays
             })
             console.log("cookWays Added Successfully");
         }

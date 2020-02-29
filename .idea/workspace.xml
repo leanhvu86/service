@@ -31,23 +31,23 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="F:/front-end/cloudinary/cloudinary_angular/projects/angular-cld/samples/photo_album" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/routers" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2019.3.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\dự án 2\front end\service\routers" />
+      <recent name="F:\dự án 2\front end\service\controllers\interest" />
+      <recent name="F:\dự án 2\front end\service\models" />
+      <recent name="F:\dự án 2\front end\service\controllers\recipe" />
+      <recent name="F:\dự án 2\front end\service\controllers\cook-way" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="F:\nodeJs\mongodb-restful-api-login-register\routers" />
       <recent name="F:\nodeJs\mongodb-restful-api-login-register\controllers\province" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="F:\dự án 2\front end\service\routers" />
-      <recent name="F:\dự án 2\front end\service\controllers\recipe" />
-      <recent name="F:\dự án 2\front end\service\models" />
-      <recent name="F:\dự án 2\front end\service\controllers\cook-way" />
-      <recent name="F:\dự án 2\front end\service\controllers\food-type" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -114,7 +114,8 @@
       <workItem from="1582765507155" duration="3707000" />
       <workItem from="1582781847820" duration="631000" />
       <workItem from="1582801628556" duration="2177000" />
-      <workItem from="1582816310300" duration="1407000" />
+      <workItem from="1582816310300" duration="3365000" />
+      <workItem from="1582878746661" duration="8837000" />
     </task>
     <servers />
   </component>
@@ -138,10 +139,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="184" y="12" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1582572391176" />
-    <state x="559" y="0" width="607" height="738" key="find.popup" timestamp="1582689265326">
+    <state x="559" y="0" width="607" height="738" key="find.popup" timestamp="1582879746421">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="559" y="0" width="607" height="738" key="find.popup/0.0.1366.738@0.0.1366.738" timestamp="1582689265326" />
+    <state x="559" y="0" width="607" height="738" key="find.popup/0.0.1366.738@0.0.1366.738" timestamp="1582879746421" />
     <state x="339" y="165" key="run.anything.popup" timestamp="1582252824817">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
