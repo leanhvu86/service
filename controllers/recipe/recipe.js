@@ -46,8 +46,8 @@ exports.getRecipes = (async (req, res, next) => {
 });
 
 exports.findRecipe = async (req, res, next) => {
-    console.log(req.body.recipeName)
-    await Recipe.findOne({recipeName: req.body.recipeName}, function (err, recipe) {
+    console.log(req.body.id)
+    await Recipe.findOne({id: req.body.id}, function (err, recipe) {
         if (err) {
             console.log(err);
             return res.send({
@@ -57,7 +57,7 @@ exports.findRecipe = async (req, res, next) => {
         } else {
             res.send({
                 'status': 200,
-                recipe: recipe
+                'recipe': recipe
             })
         }
     })
