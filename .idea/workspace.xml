@@ -31,23 +31,23 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/routers" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2019.3.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="F:\dự án 2\front end\service\routers" />
-      <recent name="F:\dự án 2\front end\service\controllers\interest" />
-      <recent name="F:\dự án 2\front end\service\models" />
-      <recent name="F:\dự án 2\front end\service\controllers\recipe" />
-      <recent name="F:\dự án 2\front end\service\controllers\cook-way" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="F:\nodeJs\mongodb-restful-api-login-register\routers" />
       <recent name="F:\nodeJs\mongodb-restful-api-login-register\controllers\province" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\dự án 2\front end\service\routers" />
+      <recent name="F:\dự án 2\front end\service\controllers\ingredient" />
+      <recent name="F:\dự án 2\front end\service\models" />
+      <recent name="F:\dự án 2\front end\service\controllers\interest" />
+      <recent name="F:\dự án 2\front end\service\controllers\recipe" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -118,6 +118,16 @@
       <workItem from="1582878746661" duration="9000000" />
       <workItem from="1583027635910" duration="937000" />
       <workItem from="1583045267460" duration="3486000" />
+      <workItem from="1583117626231" duration="621000" />
+      <workItem from="1583146362873" duration="2388000" />
+      <workItem from="1583161912966" duration="638000" />
+      <workItem from="1583193234534" duration="833000" />
+      <workItem from="1583232010600" duration="3140000" />
+      <workItem from="1583277649412" duration="786000" />
+      <workItem from="1583307342725" duration="46000" />
+      <workItem from="1583324205599" duration="827000" />
+      <workItem from="1583338694965" duration="787000" />
+      <workItem from="1583346002251" duration="630000" />
     </task>
     <servers />
   </component>
@@ -133,18 +143,18 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="426" y="179" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.738@0.0.1366.738" timestamp="1579656389505" />
-    <state x="463" y="111" key="FileChooserDialogImpl" timestamp="1582770340153">
+    <state x="463" y="111" key="FileChooserDialogImpl" timestamp="1583343449881">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="463" y="111" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1582770340153" />
+    <state x="463" y="111" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1583343449881" />
     <state x="184" y="12" key="SettingsEditor" timestamp="1582572391176">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="184" y="12" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1582572391176" />
-    <state x="559" y="0" width="607" height="738" key="find.popup" timestamp="1582879746421">
+    <state x="559" y="0" width="607" height="738" key="find.popup" timestamp="1583232541848">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="559" y="0" width="607" height="738" key="find.popup/0.0.1366.738@0.0.1366.738" timestamp="1582879746421" />
+    <state x="559" y="0" width="607" height="738" key="find.popup/0.0.1366.738@0.0.1366.738" timestamp="1583232541848" />
     <state x="339" y="165" key="run.anything.popup" timestamp="1582252824817">
       <screen x="0" y="0" width="1366" height="738" />
     </state>

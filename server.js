@@ -20,6 +20,7 @@ require("./models/cook-way");
 require("./models/food_type");
 require("./models/recipe");
 require("./models/interest");
+require("./models/ingredient");
 require("./config/facebookconfig");
 require("./config/googleconfig");
 //Configure isProduction variable
@@ -98,6 +99,7 @@ require("./routers/food-type.route")(server);
 require("./routers/cook-way.route")(server);
 require("./routers/recipe.route")(server);
 require("./routers/interest.router")(server);
+require("./routers/ingredient.router")(server);
 if (!isProduction) {
     server.use(errorHandler());
 }

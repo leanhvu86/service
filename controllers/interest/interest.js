@@ -2,36 +2,8 @@ const mongoose = require('mongoose');
 const auth = require("../../routers/auth");
 const Interests = mongoose.model('Interests');
 exports.getInterests = (async (req, res, next) => {
-    // try {
-    //     const interests = interest.find({}, '-_id');
-    //     console.log('danh sach tinh tp' + interests);
-    //     res.send({
-    //         'status': 200,
-    //         interests: interests
-    //     })
-    // } catch (err) {
-    //     console.log('not found interest');
-    //     res.send({
-    //         "status": 404,
-    //         'type': 'ERROR_DATA',
-    //         'message': 'interests not  found'
-    //     })
-    // }
-    await Interests.find
-        // ({}, function(err, interests) {
-        //     console.log(interests);
-        //     if (interests.length===0){
-        //         res.status(404).send(
-        //             {
-        //                 'status':404,
-        //                 'message':err||'can not find interests'
-        //             }
-        //         )
-        //     }else {
-        //         res.status(200).send(interests);
-        //     }
-        // });
-        ()
+
+    await Interests.find()
         .then(interests => {
             console.log('tìm provice' + interests);
             res.status(200).send(interests
