@@ -81,6 +81,8 @@ module.exports = app => {
   app.post("/login", users.login);
   app.post("/testEmail", users.testEmail);
   app.post("/loginv2", users.login);
+  app.post("/addPoint", users.addPoint);
+  app.post("/removePoint", users.removePoint);
 
   app.get("/logout", users.logout);
 

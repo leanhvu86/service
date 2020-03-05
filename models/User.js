@@ -10,6 +10,7 @@ const UsersSchema = new Schema({
     imageUrl:String,
     hash: String,
     salt: String,
+    totalPoint:Number,
 }, {
     timestamps: true
 });

@@ -12,6 +12,7 @@ exports.create =
                 email: req.body.user.email,
                 password: req.body.user.password,
                 name: req.body.user.user,
+                totalPoint: 0,
                 imageUrl: req.body.user.imageUrl
             };
 
@@ -60,7 +61,7 @@ exports.testEmail = (req, res, next) => {
         if (err) {
             return res.send({
                 status: 401,
-                message: "Error"
+                message: err
             });
         }
         console.log("UserName: " + userSchema.email);
@@ -69,12 +70,12 @@ exports.testEmail = (req, res, next) => {
             return res.send({
                 status: 200,
                 user: userSchema,
-                message: "Account đã tồn tại"
+                message: "Thêm điêm thành công"
             });
         } else {
             return res.send({
                 status: 403,
-                message: "Account không tìm thấy"
+                message: err
             });
         }
     });
@@ -163,3 +164,81 @@ exports.logout =
                 res.redirect("/login");
             }
         });
+exports.addPoint = (req, res, next) => {
+    console.log("testet" + req.body.user);
+    Users.findOne({email: req.body.user.email}, function (err, userSchema) {
+        if (err) {
+            return res.send({
+                status: 401,
+                message: "Error"
+            });
+        }
+        console.log("UserName: " + userSchema.email);
+        console.log("Password:" + userSchema.password);
+        if (userSchema) {
+            userSchema.totalPoint++;
+            userSchema.save((function (err) {
+                if (err) {
+                    console.log(err);
+                    return res.send({
+                        status: 401,
+                        message: "Error"
+                    });
+                } else {
+                    return res.send({
+                        status: 200,
+                        message: "Thêm điểm thành công"
+                    });
+                }
+            }))
+        } else {
+            return res.send({
+                status: 403,
+                message: "Account không tìm thấy"
+            });
+        }
+    });
+};
+exports.removePoint = (req, res, next) => {
+    console.log("testet" + req.body.user.email);
+    Users.findOne({email: req.body.user.email}, function (err, userSchema) {
+        if (err) {
+            console.log(err);
+            return res.send({
+                status: 401,
+                message: "Error"
+            });
+        }
+        console.log("UserName: " + userSchema.email);
+        console.log("Password:" + userSchema.password);
+        if (userSchema) {
+            console.log(userSchema.totalPoint);
+            if (userSchema.totalPoint !== undefined) {
+                let point = userSchema.totalPoint
+                if (parseInt(userSchema.totalPoint) > 0) {
+                    userSchema.totalPoint--;
+                    console.log(userSchema.totalPoint);
+                } else {
+                    return res.send({
+                        status: 401,
+                        message: "Sorry đã hết điểm để trừ rồi bạn ạ"
+                    });
+                }
+                userSchema.save((function (err) {
+                    if (err) {
+                        console.log(err);
+                        return res.send({
+                            status: 401,
+                            message: "Error"
+                        });
+                    } else {
+                        return res.send({
+                            status: 200,
+                            message: "Trừ điểm thành công"
+                        });
+                    }
+                }))
+            }
+        }
+    });
+};

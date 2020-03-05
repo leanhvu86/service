@@ -12,6 +12,9 @@ const RecipeSchema = mongoose.Schema({
     country:{type:Array},
     foodType:{type:Array},
     cookWay:{type:Array},
+    totalPoint:{type:Number,default: 0},
+    doneCount:{type:Number,default: 0},
+    user:{type:Object},
     description:{type:String,default:'Làm theo phương pháp mặc định'},
     status: {type: Number, default: 1}
 }, {

@@ -88,12 +88,10 @@ exports.createMultiple = (req, res) => {
             })
             console.log(err);
         } else{
-            console.log(provinces)
             res.status(200).send({
                 message:'Luu Multiple thanh cong',
                 provinces:provinces
             })
-            console.log("provinces Added Successfully");
         }
     });
 }
