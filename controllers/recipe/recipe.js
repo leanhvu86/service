@@ -53,10 +53,27 @@ exports.findRecipe = async (req, res, next) => {
                 'message': 'recipe not found'
             })
         } else {
-            res.send({
-                'status': 200,
-                'recipe': recipe
-            })
+            Users.findOne({email: recipe.user.email}, function (err, userSchema) {
+                if (err) {
+                    return res.send({
+                        status: 401,
+                        message: err
+                    });
+                }
+                if (userSchema) {
+                    recipe.user=userSchema;
+                    return res.send({
+                        status: 200,
+                        recipe: recipe,
+                        message: "update user công thức thành công"
+                    });
+                } else {
+                    return res.send({
+                        status: 403,
+                        message: err
+                    });
+                }
+            });
         }
     })
 }
