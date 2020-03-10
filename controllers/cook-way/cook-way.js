@@ -33,7 +33,6 @@ exports.getCookWays = (async (req, res, next) => {
         // });
         ()
         .then(cookWays => {
-            console.log('tìm provice' + cookWays);
             res.status(200).send(cookWays
             )
         }).catch(err => {

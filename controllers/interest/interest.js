@@ -130,5 +130,4 @@ exports.deleteInterest = (auth.optional,
                     }
                 }
             });
-
     });

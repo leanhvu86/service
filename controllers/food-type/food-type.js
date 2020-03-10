@@ -33,7 +33,6 @@ exports.getFoodTypes = (async (req, res, next) => {
         // });
         ()
         .then(foodTypes => {
-            console.log('tìm foodType' + foodTypes);
             res.status(200).send(foodTypes
             )
         }).catch(err => {

@@ -31,10 +31,10 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/routers" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2019.3.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
@@ -44,10 +44,10 @@
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="F:\dự án 2\front end\service\routers" />
-      <recent name="F:\dự án 2\front end\service\controllers\ingredient" />
+      <recent name="F:\dự án 2\front end\service\controllers\cook-step" />
       <recent name="F:\dự án 2\front end\service\models" />
+      <recent name="F:\dự án 2\front end\service\controllers\ingredient" />
       <recent name="F:\dự án 2\front end\service\controllers\interest" />
-      <recent name="F:\dự án 2\front end\service\controllers\recipe" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -131,6 +131,14 @@
       <workItem from="1583370482128" duration="3008000" />
       <workItem from="1583379140458" duration="38000" />
       <workItem from="1583413690737" duration="14087000" />
+      <workItem from="1583455949399" duration="637000" />
+      <workItem from="1583535670225" duration="2136000" />
+      <workItem from="1583542664767" duration="676000" />
+      <workItem from="1583575785466" duration="1657000" />
+      <workItem from="1583577573273" duration="1640000" />
+      <workItem from="1583631813730" duration="9127000" />
+      <workItem from="1583707404442" duration="2428000" />
+      <workItem from="1583759447964" duration="4051000" />
     </task>
     <servers />
   </component>
@@ -150,22 +158,30 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="426" y="179" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.738@0.0.1366.738" timestamp="1579656389505" />
-    <state x="463" y="111" key="FileChooserDialogImpl" timestamp="1583379177052">
+    <state x="463" y="111" key="FileChooserDialogImpl" timestamp="1583575880535">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="463" y="111" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1583379177052" />
-    <state x="184" y="12" key="SettingsEditor" timestamp="1582572391176">
+    <state x="463" y="111" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1583575880535" />
+    <state x="184" y="12" key="SettingsEditor" timestamp="1583579007962">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="184" y="12" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1582572391176" />
-    <state x="559" y="0" width="607" height="738" key="find.popup" timestamp="1583232541848">
+    <state x="184" y="12" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1583579007962" />
+    <state x="92" y="92" width="1182" height="554" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1583576862550">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="559" y="0" width="607" height="738" key="find.popup/0.0.1366.738@0.0.1366.738" timestamp="1583232541848" />
-    <state x="339" y="165" key="run.anything.popup" timestamp="1582252824817">
+    <state x="92" y="92" width="1182" height="554" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1366.738@0.0.1366.738" timestamp="1583576862550" />
+    <state x="92" y="92" width="1182" height="554" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1583576862550">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="339" y="165" key="run.anything.popup/0.0.1366.738@0.0.1366.738" timestamp="1582252824817" />
+    <state x="92" y="92" width="1182" height="554" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog/0.0.1366.738@0.0.1366.738" timestamp="1583576862550" />
+    <state x="559" y="0" width="607" height="738" key="find.popup" timestamp="1583632398909">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state x="559" y="0" width="607" height="738" key="find.popup/0.0.1366.738@0.0.1366.738" timestamp="1583632398909" />
+    <state x="339" y="165" key="run.anything.popup" timestamp="1583576647957">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state x="339" y="165" key="run.anything.popup/0.0.1366.738@0.0.1366.738" timestamp="1583576647957" />
     <state x="346" y="59" width="672" height="678" key="search.everywhere.popup" timestamp="1582689492639">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
@@ -186,7 +202,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/controllers/country/country.js</url>
-          <line>65</line>
+          <line>64</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>

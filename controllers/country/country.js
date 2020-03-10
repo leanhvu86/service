@@ -33,7 +33,6 @@ exports.getCountrys = (async (req, res, next) => {
         // });
         ()
         .then(countrys => {
-            console.log('tìm provice' + countrys);
             res.status(200).send(countrys
             )
         }).catch(err => {

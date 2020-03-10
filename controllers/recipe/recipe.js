@@ -45,27 +45,32 @@ exports.getRecipes = (async (req, res, next) => {
 });
 
 exports.findRecipe = async (req, res, next) => {
-
-    await Recipe.findOne({id: req.body.id}, function (err, recipe) {
-        if (err) {
+    console.log('helo' + req.params.id)
+    var mongoose = require('mongoose');
+    var id = mongoose.Types.ObjectId(req.params.id);
+    await Recipe.findOne({_id: id}, function (err, recipe) {
+        if (err || recipe === null) {
+            console.log(recipe)
             return res.send({
                 'status': 401,
                 'message': 'recipe not found'
             })
         } else {
+            console.log(recipe)
             Users.findOne({email: recipe.user.email}, function (err, userSchema) {
                 if (err) {
+                    console.log(err)
                     return res.send({
                         status: 401,
                         message: err
                     });
                 }
                 if (userSchema) {
-                    recipe.user=userSchema;
-                    return res.send({
-                        status: 200,
-                        recipe: recipe,
-                        message: "update user công thức thành công"
+                    console.log(userSchema)
+                    recipe.user = userSchema;
+                    return res.status(200).send({
+                        status:200,
+                        recipe:recipe
                     });
                 } else {
                     return res.send({
@@ -87,14 +92,16 @@ exports.createRecipe = (req, res) => {
         videoLink: req.body.recipe.videoLink,
         hardLevel: req.body.recipe.hardLevel,
         time: req.body.recipe.time,
-        ingredients:req.body.recipe.ingredients,
-        ingredientsGroup:req.body.recipe.ingredientsGroup,
-        cockStep:req.body.recipe.cockStep,
-        country:req.body.recipe.country,
-        foodType:req.body.recipe.foodType,
-        cookWay:req.body.recipe.cookWay,
+        ingredients: req.body.recipe.ingredients,
+        ingredientsGroup: req.body.recipe.ingredientsGroup,
+        cockStep: req.body.recipe.cockStep,
+        country: req.body.recipe.country,
+        foodType: req.body.recipe.foodType,
+        cookWay: req.body.recipe.cookWay,
     })
-    const user= req.body.recipe.user;
+    console.log(req.body.recipe.cockStep)
+    console.log(req.body.cockStep)
+    const user = req.body.recipe.user;
     Users.findOne({email: "dung@gmail.com"}, function (err, userSchema) {
         if (err) {
             return res.send({
@@ -103,12 +110,12 @@ exports.createRecipe = (req, res) => {
             });
         }
         if (userSchema) {
-            recipe.user=userSchema;
+            recipe.user = userSchema;
             recipe.save()
                 .then(data => {
                     res.status(200).send({
-                        data:data,
-                        message:'Chúc mừng bạn đã thêm mới công thức thành công!'
+                        data: data,
+                        message: 'Chúc mừng bạn đã thêm mới công thức thành công!'
                     })
                 }).catch(err => {
                 res.status(500).send({
@@ -121,7 +128,13 @@ exports.createRecipe = (req, res) => {
                 message: err
             });
         }
-    });
+    }).catch(err => {
+        console.log('not found recipe');
+        res.send({
+            'status': 404,
+            'message': err.message || 'Some error occurred while finding recipe'
+        })
+    })
 
 }
 
@@ -131,10 +144,10 @@ exports.createMultiple = (req, res) => {
             res.status(500).send({
                 message: 'Luu multiple that bai'
             })
-        } else{
+        } else {
             res.status(200).send({
-                message:'Luu Multiple thanh cong',
-                recipes:recipes
+                message: 'Luu Multiple thanh cong',
+                recipes: recipes
             })
         }
     });

@@ -16,6 +16,7 @@ require("./config/passport");
 require("./models/province");
 require("./models/route_rail");
 require("./models/country");
+require("./models/cookStep");
 require("./models/cook-way");
 require("./models/food_type");
 require("./models/recipe");
@@ -100,6 +101,7 @@ require("./routers/cook-way.route")(server);
 require("./routers/recipe.route")(server);
 require("./routers/interest.router")(server);
 require("./routers/ingredient.router")(server);
+require("./routers/cook-step.route")(server);
 if (!isProduction) {
     server.use(errorHandler());
 }

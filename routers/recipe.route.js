@@ -7,3 +7,4 @@ module.exports = (app) => {
     app.post('/createRecipe', RecipeRouter.createRecipe)
     app.post('/createMultipleRecipe', RecipeRouter.createMultiple)
 }
+
