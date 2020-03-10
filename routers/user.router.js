@@ -77,7 +77,7 @@
 module.exports = app => {
   const users = require("../controllers/users");
   app.post("/register", users.create);
-
+  app.get("/getUsers", users.getUsers);
   app.post("/login", users.login);
   app.post("/testEmail", users.testEmail);
   app.post("/loginv2", users.login);
