@@ -68,10 +68,20 @@ exports.findRecipe = async (req, res, next) => {
                 if (userSchema) {
                     console.log(userSchema)
                     recipe.user = userSchema;
-                    return res.status(200).send({
-                        status:200,
-                        recipe:recipe
-                    });
+                    recipe.viewCount++;
+                    recipe.save((function (err) {
+                        if (err) {
+                            return res.send({
+                                status: 401,
+                                message: "Error"
+                            });
+                        } else {
+                            return res.status(200).send({
+                                status:200,
+                                recipe:recipe
+                            });
+                        }
+                    }));
                 } else {
                     return res.send({
                         status: 403,
