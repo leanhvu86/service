@@ -102,7 +102,7 @@ exports.createRecipe = (req, res) => {
     console.log(req.body.recipe.cockStep)
     console.log(req.body.cockStep)
     const user = req.body.recipe.user;
-    Users.findOne({email: "dung@gmail.com"}, function (err, userSchema) {
+    Users.findOne({email:user}, function (err, userSchema) {
         if (err) {
             return res.send({
                 status: 401,
