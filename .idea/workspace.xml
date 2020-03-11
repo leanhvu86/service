@@ -38,16 +38,16 @@
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2019.3.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\dự án 2\front end\service\routers" />
+      <recent name="F:\dự án 2\front end\service\controllers\comment" />
+      <recent name="F:\dự án 2\front end\service\models" />
+      <recent name="F:\dự án 2\front end\service\controllers\cook-step" />
+      <recent name="F:\dự án 2\front end\service\controllers\ingredient" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="F:\nodeJs\mongodb-restful-api-login-register\routers" />
       <recent name="F:\nodeJs\mongodb-restful-api-login-register\controllers\province" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="F:\dự án 2\front end\service\routers" />
-      <recent name="F:\dự án 2\front end\service\controllers\cook-step" />
-      <recent name="F:\dự án 2\front end\service\models" />
-      <recent name="F:\dự án 2\front end\service\controllers\ingredient" />
-      <recent name="F:\dự án 2\front end\service\controllers\interest" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -140,7 +140,8 @@
       <workItem from="1583707404442" duration="2428000" />
       <workItem from="1583759447964" duration="4051000" />
       <workItem from="1583815690200" duration="1304000" />
-      <workItem from="1583837378462" duration="736000" />
+      <workItem from="1583837378462" duration="1513000" />
+      <workItem from="1583883167626" duration="2140000" />
     </task>
     <servers />
   </component>

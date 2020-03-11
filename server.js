@@ -22,6 +22,7 @@ require("./models/food_type");
 require("./models/recipe");
 require("./models/interest");
 require("./models/ingredient");
+require("./models/comment");
 require("./config/facebookconfig");
 require("./config/googleconfig");
 //Configure isProduction variable
@@ -102,6 +103,7 @@ require("./routers/recipe.route")(server);
 require("./routers/interest.router")(server);
 require("./routers/ingredient.router")(server);
 require("./routers/cook-step.route")(server);
+require("./routers/comment.router")(server);
 if (!isProduction) {
     server.use(errorHandler());
 }
