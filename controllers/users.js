@@ -254,3 +254,96 @@ exports.getUsers = (async (req, res, next) => {
             })
         })
 });
+
+exports.updateRole = async (req, res, next) => {
+    console.log('helo' + req.body.user.user._id)
+    console.log('helo' + req.body.user.role)
+    var mongoose = require('mongoose');
+    var id = mongoose.Types.ObjectId(req.body.user.user._id);
+    await Users.findOne({_id: id}, function (err, user) {
+        if (err || user === null) {
+            console.log(user)
+            return res.send({
+                'status': 401,
+                'message': 'user not found'
+            })
+        } else {
+            console.log(user)
+            user.role=req.body.user.role;
+            user.save((function (err) {
+                if (err) {
+                    return res.send({
+                        status: 401,
+                        message: "Error"
+                    });
+                } else {
+                    return res.status(200).send({
+                        status:200,
+                        user:user
+                    });
+                }
+            }));
+        }
+    })
+}
+
+exports.updateReport = async (req, res, next) => {
+    console.log('helo' + req.body.user.user._id)
+    var mongoose = require('mongoose');
+    var id = mongoose.Types.ObjectId(req.body.user.user._id);
+    await Users.findOne({_id: id}, function (err, user) {
+        if (err || user === null) {
+            console.log(user)
+            return res.send({
+                'status': 401,
+                'message': 'user not found'
+            })
+        } else {
+            console.log(user)
+            user.warningReport++;
+            user.save((function (err) {
+                if (err) {
+                    return res.send({
+                        status: 401,
+                        message: "Error"
+                    });
+                } else {
+                    return res.status(200).send({
+                        status:200,
+                        user:user
+                    });
+                }
+            }));
+        }
+    })
+}
+exports.bannedUser = async (req, res, next) => {
+    console.log('helo' + req.body.user.user._id)
+    var mongoose = require('mongoose');
+    var id = mongoose.Types.ObjectId(req.body.user.user._id);
+    await Users.findOne({_id: id}, function (err, user) {
+        if (err || user === null) {
+            console.log(user)
+            return res.send({
+                'status': 401,
+                'message': 'user not found'
+            })
+        } else {
+            console.log(user)
+            user.status=0;
+            user.save((function (err) {
+                if (err) {
+                    return res.send({
+                        status: 401,
+                        message: "Error"
+                    });
+                } else {
+                    return res.status(200).send({
+                        status:200,
+                        user:user
+                    });
+                }
+            }));
+        }
+    })
+}

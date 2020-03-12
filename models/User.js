@@ -11,6 +11,9 @@ const UsersSchema = new Schema({
     hash: String,
     salt: String,
     totalPoint:Number,
+    role:{ type: Number, default: 0 },
+    warningReport:{ type: Number, default: 0 },
+    status:{ type: Number, default: 1 },
 }, {
     timestamps: true
 });
