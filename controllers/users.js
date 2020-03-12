@@ -142,7 +142,8 @@ exports.login =
                     req.session.email = user.email;
                     return res.send({
                         status: 200,
-                        user: user.toAuthJSON()
+                        user: user.toAuthJSON(),
+                        role: userSchema.role
                     });
                 } else {
                     return res.send({
