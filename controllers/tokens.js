@@ -39,19 +39,6 @@ exports.deleteToken =  (auth.optional,
                     message: "Error"
                 });
             }
-            /*if (!userSchema) {
-                return res.send({
-                    status: 401,
-                    message: "Username or password invalid"
-                });
-            }
-            if (!userSchema.validatePassword(user.password)) {
-                return res.send({
-                    status: 401,
-                    message: "Username or passwordno invalid"
-                });
-            }*/
-
             if (tokenSchema) {
                 console.log(tokenSchema._id);
                 Tokens.deleteOne({_id: tokenSchema._id}, function (err, result) {
@@ -76,27 +63,3 @@ exports.deleteToken =  (auth.optional,
             }
         })
 });
-/*
-exports.deleteToken =
-    (auth.optional,
-         (req, res, next) => {
-        console.log('Test 123456');
-            const {body: {token}} = req;
-            console.log(token);
-            return Tokens.delete({ Users: token })
-                .then((tokens) => {
-                    if (tokens) {
-                        return res.status(400).send({
-                            message: "can not delete current token"
-                        });
-                    }
-
-                    return res.json({
-                            status:200,
-                            message: " delete current token"
-                        }
-                    );
-                });
-        });
-*/
-

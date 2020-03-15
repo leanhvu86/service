@@ -25,6 +25,9 @@ require("./models/ingredient");
 require("./models/comment");
 require("./config/facebookconfig");
 require("./config/googleconfig");
+
+
+global.__root   = __dirname + '/';
 //Configure isProduction variable
 
 //Initiate our server
@@ -80,7 +83,7 @@ server.use(function (req, res, next) {
     res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
     res.header(
         "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+        "Origin, X-Requested-With, Content-Type, Accept, x-client-key,x-access-token, x-client-token, x-client-secret, Authorization"
     );
     next();
 });

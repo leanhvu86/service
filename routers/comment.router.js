@@ -1,9 +1,10 @@
 
 module.exports = app => {
   const comments = require("../controllers/comment/comment");
-  app.post("/addComment", comments.createComment);
+  var VerifyToken = require(__root + 'auth/VerifyToken');
+  app.post("/addComment", VerifyToken,comments.createComment);
 
-  app.post("/removeComment", comments.deleteComment);
+  app.post("/removeComment",VerifyToken, comments.deleteComment);
   app.get("/getComment", comments.getComments);
   app.get("/findComment", comments.findComment);
 };

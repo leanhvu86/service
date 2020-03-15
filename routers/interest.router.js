@@ -1,9 +1,10 @@
 
 module.exports = app => {
   const interests = require("../controllers/interest/interest");
-  app.post("/likeRecipe", interests.createInterest);
+  var VerifyToken = require(__root + 'auth/VerifyToken');
+  app.post("/likeRecipe",VerifyToken, interests.createInterest);
 
-  app.post("/dislikeRecipe", interests.deleteInterest);
+  app.post("/dislikeRecipe",VerifyToken, interests.deleteInterest);
   app.get("/getInterest", interests.getInterests);
-  app.get("/findInterest", interests.findInterest);
+  app.post("/findInterest", interests.findInterest);
 };

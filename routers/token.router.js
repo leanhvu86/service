@@ -75,8 +75,10 @@
 // module.exports = app;
 
 module.exports = app => {
+
+  var VerifyToken = require(__root + 'auth/VerifyToken');
   const tokens = require("../controllers/tokens");
-  app.post("/deleteToken", tokens.deleteToken);
+  app.post("/deleteToken",VerifyToken, tokens.deleteToken);
 
   // app.post("/login", users.login);
   // app.post("/test", users.test);

@@ -31,23 +31,24 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/routers" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2019.3.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\dự án 2\front end\service\auth" />
+      <recent name="F:\nodeJs\mongodb-restful-api-login-register\routers" />
+      <recent name="F:\nodeJs\mongodb-restful-api-login-register\controllers\province" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\dự án 2\front end\service" />
       <recent name="F:\dự án 2\front end\service\routers" />
       <recent name="F:\dự án 2\front end\service\controllers\comment" />
       <recent name="F:\dự án 2\front end\service\models" />
       <recent name="F:\dự án 2\front end\service\controllers\cook-step" />
-      <recent name="F:\dự án 2\front end\service\controllers\ingredient" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="F:\nodeJs\mongodb-restful-api-login-register\routers" />
-      <recent name="F:\nodeJs\mongodb-restful-api-login-register\controllers\province" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -144,7 +145,12 @@
       <workItem from="1583883167626" duration="2472000" />
       <workItem from="1583935459471" duration="2612000" />
       <workItem from="1584012781414" duration="1706000" />
-      <workItem from="1584020851095" duration="1344000" />
+      <workItem from="1584020851095" duration="6230000" />
+      <workItem from="1584055379401" duration="3535000" />
+      <workItem from="1584097625721" duration="1207000" />
+      <workItem from="1584183806414" duration="1621000" />
+      <workItem from="1584234973983" duration="3861000" />
+      <workItem from="1584267793277" duration="2835000" />
     </task>
     <servers />
   </component>
@@ -164,18 +170,18 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="426" y="179" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.738@0.0.1366.738" timestamp="1579656389505" />
-    <state x="463" y="111" key="FileChooserDialogImpl" timestamp="1583575880535">
+    <state x="463" y="111" key="FileChooserDialogImpl" timestamp="1584055521421">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="463" y="111" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1583575880535" />
+    <state x="463" y="111" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1584055521421" />
     <state x="184" y="12" key="SettingsEditor" timestamp="1584022655192">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="184" y="12" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1584022655192" />
-    <state x="92" y="92" width="1182" height="554" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1583576862550">
+    <state x="92" y="92" width="1182" height="554" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1584055505691">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="92" y="92" width="1182" height="554" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1366.738@0.0.1366.738" timestamp="1583576862550" />
+    <state x="92" y="92" width="1182" height="554" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1366.738@0.0.1366.738" timestamp="1584055505691" />
     <state x="92" y="92" width="1182" height="554" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1583576862550">
       <screen x="0" y="0" width="1366" height="738" />
     </state>

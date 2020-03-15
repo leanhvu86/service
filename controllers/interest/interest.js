@@ -18,6 +18,8 @@ exports.getInterests = (async (req, res, next) => {
 });
 
 exports.findInterest = async (req, res, next) => {
+
+    console.log(req.body)
     await Interests.findOne({user: req.body.user}, function (err, interests) {
         if (err) {
             console.log(err);
@@ -26,10 +28,9 @@ exports.findInterest = async (req, res, next) => {
                 'message': 'interest not found'
             })
         } else {
-            res.send({
-                'status': 200,
-                interest: interests
-            })
+            console.log(interests)
+            res.status(200).send(interests
+            )
         }
     })
 }

@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Recipe = mongoose.model('Recipes');
 const Users = mongoose.model("Users");
 exports.getRecipes = (async (req, res, next) => {
+    console.log(req.header)
     // try {
     //     const recipes = recipe.find({}, '-_id');
     //     console.log('danh sach tinh tp' + recipes);

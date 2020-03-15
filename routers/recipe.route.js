@@ -1,10 +1,10 @@
 
 module.exports = (app) => {
     const RecipeRouter = require('../controllers/recipe/recipe');
-
+    var VerifyToken = require(__root + 'auth/VerifyToken');
     app.get('/recipes', RecipeRouter.getRecipes)
     app.get('/findRecipe/:id', RecipeRouter.findRecipe)
-    app.post('/createRecipe', RecipeRouter.createRecipe)
-    app.post('/createMultipleRecipe', RecipeRouter.createMultiple)
+    app.post('/createRecipe',VerifyToken, RecipeRouter.createRecipe)
+    app.post('/createMultipleRecipe',VerifyToken, RecipeRouter.createMultiple)
 }
 

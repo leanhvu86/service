@@ -74,15 +74,16 @@
 
 // module.exports = app;
 
+var VerifyToken = require(__root + 'auth/VerifyToken');
 module.exports = app => {
   const users = require("../controllers/users");
   app.post("/register", users.create);
   app.get("/getUsers", users.getUsers);
   app.post("/login", users.login);
-  app.post("/testEmail", users.testEmail);
+  app.post("/testEmail",VerifyToken, users.testEmail);
   app.post("/loginv2", users.login);
-  app.post("/addPoint", users.addPoint);
-  app.post("/removePoint", users.removePoint);
+  app.post("/addPoint", VerifyToken,users.addPoint);
+  app.post("/removePoint",VerifyToken, users.removePoint);
   app.post("/updateRole", users.updateRole);
   app.post("/updateReport", users.updateReport);
   app.post("/bannedUser", users.bannedUser);
