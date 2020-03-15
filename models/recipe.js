@@ -17,7 +17,7 @@ const RecipeSchema = mongoose.Schema({
     viewCount:{type:Number,default: 0},
     user:{type:Object},
     description:{type:String,default:'Làm theo phương pháp mặc định'},
-    status: {type: Number, default: 1}
+    status: {type: Number, default: 0}
 }, {
     timestamps: true
 });

@@ -4,35 +4,24 @@ const Recipe = mongoose.model('Recipes');
 const Users = mongoose.model("Users");
 exports.getRecipes = (async (req, res, next) => {
     console.log(req.header)
-    // try {
-    //     const recipes = recipe.find({}, '-_id');
-    //     console.log('danh sach tinh tp' + recipes);
-    //     res.send({
-    //         'status': 200,
-    //         recipes: recipes
-    //     })
-    // } catch (err) {
-    //     console.log('not found recipe');
-    //     res.send({
-    //         "status": 404,
-    //         'type': 'ERROR_DATA',
-    //         'message': 'recipes not  found'
-    //     })
-    // }
     await Recipe.find
-        // ({}, function(err, recipes) {
-        //     console.log(recipes);
-        //     if (recipes.length===0){
-        //         res.status(404).send(
-        //             {
-        //                 'status':404,
-        //                 'message':err||'can not find recipes'
-        //             }
-        //         )
-        //     }else {
-        //         res.status(200).send(recipes);
-        //     }
-        // });
+        ({
+            status: 1
+        })
+        .then(recipes => {
+            res.status(200).send(recipes
+            )
+        }).catch(err => {
+            res.send({
+                'status': 404,
+                'message': err.message || 'Some error occurred while finding recipe'
+            })
+        })
+});
+exports.getAllRecipes = (async (req, res, next) => {
+    console.log(req.header)
+    await Recipe.find
+
         ()
         .then(recipes => {
             res.status(200).send(recipes
@@ -44,7 +33,6 @@ exports.getRecipes = (async (req, res, next) => {
             })
         })
 });
-
 exports.findRecipe = async (req, res, next) => {
     console.log('helo' + req.params.id)
     var mongoose = require('mongoose');
