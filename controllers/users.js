@@ -136,14 +136,18 @@ exports.login =
                     const finalUser = new Tokens({
                         email: userSchema.email
                     });
-                    console.log(userSchema.email);
+                    console.log(userSchema.role);
+                    role=userSchema.role;
+                    if(role===0){
+                        role='';
+                    }
                     finalUser.token = user.token;
                     finalUser.save().then(() => console.log("save token thanh cong"));
                     req.session.email = user.email;
                     return res.send({
                         status: 200,
                         user: user.toAuthJSON(),
-                        role: userSchema.role
+                        role: role
                     });
                 } else {
                     return res.send({

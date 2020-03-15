@@ -89,7 +89,6 @@ exports.deleteInterest = (auth.optional,
                         message: "can not found current user"
                     });
                 }
-
                 for (let interested of interests) {
                     if (interest.objectId._id === interested.objectId._id) {
 
@@ -116,19 +115,18 @@ exports.deleteInterest = (auth.optional,
                                                     status: 401,
                                                     message: "Error"
                                                 });
-                                            } else {
-                                                return res.send({
-                                                    recipe: recipe,
-                                                    status: 200,
-                                                    message: "xóa điểm thành công"
-                                                });
                                             }
                                         }));
                                     }
                                 })
+
                             }
                         });
                     }
-                }
+                }return res.send({
+                    result: 'true',
+                    status: 200,
+                    message: "xóa điểm thành công"
+                });
             });
     });

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const auth = require("../../routers/auth");
 const Comments = mongoose.model('Comments');
 const Recipe = mongoose.model('Recipes');
+const Users = mongoose.model("Users");
 exports.getComments = (async (req, res, next) => {
 
     await Comments.find()
@@ -35,13 +36,29 @@ exports.findComment = async (req, res, next) => {
 }
 exports.createComment = (req, res) => {
     const comment = new Comments({
-        user: req.body.comment.user.email,
+        user: req.body.comment.user,
         recipe: req.body.comment.recipe,
         content: req.body.comment.content,
         imageUrl: req.body.comment.imageUrl,
         type: req.body.comment.type
     })
-
+    Users.findOne({email:req.body.comment.user}, function (err, userSchema) {
+        if (err) {
+            return res.send({
+                status: 401,
+                message: err
+            });
+        }
+        console.log("UserName: " + userSchema.email);
+        if (userSchema) {
+            comment.user=userSchema
+        } else {
+            return res.send({
+                status: 403,
+                message: err
+            });
+        }
+    });
     comment.save()
         .then(data => {
             Recipe.findOne({id: req.body.comment.recipe.id}, function (err, recipe) {
@@ -63,6 +80,7 @@ exports.createComment = (req, res) => {
                         } else {
                             return res.send({
                                 recipe: recipe,
+                                comment:comment,
                                 status: 200,
                                 message: "Thêm điểm thành công"
                             });
