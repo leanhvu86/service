@@ -107,6 +107,7 @@ require("./routers/interest.router")(server);
 require("./routers/ingredient.router")(server);
 require("./routers/cook-step.route")(server);
 require("./routers/comment.router")(server);
+require("./routers/util.router")(server);
 if (!isProduction) {
     server.use(errorHandler());
 }

@@ -12,7 +12,7 @@ const UsersSchema = new Schema({
     hash: String,
     salt: String,
     totalPoint:Number,
-    role:{ type: Number, default: 0 },
+    role:{ type: Number, default: -1},
     warningReport:{ type: Number, default: 0 },
     status:{ type: Number, default: 1 },
 }, {

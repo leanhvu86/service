@@ -89,4 +89,5 @@ module.exports = app => {
   app.post("/bannedUser", users.bannedUser);
   app.get("/logout", users.logout);
 
+  app.get('/active/:id', users.activeMember)
 };

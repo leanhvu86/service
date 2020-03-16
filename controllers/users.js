@@ -3,6 +3,7 @@ const passport = require("passport");
 const auth = require("../routers/auth");
 const Users = mongoose.model("Users");
 const Tokens = require("../models/Token");
+const  nodeMailer = require('nodemailer');
 //POST new user route (optional, everyone has access)
 
 exports.create =
@@ -17,42 +18,68 @@ exports.create =
             };
 
             const finalUser = new Users(user);
-
             Users.findOne({email: user.email}, function (err, users) {
                 if (users !== null) {
-                    return res.status(422).json({
+                    return res.send({
+                        status:422,
                         message: "Email đã tồn tại trong hệ thống. Vui lòng chọn email khác"
 
                     });
+                }else{
+                    if (!user.email) {
+                        return res.status(422).send({
+                            status:422,
+                            message:
+                                "email is required"
+
+                        });
+                    }
+
+                    if (!user.password) {
+                        return res.status(423).send({
+                            status:422,
+                            message:
+                                "Password không được để trống"
+
+                        });
+                    }
+
+                    finalUser.setPassword(user.password);
+                    let transporter = nodeMailer.createTransport({
+                        host: 'smtp.gmail.com',
+                        port: 465,
+                        secure: true,
+                        auth: {
+                            user: 'leanhvu86@gmail.com',
+                            pass: 'leanhvu123'
+                        }
+                    });
+                    let mailOptions = {
+                        from: 'Ban quản trị website Ẩm thực ăn chay <leanhvu86@gmail.com>', // sender address
+                        to: user.email, // list of receivers
+                        subject: 'Chào mừng đến trang web Ẩm thực Ăn chay', // Subject line
+                        text: req.body.body, // plain text body
+                        html: 'Chúc mừng bạn đã đăng ký thành công tài khoản trên trang web Ẩm thực ăn chay ' +
+                            '<br> Vui lòng xác thực tài khoản đăng ký bằng link sau:' +
+                            '<br> http://localhost:4200/' + finalUser._id
+                        // html body
+                    };
+
+                    transporter.sendMail(mailOptions, (error, info) => {
+                        if (error) {
+                            return console.log(error);
+                        }
+                        console.log('Message %s sent: %s', info.messageId, info.response);
+                    });
+                    console.log("Email:" + finalUser.email);
+                    return finalUser.save().then(() =>
+                        res.status(200).send({
+                            status: 200,
+                            user: finalUser.toAuthJSON()
+                        })
+                    );
                 }
             });
-
-            if (!user.email) {
-                return res.status(422).json({
-                    message:
-                        "email is required"
-
-                });
-            }
-
-            if (!user.password) {
-                return res.status(423).json({
-                    message:
-                        "Password không được để trống"
-
-                });
-            }
-
-            finalUser.setPassword(user.password);
-
-            console.log("Email:" + finalUser.email);
-            console.log("Passowrd:" + finalUser.passport);
-            return finalUser.save().then(() =>
-                res.status(200).send({
-                    status: 200,
-                    user: finalUser.toAuthJSON()
-                })
-            );
         });
 
 exports.testEmail = (req, res, next) => {
@@ -128,7 +155,18 @@ exports.login =
                         message: "Username or password invalid"
                     });
                 }
-
+                if (userSchema.role<-1) {
+                    return res.send({
+                        status: 403,
+                        message: "Tài khoản của bạn đã bị khóa!"
+                    });
+                }
+                if (userSchema.role<0) {
+                    return res.send({
+                        status: 403,
+                        message: "Username chưa xác thực email"
+                    });
+                }
                 if (user) {
                     const user = new Users();
                     user.token = user.generateJWT();
@@ -335,7 +373,7 @@ exports.bannedUser = async (req, res, next) => {
             })
         } else {
             console.log(user)
-            user.status=0;
+            user.status=-2;
             user.save((function (err) {
                 if (err) {
                     return res.send({
@@ -352,3 +390,34 @@ exports.bannedUser = async (req, res, next) => {
         }
     })
 }
+exports.activeMember = async (req, res, next) => {
+    console.log('helo' + req.params.id)
+    var mongoose = require('mongoose');
+    var id = mongoose.Types.ObjectId(req.params.id);
+    await Users.findOne({_id: id}, function (err, user) {
+        if (err || user === null) {
+            console.log(user)
+            return res.send({
+                'status': 401,
+                'message': 'user not found'
+            })
+        } else {
+            console.log(user)
+            user.role=0;
+            user.save((function (err) {
+                if (err) {
+                    return res.send({
+                        status: 401,
+                        message: "Error"
+                    });
+                } else {
+                    return res.status(200).send({
+                        status:200,
+                        user:user
+                    });
+                }
+            }));
+        }
+    })
+}
+
