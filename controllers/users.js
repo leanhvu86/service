@@ -142,8 +142,6 @@ exports.login =
                         message: "Error"
                     });
                 }
-                console.log("UserName: " + userSchema.email);
-                console.log("Password:" + userSchema.password);
                 if (!userSchema) {
                     return res.send({
                         status: 401,
@@ -300,10 +298,10 @@ exports.getUsers = (async (req, res, next) => {
 });
 
 exports.updateRole = async (req, res, next) => {
-    console.log('helo' + req.body.user.user._id)
+    console.log('helo' + req.body.user.id)
     console.log('helo' + req.body.user.role)
     var mongoose = require('mongoose');
-    var id = mongoose.Types.ObjectId(req.body.user.user._id);
+    var id = mongoose.Types.ObjectId(req.body.user.id);
     await Users.findOne({_id: id}, function (err, user) {
         if (err || user === null) {
             console.log(user)
@@ -332,9 +330,9 @@ exports.updateRole = async (req, res, next) => {
 }
 
 exports.updateReport = async (req, res, next) => {
-    console.log('helo' + req.body.user.user._id)
+    console.log('helo' + req.body.user.id)
     var mongoose = require('mongoose');
-    var id = mongoose.Types.ObjectId(req.body.user.user._id);
+    var id = mongoose.Types.ObjectId(req.body.user.id);
     await Users.findOne({_id: id}, function (err, user) {
         if (err || user === null) {
             console.log(user)
@@ -362,9 +360,9 @@ exports.updateReport = async (req, res, next) => {
     })
 }
 exports.bannedUser = async (req, res, next) => {
-    console.log('helo' + req.body.user.user._id)
+    console.log('helo' + req.body.user.id)
     var mongoose = require('mongoose');
-    var id = mongoose.Types.ObjectId(req.body.user.user._id);
+    var id = mongoose.Types.ObjectId(req.body.user.id);
     await Users.findOne({_id: id}, function (err, user) {
         if (err || user === null) {
             console.log(user)

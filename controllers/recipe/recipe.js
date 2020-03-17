@@ -168,6 +168,7 @@ exports.acceptRecipe = async (req, res, next) => {
                 } else {
                     return res.status(200).send({
                         status:200,
+                        message:'Bạn đã duyệt công thức thành công',
                         recipe:recipe
                     });
                 }
@@ -198,6 +199,7 @@ exports.declineRecipe = async (req, res, next) => {
                 } else {
                     return res.status(200).send({
                         status:200,
+                        message:'Bạn đã từ chối công thức này',
                         recipe:recipe
                     });
                 }
