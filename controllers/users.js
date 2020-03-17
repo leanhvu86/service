@@ -61,7 +61,7 @@ exports.create =
                         text: req.body.body, // plain text body
                         html: 'Chúc mừng bạn đã đăng ký thành công tài khoản trên trang web Ẩm thực ăn chay ' +
                             '<br> Vui lòng xác thực tài khoản đăng ký bằng link sau:' +
-                            '<br> http://localhost:4200/' + finalUser._id
+                            '<br> http://localhost:4200/active/' + finalUser._id
                         // html body
                     };
 
@@ -173,7 +173,9 @@ exports.login =
                     const finalUser = new Tokens({
                         email: userSchema.email
                     });
-                    console.log(userSchema.role);
+                    if(userSchema.imageUrl=== undefined){
+                        userSchema.imageUrl='jbiajl3qqdzshdw0z749'
+                    }
                     role=userSchema.role;
                     if(role===0){
                         role='';
@@ -184,7 +186,8 @@ exports.login =
                     return res.send({
                         status: 200,
                         user: user.toAuthJSON(),
-                        role: role
+                        role: role,
+                        image:userSchema.imageUrl
                     });
                 } else {
                     return res.send({
@@ -380,6 +383,31 @@ exports.bannedUser = async (req, res, next) => {
                         message: "Error"
                     });
                 } else {
+                    let transporter = nodeMailer.createTransport({
+                        host: 'smtp.gmail.com',
+                        port: 465,
+                        secure: true,
+                        auth: {
+                            user: 'leanhvu86@gmail.com',
+                            pass: 'leanhvu123'
+                        }
+                    });
+                    let mailOptions = {
+                        from: 'Ban quản trị website Ẩm thực ăn chay <leanhvu86@gmail.com>', // sender address
+                        to: user.email, // list of receivers
+                        subject: 'Chào mừng đến trang web Ẩm thực Ăn chay', // Subject line
+                        text: req.body.body, // plain text body
+                        html: 'Tài khoản của bạn đã bị khóa vì vi pham quy định của diễn đàn, pháp luật của nhà nước.' +
+                            'Vui lòng liên hệ lại với email: amthuc.anchay.support@gmaillcom'
+                        // html body
+                    };
+
+                    transporter.sendMail(mailOptions, (error, info) => {
+                        if (error) {
+                            return console.log(error);
+                        }
+                        console.log('Message %s sent: %s', info.messageId, info.response);
+                    });
                     return res.status(200).send({
                         status:200,
                         user:user
