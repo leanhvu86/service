@@ -11,7 +11,7 @@ const UsersSchema = new Schema({
     imageUrl:String,
     hash: String,
     salt: String,
-    totalPoint:Number,
+    totalPoint:{ type: Number, default: 3},
     role:{ type: Number, default: -1},
     warningReport:{ type: Number, default: 0 },
     status:{ type: Number, default: 1 },

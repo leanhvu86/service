@@ -74,6 +74,7 @@ exports.create =
                     console.log("Email:" + finalUser.email);
                     return finalUser.save().then(() =>
                         res.status(200).send({
+                            message:'Chúc mừng bạn đăng ký tài khoản thành công. Vui lòng check mail',
                             status: 200,
                             user: finalUser.toAuthJSON()
                         })
