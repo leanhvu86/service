@@ -2,12 +2,13 @@ const mongoose = require('mongoose');
 
 const Recipe = mongoose.model('Recipes');
 const Users = mongoose.model("Users");
+const Messages = mongoose.model('Messages');
 exports.getRecipes = (async (req, res, next) => {
     console.log(req.header)
     await Recipe.find
-        ({
-            status: 1
-        })
+    ({
+        status: 1
+    })
         .then(recipes => {
             res.status(200).send(recipes
             )
@@ -22,7 +23,7 @@ exports.getAllRecipes = (async (req, res, next) => {
     console.log(req.header)
     await Recipe.find
 
-        ()
+    ()
         .then(recipes => {
             res.status(200).send(recipes
             )
@@ -66,8 +67,8 @@ exports.findRecipe = async (req, res, next) => {
                             });
                         } else {
                             return res.status(200).send({
-                                status:200,
-                                recipe:recipe
+                                status: 200,
+                                recipe: recipe
                             });
                         }
                     }));
@@ -101,7 +102,7 @@ exports.createRecipe = (req, res) => {
     console.log(req.body.recipe.cockStep)
     console.log(req.body.cockStep)
     const user = req.body.recipe.user;
-    Users.findOne({email:user}, function (err, userSchema) {
+    Users.findOne({email: user}, function (err, userSchema) {
         if (err) {
             return res.send({
                 status: 401,
@@ -110,14 +111,28 @@ exports.createRecipe = (req, res) => {
         }
         if (userSchema) {
 
-            userSchema.totalPoint=userSchema.totalPoint +2;
-            userSchema.save().then(data =>{
+            userSchema.totalPoint = userSchema.totalPoint + 2;
+            userSchema.save().then(data => {
                 recipe.user = userSchema;
                 recipe.save()
                     .then(data => {
-                        res.status(200).send({
-                            data: data,
-                            message: 'Chúc mừng bạn đã thêm mới công thức thành công!'
+                        const message = new Messages({
+                            user: userSchema.email,
+                            imageUrl: '',
+                            content: 'Chúc mừng bạn đã thêm mới công thức thành công!',
+                            videoUrl: '',
+                        })
+                        message.save().then(message => {
+                            res.status(200).send({
+                                data: data,
+                                message: 'Chúc mừng bạn đã thêm mới công thức thành công!'
+                            })
+                        }).catch(err => {
+                            console.log('not found recipe');
+                            res.send({
+                                'status': 404,
+                                'message': err.message || 'Some error occurred while finding recipe'
+                            })
                         })
                     }).catch(err => {
                     res.status(500).send({
@@ -158,7 +173,7 @@ exports.acceptRecipe = async (req, res, next) => {
             })
         } else {
             console.log(recipe)
-            recipe.status=1;
+            recipe.status = 1;
             recipe.save((function (err) {
                 if (err) {
                     return res.send({
@@ -166,11 +181,25 @@ exports.acceptRecipe = async (req, res, next) => {
                         message: "Error"
                     });
                 } else {
-                    return res.status(200).send({
-                        status:200,
-                        message:'Bạn đã duyệt công thức thành công',
-                        recipe:recipe
-                    });
+                    const message = new Messages({
+                        user: recipe.user.email,
+                        imageUrl: '',
+                        content: 'Chúc mừng bạn đã được duyệt công thức '+recipe.recipeName,
+                        videoUrl: '',
+                    })
+                    message.save().then(message => {
+                        return res.status(200).send({
+                            status: 200,
+                            message: 'Bạn đã duyệt công thức thành công',
+                            recipe: recipe
+                        });
+                    }).catch(err => {
+                        console.log('not found recipe');
+                        res.send({
+                            'status': 404,
+                            'message': err.message || 'Some error occurred while finding recipe'
+                        })
+                    })
                 }
             }));
         }
@@ -189,7 +218,7 @@ exports.declineRecipe = async (req, res, next) => {
             })
         } else {
             console.log(recipe)
-            recipe.status=-1;
+            recipe.status = -1;
             recipe.save((function (err) {
                 if (err) {
                     return res.send({
@@ -197,11 +226,26 @@ exports.declineRecipe = async (req, res, next) => {
                         message: "Error"
                     });
                 } else {
-                    return res.status(200).send({
-                        status:200,
-                        message:'Bạn đã từ chối công thức này',
-                        recipe:recipe
-                    });
+                    const message = new Messages({
+                        user: recipe.user.email,
+                        imageUrl: '',
+                        content: 'Công thức '+recipe.recipeName+' đã bị từ chối',
+                        videoUrl: '',
+                    })
+                    message.save().then(message => {
+                        return res.status(200).send({
+                            status: 200,
+                            message: 'Bạn đã từ chối công thức này',
+                            recipe: recipe
+                        });
+                    }).catch(err => {
+                        console.log('not found recipe');
+                        res.send({
+                            'status': 404,
+                            'message': err.message || 'Some error occurred while finding recipe'
+                        })
+                    })
+
                 }
             }));
         }

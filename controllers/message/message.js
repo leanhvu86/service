@@ -17,7 +17,7 @@ exports.getMessages = (async (req, res, next) => {
 });
 
 exports.findMessage = async (req, res, next) => {
-    await Messages.findOne({user: req.body.user.email}, function (err, messages) {
+    await Messages.find({user: req.body.user.email}, function (err, messages) {
         if (err) {
             console.log(err);
             return res.send({
@@ -25,8 +25,14 @@ exports.findMessage = async (req, res, next) => {
                 'message': 'message not found'
             })
         } else {
-            res.send({
-                'status': 200,
+            console.log(messages)
+           for(let mess of messages){
+              mess.news++
+              mess.save().then( mes=>{
+                  
+              })
+           }
+            res.status(200).send({
                 message: messages
             })
         }

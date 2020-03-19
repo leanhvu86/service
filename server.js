@@ -25,7 +25,7 @@ require("./models/ingredient");
 require("./models/comment");
 require("./config/facebookconfig");
 require("./config/googleconfig");
-
+require("./models/message");
 
 global.__root   = __dirname + '/';
 //Configure isProduction variable
@@ -108,6 +108,7 @@ require("./routers/ingredient.router")(server);
 require("./routers/cook-step.route")(server);
 require("./routers/comment.router")(server);
 require("./routers/util.router")(server);
+require("./routers/message.router")(server);
 if (!isProduction) {
     server.use(errorHandler());
 }

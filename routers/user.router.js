@@ -80,7 +80,7 @@ module.exports = app => {
   app.post("/register", users.create);
   app.get("/getUsers", users.getUsers);
   app.post("/login", users.login);
-  app.post("/testEmail",VerifyToken, users.testEmail);
+  app.post("/testEmail", users.testEmail);
   app.post("/loginv2", users.login);
   app.post("/addPoint", VerifyToken,users.addPoint);
   app.post("/removePoint",VerifyToken, users.removePoint);
@@ -88,6 +88,6 @@ module.exports = app => {
   app.post("/updateReport", users.updateReport);
   app.post("/bannedUser", users.bannedUser);
   app.get("/logout", users.logout);
-
+  app.get("/getTopUsers",users.getTopUsers);
   app.get('/active/:id', users.activeMember)
 };

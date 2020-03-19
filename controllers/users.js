@@ -85,28 +85,34 @@ exports.create =
 
 exports.testEmail = (req, res, next) => {
     console.log("testet" + req.body.email);
-    Users.findOne({email: req.body.email}, function (err, userSchema) {
-        if (err) {
-            return res.send({
-                status: 401,
-                message: err
-            });
-        }
-        console.log("UserName: " + userSchema.email);
-        console.log("Password:" + userSchema.password);
-        if (userSchema) {
-            return res.send({
-                status: 200,
-                user: userSchema,
-                message: "Thêm điêm thành công"
-            });
-        } else {
-            return res.send({
-                status: 403,
-                message: err
-            });
-        }
-    });
+    if(req.body.email!==undefined||req.body.email!==''){
+        Users.findOne({email: req.body.email}, function (err, userSchema) {
+            if (err) {
+                return res.send({
+                    status: 401,
+                    message: err
+                });
+            }
+            if (userSchema) {
+                return res.send({
+                    status: 200,
+                    user: userSchema,
+                    message: "Thêm điêm thành công"
+                });
+            } else {
+                return res.send({
+                    status: 403,
+                    message: err
+                });
+            }
+        });
+    }else{
+        return res.send({
+            status: 401,
+            message: 'email not found'
+        });
+    }
+
 };
 //POST login route (optional, everyone has access)
 exports.login =
@@ -315,6 +321,11 @@ exports.updateRole = async (req, res, next) => {
         } else {
             console.log(user)
             user.role=req.body.user.role;
+            if(user.role===0){
+                user.warningReport=0;
+            }else{
+                user.warningReport=user.role;
+            }
             user.save((function (err) {
                 if (err) {
                     return res.send({
@@ -431,6 +442,7 @@ exports.activeMember = async (req, res, next) => {
         } else {
             console.log(user)
             user.role=0;
+            user.status=1;
             user.save((function (err) {
                 if (err) {
                     return res.send({
@@ -438,13 +450,49 @@ exports.activeMember = async (req, res, next) => {
                         message: "Error"
                     });
                 } else {
-                    return res.status(200).send({
-                        status:200,
-                        user:user
+                    let transporter = nodeMailer.createTransport({
+                        host: 'smtp.gmail.com',
+                        port: 465,
+                        secure: true,
+                        auth: {
+                            user: 'leanhvu86@gmail.com',
+                            pass: 'leanhvu123'
+                        }
                     });
+                    let mailOptions = {
+                        from: 'Ban quản trị website Ẩm thực ăn chay <leanhvu86@gmail.com>', // sender address
+                        to: user.email, // list of receivers
+                        subject: 'Chào mừng đến trang web Ẩm thực Ăn chay', // Subject line
+                        text: req.body.body, // plain text body
+                        html: 'Xin chúc mừng! Tài khoản của bạn đã được mở. Vui lòng đăng nhập trang chủ website Ẩm thực Ăn chay' +
+                            ':http://localhost:4200'
+                        // html body
+                    };
+
+                    transporter.sendMail(mailOptions, (error, info) => {
+                        if (error) {
+                            return console.log(error);
+                        }
+                        console.log('Message %s sent: %s', info.messageId, info.response);
+                    });
+                    return res.status(200).send(user);
                 }
             }));
         }
     })
 }
+exports.getTopUsers = (async (req, res, next) => {
+    await Users.find()
+        .sort({totalPoint:-1})
+        .limit(10)
+        .then(users => {
+            res.status(200).send(users
+            )
+        }).catch(err => {
+            res.send({
+                'status': 404,
+                'message': err.message || 'Some error occurred while finding users'
+            })
+        })
+});
 

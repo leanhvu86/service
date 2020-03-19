@@ -20,7 +20,7 @@ exports.getInterests = (async (req, res, next) => {
 exports.findInterest = async (req, res, next) => {
 
     console.log(req.body)
-    await Interests.findOne({user: req.body.user.email}, function (err, interests) {
+    await Interests.findOne({user: req.body.user}, function (err, interests) {
         if (err) {
             console.log(err);
             return res.send({
