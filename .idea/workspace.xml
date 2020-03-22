@@ -37,24 +37,24 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/controllers/message" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/routers" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2019.3.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\dự án 2\front end\service\routers" />
+      <recent name="F:\dự án 2\front end\service\models" />
+      <recent name="F:\dự án 2\front end\service\controllers\gallery" />
+      <recent name="F:\dự án 2\front end\service\controllers\message" />
+      <recent name="F:\dự án 2\front end\service\controllers\utils" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="F:\dự án 2\front end\service\auth" />
       <recent name="F:\nodeJs\mongodb-restful-api-login-register\routers" />
       <recent name="F:\nodeJs\mongodb-restful-api-login-register\controllers\province" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="F:\dự án 2\front end\service\controllers\message" />
-      <recent name="F:\dự án 2\front end\service\routers" />
-      <recent name="F:\dự án 2\front end\service\models" />
-      <recent name="F:\dự án 2\front end\service\controllers\utils" />
-      <recent name="F:\dự án 2\front end\service" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -162,6 +162,9 @@
       <workItem from="1584448197352" duration="11320000" />
       <workItem from="1584537556169" duration="5966000" />
       <workItem from="1584624610424" duration="10342000" />
+      <workItem from="1584754747431" duration="1620000" />
+      <workItem from="1584779584869" duration="5702000" />
+      <workItem from="1584846623611" duration="5130000" />
     </task>
     <servers />
   </component>

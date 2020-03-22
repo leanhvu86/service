@@ -18,6 +18,7 @@ require("./models/route_rail");
 require("./models/country");
 require("./models/cookStep");
 require("./models/cook-way");
+require("./models/gallery");
 require("./models/food_type");
 require("./models/recipe");
 require("./models/interest");
@@ -109,6 +110,7 @@ require("./routers/cook-step.route")(server);
 require("./routers/comment.router")(server);
 require("./routers/util.router")(server);
 require("./routers/message.router")(server);
+require("./routers/gallery.router")(server);
 if (!isProduction) {
     server.use(errorHandler());
 }
