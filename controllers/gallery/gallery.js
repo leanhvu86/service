@@ -76,7 +76,12 @@ exports.addGallery = (req, res) => {
     });
 }
 exports.createGallery = (req, res) => {
-
+    const gallery = new Gallerys({
+        user: req.body.gallery.user,
+        name: req.body.gallery.name,
+        content: req.body.gallery.content,
+        image: req.body.gallery.image
+    })
     Users.findOne({email: req.body.gallery.user}, function (err, userSchema) {
         if (err) {
             return res.send({
