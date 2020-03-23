@@ -8,11 +8,9 @@ exports.getCookStep= (async (req, res, next) => {
         })
         .limit(100)
         .then(cookSteps => {
-            console.log('tìm provice' + cookSteps);
             res.status(200).send(cookSteps
             )
         }).catch(err => {
-            console.log('not found cookStep');
             res.send({
                 'status': 404,
                 'message': err.message || 'Some error occurred while finding cookStep'
@@ -21,7 +19,6 @@ exports.getCookStep= (async (req, res, next) => {
 });
 
 exports.findCookStep = async (req, res, next) => {
-    console.log(req.body.cookStepName)
     await CookStep.findOne({cookStepName: req.body.cookStepName}, function (err, cookStep) {
         if (err) {
             console.log(err);
@@ -67,7 +64,6 @@ exports.createMultipleCookStep = (req, res) => {
             })
             console.log(err);
         } else{
-            console.log(cookSteps);
             res.status(200).send(
                 cookSteps
             )

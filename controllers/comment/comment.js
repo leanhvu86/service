@@ -49,7 +49,6 @@ exports.createComment = (req, res) => {
                 message: err
             });
         }
-        console.log("UserName: " + userSchema.email);
         if (userSchema) {
             comment.user=userSchema
         } else {

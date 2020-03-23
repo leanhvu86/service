@@ -8,7 +8,7 @@ const { Schema } = mongoose;
 const UsersSchema = new Schema({
     email: String,
     name:String,
-    imageUrl:String,
+    imageUrl:{type:String,default:'jbiajl3qqdzshdw0z749'},
     hash: String,
     salt: String,
     totalPoint:{ type: Number, default: 3},

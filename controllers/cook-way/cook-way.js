@@ -79,7 +79,6 @@ exports.createCookWay = (req, res) => {
 }
 
 exports.createMultiple = (req, res) => {
-    console.log(req.body.cookWays)
     CookWay.insertMany(req.body.cookWays, function (err, cookWays) {
         if (err) {
             res.status(500).send({

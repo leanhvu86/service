@@ -33,11 +33,9 @@ exports.getIngredients = (async (req, res, next) => {
         // });
         ()
         .then(ingredients => {
-            console.log('tìm provice' + ingredients);
             res.status(200).send(ingredients
             )
         }).catch(err => {
-            console.log('not found ingredient');
             res.send({
                 'status': 404,
                 'message': err.message || 'Some error occurred while finding ingredient'
@@ -63,7 +61,6 @@ exports.findIngredient = async (req, res, next) => {
     })
 }
 exports.createIngredient = (req, res) => {
-    console.log(req.body)
     const ingredient = new Ingredients({
         quantitative: req.body.ingredient.quantitative,
         typeOfquantitative: req.body.ingredient.typeOfquantitative,
@@ -93,14 +90,12 @@ exports.deleteIngredient =  (auth.optional,
 
             if (err) {
 
-                console.log("error query");
                 return res.send({
                     status: 401,
                     message: "lỗi xóa lượt ưu thích"
                 });
             } else {
 
-                console.log(result);
                 return res.send({
                     status: 200,
                     message: "Xóa lượt ưu thích thành công"

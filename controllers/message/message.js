@@ -25,11 +25,10 @@ exports.findMessage = async (req, res, next) => {
                 'message': 'message not found'
             })
         } else {
-            console.log(messages)
            for(let mess of messages){
               mess.news++
               mess.save().then( mes=>{
-                  
+
               })
            }
             res.status(200).send({
@@ -50,7 +49,6 @@ exports.createMessage = (req, res) => {
                 message: err
             });
         }
-        console.log("UserName: " + userSchema.email);
         if (userSchema) {
             message.user=userSchema
         } else {

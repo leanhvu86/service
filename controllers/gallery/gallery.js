@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const auth = require("../../routers/auth");
-const Gallerys = mongoose.model('Gallerys');
+const Gallery = mongoose.model('Gallerys');
 const Recipe = mongoose.model('Recipes');
 const Users = mongoose.model("Users");
 exports.getGallerys = (async (req, res, next) => {
 
-    await Gallerys.find()
+    await Gallery.find()
         .then(gallerys => {
             res.status(200).send(gallerys
             )
@@ -19,7 +19,7 @@ exports.getGallerys = (async (req, res, next) => {
 });
 exports.getTopGallerys = (async (req, res, next) => {
 
-    await Gallerys.find()
+    await Gallery.find()
         .sort({totalPoint: -1})
         .limit(4)
         .then(gallerys => {
@@ -34,24 +34,34 @@ exports.getTopGallerys = (async (req, res, next) => {
         })
 });
 exports.findGallery = async (req, res, next) => {
-    console.log(req.body.gallery)
-    Gallerys.find({user: req.body.gallery.email}, function (err, gallerys) {
-        if (err) {
-            console.log(err);
-            return res.send({
-                'status': 401,
-                'message': 'gallery not found'
+    Users.findOne({email: req.body.gallery.email}, function (err, userSchema) {
+        if (userSchema) {
+            Gallery.find()
+                .then(gallerys => {
+                    gallerys = gallerys.filter(
+                        gallery => gallery.user._id === userSchema._id);
+                    res.status(200).send({gallerys: gallerys}
+                    )
+                }).catch(err => {
+                console.log(err);
+                res.send({
+                    'status': 404,
+                    'message': err.message || 'Some error occurred while finding gallery'
+                })
             })
         } else {
-            res.status(200).send({gallerys: gallerys}
-            )
+            return res.send({
+                status: 403,
+                message: err
+            });
         }
-    })
+    });
+
 }
 exports.addGallery = (req, res) => {
     var mongoose = require('mongoose');
     var id = mongoose.Types.ObjectId(req.body.gallery._id);
-    Gallerys.findOne({_id: id}, function (err, gallery) {
+    Gallery.findOne({_id: id}, function (err, gallery) {
         if (err) {
             return res.send({
                 status: 401,
@@ -75,8 +85,24 @@ exports.addGallery = (req, res) => {
         })
     });
 }
+exports.galleryDetail = (req, res) => {
+    var mongoose = require('mongoose');
+    var id = mongoose.Types.ObjectId(req.params.id);
+    Gallery.findOne({_id: id}, function (err, gallery) {
+        if (err) {
+            return res.send({
+                status: 401,
+                message: err
+            });
+        }
+        return res.send({
+            gallery: gallery,
+            status: 200
+        });
+    })
+}
 exports.createGallery = (req, res) => {
-    const gallery = new Gallerys({
+    const gallery = new Gallery({
         user: req.body.gallery.user,
         name: req.body.gallery.name,
         content: req.body.gallery.content,
@@ -89,9 +115,20 @@ exports.createGallery = (req, res) => {
                 message: err
             });
         }
-        console.log("UserName: " + userSchema.email);
         if (userSchema) {
-            gallery.user = userSchema.email
+            gallery.user = userSchema
+            gallery.save()
+                .then(data => {
+                    return res.send({
+                        gallery: gallery,
+                        status: 200,
+                        message: "Thêm bộ sưu tập thành công"
+                    });
+                }).catch(err => {
+                res.status(500).send({
+                    message: err.message || 'Some error occurred while creating the gallery'
+                })
+            })
         } else {
             return res.send({
                 status: 403,
@@ -99,25 +136,13 @@ exports.createGallery = (req, res) => {
             });
         }
     });
-    gallery.save()
-        .then(data => {
-            return res.send({
-                gallery: gallery,
-                status: 200,
-                message: "Thêm bộ sưu tập thành công"
-            });
-        }).catch(err => {
-        res.status(500).send({
-            message: err.message || 'Some error occurred while creating the gallery'
-        })
-    })
 }
 exports.deleteGallery = (auth.optional,
     (req, res, next) => {
 
         var mongoose = require('mongoose');
         var id = mongoose.Types.ObjectId(req.body.gallery._id);
-        Gallerys.find({id: id})
+        Gallery.find({id: id})
             .then((gallerys) => {
                 if (!gallerys) {
                     return res.status(400).send({

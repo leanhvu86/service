@@ -69,9 +69,7 @@ exports.create =
                         if (error) {
                             return console.log(error);
                         }
-                        console.log('Message %s sent: %s', info.messageId, info.response);
                     });
-                    console.log("Email:" + finalUser.email);
                     return finalUser.save().then(() =>
                         res.status(200).send({
                             message:'Chúc mừng bạn đăng ký tài khoản thành công. Vui lòng check mail',
@@ -84,7 +82,6 @@ exports.create =
         });
 
 exports.testEmail = (req, res, next) => {
-    console.log("testet" + req.body.email);
     if(req.body.email!==undefined||req.body.email!==''){
         Users.findOne({email: req.body.email}, function (err, userSchema) {
             if (err) {
@@ -122,9 +119,6 @@ exports.login =
                 email: req.body.user.email,
                 password: req.body.user.password
             };
-            console.log("ss" + user.password);
-            console.log("ss" + user.email);
-
             if (!user.email) {
                 return res.status(422).json({
                     errors: {

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const GallerySchema = mongoose.Schema({
-    user: {type: String, default: ''},
+    user: {type: Object},
     name: {type: String, default: ''},
     content: {type: String, default: ''},
     image: {type: String, default: ''},

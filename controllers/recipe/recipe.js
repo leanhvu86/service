@@ -4,7 +4,6 @@ const Recipe = mongoose.model('Recipes');
 const Users = mongoose.model("Users");
 const Messages = mongoose.model('Messages');
 exports.getRecipes = (async (req, res, next) => {
-    console.log(req.header)
     await Recipe.find
     ({
         status: 1
@@ -20,10 +19,7 @@ exports.getRecipes = (async (req, res, next) => {
         })
 });
 exports.getAllRecipes = (async (req, res, next) => {
-    console.log(req.header)
-    await Recipe.find
-
-    ()
+    await Recipe.find()
         .then(recipes => {
             res.status(200).send(recipes
             )
@@ -35,18 +31,15 @@ exports.getAllRecipes = (async (req, res, next) => {
         })
 });
 exports.findRecipe = async (req, res, next) => {
-    console.log('helo' + req.params.id)
     var mongoose = require('mongoose');
     var id = mongoose.Types.ObjectId(req.params.id);
     await Recipe.findOne({_id: id}, function (err, recipe) {
         if (err || recipe === null) {
-            console.log(recipe)
             return res.send({
                 'status': 401,
                 'message': 'recipe not found'
             })
         } else {
-            console.log(recipe)
             Users.findOne({email: recipe.user.email}, function (err, userSchema) {
                 if (err) {
                     console.log(err)
@@ -56,7 +49,6 @@ exports.findRecipe = async (req, res, next) => {
                     });
                 }
                 if (userSchema) {
-                    console.log(userSchema)
                     recipe.user = userSchema;
                     recipe.viewCount++;
                     recipe.save((function (err) {
@@ -99,8 +91,6 @@ exports.createRecipe = (req, res) => {
         foodType: req.body.recipe.foodType,
         cookWay: req.body.recipe.cookWay,
     })
-    console.log(req.body.recipe.cockStep)
-    console.log(req.body.cockStep)
     const user = req.body.recipe.user;
     Users.findOne({email: user}, function (err, userSchema) {
         if (err) {
@@ -161,18 +151,15 @@ exports.createRecipe = (req, res) => {
 
 }
 exports.acceptRecipe = async (req, res, next) => {
-    console.log('helo' + req.body.recipe._id)
     var mongoose = require('mongoose');
     var id = mongoose.Types.ObjectId(req.body.recipe._id);
     await Recipe.findOne({_id: id}, function (err, recipe) {
         if (err || recipe === null) {
-            console.log(recipe)
             return res.send({
                 'status': 401,
                 'message': 'user not found'
             })
         } else {
-            console.log(recipe)
             recipe.status = 1;
             recipe.save((function (err) {
                 if (err) {
@@ -184,7 +171,7 @@ exports.acceptRecipe = async (req, res, next) => {
                     const message = new Messages({
                         user: recipe.user.email,
                         imageUrl: '',
-                        content: 'Chúc mừng bạn đã được duyệt công thức '+recipe.recipeName,
+                        content: 'Chúc mừng bạn đã được duyệt công thức ' + recipe.recipeName,
                         videoUrl: '',
                     })
                     message.save().then(message => {
@@ -206,18 +193,15 @@ exports.acceptRecipe = async (req, res, next) => {
     })
 }
 exports.declineRecipe = async (req, res, next) => {
-    console.log('helo' + req.body.recipe._id)
     var mongoose = require('mongoose');
     var id = mongoose.Types.ObjectId(req.body.recipe._id);
     await Recipe.findOne({_id: id}, function (err, recipe) {
         if (err || recipe === null) {
-            console.log(recipe)
             return res.send({
                 'status': 401,
                 'message': 'user not found'
             })
         } else {
-            console.log(recipe)
             recipe.status = -1;
             recipe.save((function (err) {
                 if (err) {
@@ -229,7 +213,7 @@ exports.declineRecipe = async (req, res, next) => {
                     const message = new Messages({
                         user: recipe.user.email,
                         imageUrl: '',
-                        content: 'Công thức '+recipe.recipeName+' đã bị từ chối',
+                        content: 'Công thức ' + recipe.recipeName + ' đã bị từ chối',
                         videoUrl: '',
                     })
                     message.save().then(message => {
