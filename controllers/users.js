@@ -116,6 +116,7 @@ exports.login =
     (auth.optional,
         (req, res, next) => {
             var user = {
+                name: req.body.user.user,
                 email: req.body.user.email,
                 password: req.body.user.password
             };
