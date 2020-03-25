@@ -3,7 +3,7 @@ const passport = require("passport");
 const auth = require("../routers/auth");
 const Users = mongoose.model("Users");
 const Tokens = require("../models/Token");
-const  nodeMailer = require('nodemailer');
+const nodeMailer = require('nodemailer');
 //POST new user route (optional, everyone has access)
 
 exports.create =
@@ -21,14 +21,14 @@ exports.create =
             Users.findOne({email: user.email}, function (err, users) {
                 if (users !== null) {
                     return res.send({
-                        status:422,
+                        status: 422,
                         message: "Email đã tồn tại trong hệ thống. Vui lòng chọn email khác"
 
                     });
-                }else{
+                } else {
                     if (!user.email) {
                         return res.status(422).send({
-                            status:422,
+                            status: 422,
                             message:
                                 "email is required"
 
@@ -37,7 +37,7 @@ exports.create =
 
                     if (!user.password) {
                         return res.status(423).send({
-                            status:422,
+                            status: 422,
                             message:
                                 "Password không được để trống"
 
@@ -72,7 +72,7 @@ exports.create =
                     });
                     return finalUser.save().then(() =>
                         res.status(200).send({
-                            message:'Chúc mừng bạn đăng ký tài khoản thành công. Vui lòng check mail',
+                            message: 'Chúc mừng bạn đăng ký tài khoản thành công. Vui lòng check mail',
                             status: 200,
                             user: finalUser.toAuthJSON()
                         })
@@ -82,7 +82,7 @@ exports.create =
         });
 
 exports.testEmail = (req, res, next) => {
-    if(req.body.email!==undefined||req.body.email!==''){
+    if (req.body.email !== undefined || req.body.email !== '') {
         Users.findOne({email: req.body.email}, function (err, userSchema) {
             if (err) {
                 return res.send({
@@ -103,7 +103,7 @@ exports.testEmail = (req, res, next) => {
                 });
             }
         });
-    }else{
+    } else {
         return res.send({
             status: 401,
             message: 'email not found'
@@ -154,13 +154,13 @@ exports.login =
                         message: "Username or password invalid"
                     });
                 }
-                if (userSchema.role<-1) {
+                if (userSchema.role < -1) {
                     return res.send({
                         status: 403,
                         message: "Tài khoản của bạn đã bị khóa!"
                     });
                 }
-                if (userSchema.role<0) {
+                if (userSchema.role < 0) {
                     return res.send({
                         status: 403,
                         message: "Username chưa xác thực email"
@@ -173,12 +173,12 @@ exports.login =
                     const finalUser = new Tokens({
                         email: userSchema.email
                     });
-                    if(userSchema.imageUrl=== undefined){
-                        userSchema.imageUrl='jbiajl3qqdzshdw0z749'
+                    if (userSchema.imageUrl === undefined) {
+                        userSchema.imageUrl = 'jbiajl3qqdzshdw0z749'
                     }
-                    role=userSchema.role;
-                    if(role===0){
-                        role='';
+                    role = userSchema.role;
+                    if (role === 0) {
+                        role = '';
                     }
                     finalUser.token = user.token;
                     finalUser.save().then(() => console.log("save token thanh cong"));
@@ -187,7 +187,7 @@ exports.login =
                         status: 200,
                         user: user.toAuthJSON(),
                         role: role,
-                        image:userSchema.imageUrl
+                        image: userSchema.imageUrl
                     });
                 } else {
                     return res.send({
@@ -314,11 +314,11 @@ exports.updateRole = async (req, res, next) => {
             })
         } else {
             console.log(user)
-            user.role=req.body.user.role;
-            if(user.role===0){
-                user.warningReport=0;
-            }else{
-                user.warningReport=user.role;
+            user.role = req.body.user.role;
+            if (user.role === 0) {
+                user.warningReport = 0;
+            } else {
+                user.warningReport = user.role;
             }
             user.save((function (err) {
                 if (err) {
@@ -328,8 +328,8 @@ exports.updateRole = async (req, res, next) => {
                     });
                 } else {
                     return res.status(200).send({
-                        status:200,
-                        user:user
+                        status: 200,
+                        user: user
                     });
                 }
             }));
@@ -359,8 +359,8 @@ exports.updateReport = async (req, res, next) => {
                     });
                 } else {
                     return res.status(200).send({
-                        status:200,
-                        user:user
+                        status: 200,
+                        user: user
                     });
                 }
             }));
@@ -380,7 +380,7 @@ exports.bannedUser = async (req, res, next) => {
             })
         } else {
             console.log(user)
-            user.status=-2;
+            user.status = -2;
             user.save((function (err) {
                 if (err) {
                     return res.send({
@@ -414,8 +414,8 @@ exports.bannedUser = async (req, res, next) => {
                         console.log('Message %s sent: %s', info.messageId, info.response);
                     });
                     return res.status(200).send({
-                        status:200,
-                        user:user
+                        status: 200,
+                        user: user
                     });
                 }
             }));
@@ -435,8 +435,8 @@ exports.activeMember = async (req, res, next) => {
             })
         } else {
             console.log(user)
-            user.role=0;
-            user.status=1;
+            user.role = 0;
+            user.status = 1;
             user.save((function (err) {
                 if (err) {
                     return res.send({
@@ -475,9 +475,26 @@ exports.activeMember = async (req, res, next) => {
         }
     })
 }
+exports.getMemerInfo = async (req, res, next) => {
+    console.log('helo' + req.params.id)
+    var mongoose = require('mongoose');
+    var id = mongoose.Types.ObjectId(req.params.id);
+    await Users.findOne({_id: id}, function (err, user) {
+        if (err || user === null) {
+            console.log(user)
+            return res.send({
+                'status': 401,
+                'message': 'user not found'
+            })
+        } else {
+            return res.status(200).send(user);
+
+        }
+    })
+}
 exports.getTopUsers = (async (req, res, next) => {
     await Users.find()
-        .sort({totalPoint:-1})
+        .sort({totalPoint: -1})
         .limit(10)
         .then(users => {
             res.status(200).send(users

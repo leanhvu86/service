@@ -90,4 +90,5 @@ module.exports = app => {
   app.get("/logout", users.logout);
   app.get("/getTopUsers",users.getTopUsers);
   app.get('/active/:id', users.activeMember)
+  app.get('/getMemerInfo/:id', users.getMemerInfo)
 };
