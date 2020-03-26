@@ -20,7 +20,7 @@ exports.getInterests = (async (req, res, next) => {
 exports.findInterest = async (req, res, next) => {
 
     console.log(req.body)
-    await Interests.findOne({user: req.body.user}, function (err, interests) {
+    await Interests.find({user: req.body.user.email}, function (err, interests) {
         if (err) {
             console.log(err);
             return res.send({
@@ -29,22 +29,24 @@ exports.findInterest = async (req, res, next) => {
             })
         } else {
             console.log(interests)
-            res.status(200).send(interests
+            res.status(200).send({interests:interests}
             )
         }
     })
 }
 exports.createInterest = (req, res) => {
     const interest = new Interests({
-        user: req.body.interest.objectId.user.email,
-        objectId: req.body.interest.objectId,
-        objectType: req.body.interest.objectType
+        user: req.body.object.user,
+        objectId: req.body.object.objectId,
+        objectType: req.body.object.objectType
     })
-
+    var mongoose = require('mongoose');
+    let id = mongoose.Types.ObjectId(req.body.object.objectId._id);
+    console.log(req.body.object)
     interest.save()
         .then(data => {
-            Recipe.findOne({id: req.body.interest.objectId.id}, function (err, recipe) {
-                if (err) {
+            Recipe.findOne({_id: id}, function (err, recipe) {
+                if (err && recipe == null) {
                     console.log(err);
                     return res.send({
                         'status': 401,
@@ -78,10 +80,13 @@ exports.createInterest = (req, res) => {
 exports.deleteInterest = (auth.optional,
     (req, res, next) => {
         const interest = new Interests({
-            user: req.body.interest.objectId.user.email,
-            objectId: req.body.interest.objectId,
-            objectType: req.body.interest.objectType
+            user: req.body.object.user,
+            objectId: req.body.object.objectId,
+            objectType: req.body.object.objectType
         })
+        var mongoose = require('mongoose');
+        let id = mongoose.Types.ObjectId(req.body.object.objectId._id);
+        console.log(req.body.object)
         Interests.find({user: interest.user})
             .then((interests) => {
                 if (!interests) {
@@ -100,15 +105,15 @@ exports.deleteInterest = (auth.optional,
                                     message: "lỗi xóa lượt ưu thích"
                                 });
                             } else {
-                                Recipe.findOne({id: req.body.interest.objectId.id}, function (err, recipe) {
-                                    if (err) {
+                                Recipe.findOne({_id: id}, function (err, recipe) {
+                                    if (err && recipe == null) {
                                         console.log(err);
                                         return res.send({
                                             'status': 401,
                                             'message': 'recipe not found'
                                         })
                                     } else {
-                                        recipe.totalPoint--;
+                                        recipe.totalPoint = recipe.totalPoint - 1;
                                         recipe.save((function (err) {
                                             if (err) {
                                                 return res.send({
@@ -123,7 +128,8 @@ exports.deleteInterest = (auth.optional,
                             }
                         });
                     }
-                }return res.send({
+                }
+                return res.send({
                     result: 'true',
                     status: 200,
                     message: "xóa điểm thành công"

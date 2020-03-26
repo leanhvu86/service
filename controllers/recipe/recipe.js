@@ -58,6 +58,7 @@ exports.findRecipe = async (req, res, next) => {
                                 message: "Error"
                             });
                         } else {
+                            console.log(recipe)
                             return res.status(200).send({
                                 status: 200,
                                 recipe: recipe

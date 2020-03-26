@@ -60,7 +60,7 @@ exports.createComment = (req, res) => {
     });
     comment.save()
         .then(data => {
-            Recipe.findOne({id: req.body.comment.recipe.id}, function (err, recipe) {
+            Recipe.findOne({_id: req.body.comment.recipe._id}, function (err, recipe) {
                 if (err) {
                     console.log(err);
                     return res.send({
@@ -115,10 +115,10 @@ exports.deleteComment= (auth.optional,
                                 console.log(err);
                                 return res.send({
                                     status: 401,
-                                    message: "lỗi xóa lượt ưu thích"
+                                    message: "lỗi xóa comment"
                                 });
                             } else {
-                                Recipe.findOne({id: req.body.comment.recipe .id}, function (err, recipe) {
+                                Recipe.findOne({_id: req.body.comment.recipe._id}, function (err, recipe) {
                                     if (err) {
                                         console.log(err);
                                         return res.send({
@@ -137,7 +137,7 @@ exports.deleteComment= (auth.optional,
                                                 return res.send({
                                                     recipe: recipe,
                                                     status: 200,
-                                                    message: "xóa điểm thành công"
+                                                    message: "xóa comment thành công"
                                                 });
                                             }
                                         }));
