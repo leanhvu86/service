@@ -265,7 +265,7 @@ exports.removePoint = (req, res, next) => {
                     userSchema.totalPoint--;
                     console.log(userSchema.totalPoint);
                 } else {
-                    return res.send({
+                     res.send({
                         status: 401,
                         message: "Sorry đã hết điểm để trừ rồi bạn ạ"
                     });
@@ -273,12 +273,12 @@ exports.removePoint = (req, res, next) => {
                 userSchema.save((function (err) {
                     if (err) {
                         console.log(err);
-                        return res.send({
+                         res.send({
                             status: 401,
                             message: "Error"
                         });
                     } else {
-                        return res.send({
+                         res.send({
                             status: 200,
                             message: "Trừ điểm thành công"
                         });

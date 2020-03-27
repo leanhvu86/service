@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const auth = require("../../routers/auth");
 const Interests = mongoose.model('Interests');
 const Recipe = mongoose.model('Recipes');
+const Gallery = mongoose.model('Gallerys');
 exports.getInterests = (async (req, res, next) => {
 
     await Interests.find()
@@ -45,32 +46,62 @@ exports.createInterest = (req, res) => {
     console.log(req.body.object)
     interest.save()
         .then(data => {
-            Recipe.findOne({_id: id}, function (err, recipe) {
-                if (err && recipe == null) {
-                    console.log(err);
-                    return res.send({
-                        'status': 401,
-                        'message': 'recipe not found'
-                    })
-                } else {
-                    recipe.totalPoint++;
-                    recipe.save((function (err) {
-                        if (err) {
-                            console.log(err);
-                            return res.send({
-                                status: 401,
-                                message: "Error"
-                            });
-                        } else {
-                            return res.send({
-                                recipe: recipe,
-                                status: 200,
-                                message: "Thêm điểm thành công"
-                            });
-                        }
-                    }));
-                }
-            })
+            if(req.body.object.objectType=='2'){
+                Recipe.findOne({_id: id}, function (err, recipe) {
+                    if (err && recipe == null) {
+                        console.log(err);
+                        return res.send({
+                            'status': 401,
+                            'message': 'recipe not found'
+                        })
+                    } else {
+                        recipe.totalPoint++;
+                        recipe.save((function (err) {
+                            if (err) {
+                                console.log(err);
+                                return res.send({
+                                    status: 401,
+                                    message: "Error"
+                                });
+                            } else {
+                                return res.send({
+                                    recipe: recipe,
+                                    status: 200,
+                                    message: "like công thức thành công"
+                                });
+                            }
+                        }));
+                    }
+                })
+            }else{
+                Gallery.findOne({_id: id}, function (err, gallery) {
+                    if (err && gallery == null) {
+                        console.log(err);
+                        return res.send({
+                            'status': 401,
+                            'message': 'recipe not found'
+                        })
+                    } else {
+                        gallery.totalPoint++;
+                        gallery.save((function (err) {
+                            if (err) {
+                                console.log(err);
+                                return res.send({
+                                    status: 401,
+                                    message: "Error"
+                                });
+                            } else {
+                                return res.send({
+                                    recipe: gallery,
+                                    status: 200,
+                                    message: "like bộ sưu tập thành công"
+                                });
+                            }
+                        }));
+                    }
+                })
+            }
+
         }).catch(err => {
         res.status(500).send({
             message: err.message || 'Some error occurred while creating the note'
@@ -104,7 +135,8 @@ exports.deleteInterest = (auth.optional,
                                     status: 401,
                                     message: "lỗi xóa lượt ưu thích"
                                 });
-                            } else {
+                            }
+                            if(req.body.object.objectType==='2'){
                                 Recipe.findOne({_id: id}, function (err, recipe) {
                                     if (err && recipe == null) {
                                         console.log(err);
@@ -125,6 +157,27 @@ exports.deleteInterest = (auth.optional,
                                     }
                                 })
 
+                            }else{
+                                Gallery.findOne({_id: id}, function (err, gallery) {
+                                    if (err && gallery == null) {
+                                        console.log(err);
+                                        return res.send({
+                                            'status': 401,
+                                            'message': 'recipe not found'
+                                        })
+                                    } else {
+                                        gallery.totalPoint--;
+                                        gallery.save((function (err) {
+                                            if (err) {
+                                                console.log(err);
+                                                return res.send({
+                                                    status: 401,
+                                                    message: "Error"
+                                                });
+                                            } 
+                                        }));
+                                    }
+                                })
                             }
                         });
                     }
