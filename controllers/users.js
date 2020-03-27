@@ -6,6 +6,54 @@ const Tokens = require("../models/Token");
 const nodeMailer = require('nodemailer');
 //POST new user route (optional, everyone has access)
 
+exports.updateUser = async (req, res, next) => {
+    console.log('helo' + req.body.user.id)
+    var mongoose = require('mongoose');
+    var userObject = {
+        email: req.body.user.email,
+        name: req.body.user.name,
+        lastName: req.body.user.lastName,
+        birthday: req.body.user.birthday,
+        gender: req.body.user.gender,
+        materialStatus: req.body.user.materialStatus,
+        signature: req.body.user.signature,
+        introduction: req.body.user.introduction,
+    };
+    var id = mongoose.Types.ObjectId(req.body.user.id);
+    await Users.findOne({_id: id}, function (err, user) {
+        if (err || user === null) {
+            console.log(user)
+            return res.send({
+                'status': 401,
+                'message': 'user not found'
+            })
+        } else {
+            console.log(user)
+                user.email = userObject.email,
+                user.name = userObject.name,
+                user.lastName = userObject.lastName,
+                user.birthday = userObject.birthday,
+                user.gender = userObject.gender,
+                user.materialStatus = userObject.materialStatus,
+                user.signature = userObject.signature,
+                user.introduction = userObject.introduction,
+                user.save((function (err) {
+                    if (err) {
+                        return res.send({
+                            status: 401,
+                            message: "Error"
+                        });
+                    } else {
+                        return res.status(200).send({
+                            status: 200,
+                            user: user,
+                            message:'Update thông tin user thành công'
+                        });
+                    }
+                }));
+        }
+    })
+}
 exports.create =
     (auth.optional,
         (req, res, next) => {
@@ -265,7 +313,7 @@ exports.removePoint = (req, res, next) => {
                     userSchema.totalPoint--;
                     console.log(userSchema.totalPoint);
                 } else {
-                     res.send({
+                    res.send({
                         status: 401,
                         message: "Sorry đã hết điểm để trừ rồi bạn ạ"
                     });
@@ -273,12 +321,12 @@ exports.removePoint = (req, res, next) => {
                 userSchema.save((function (err) {
                     if (err) {
                         console.log(err);
-                         res.send({
+                        res.send({
                             status: 401,
                             message: "Error"
                         });
                     } else {
-                         res.send({
+                        res.send({
                             status: 200,
                             message: "Trừ điểm thành công"
                         });

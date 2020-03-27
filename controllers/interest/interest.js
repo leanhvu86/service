@@ -174,7 +174,7 @@ exports.deleteInterest = (auth.optional,
                                                     status: 401,
                                                     message: "Error"
                                                 });
-                                            } 
+                                            }
                                         }));
                                     }
                                 })

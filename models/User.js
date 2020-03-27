@@ -8,6 +8,12 @@ const { Schema } = mongoose;
 const UsersSchema = new Schema({
     email: String,
     name:String,
+    lastName:String,
+    birthday: String,
+    materialStatus:String,
+    signature:String,
+    introduction:String,
+    gender: { type: Number, default: 1},
     imageUrl:{type:String,default:'jbiajl3qqdzshdw0z749'},
     hash: String,
     salt: String,
