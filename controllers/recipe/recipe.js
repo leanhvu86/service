@@ -20,6 +20,8 @@ exports.getRecipes = (async (req, res, next) => {
 });
 exports.getAllRecipes = (async (req, res, next) => {
     await Recipe.find()
+        .sort({status:1})
+        .limit(100)
         .then(recipes => {
             res.status(200).send(recipes
             )
