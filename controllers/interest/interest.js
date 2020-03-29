@@ -19,9 +19,24 @@ exports.getInterests = (async (req, res, next) => {
 });
 
 exports.findInterest = async (req, res, next) => {
-
     console.log(req.body)
     await Interests.find({user: req.body.user.email}, function (err, interests) {
+        if (err) {
+            console.log(err);
+            return res.send({
+                'status': 401,
+                'message': 'interest not found'
+            })
+        } else {
+            console.log(interests)
+            res.status(200).send({interests:interests}
+            )
+        }
+    })
+}
+exports.findInterestGallery = async (req, res, next) => {
+    console.log(req.body)
+    await Interests.find({user: req.body.user.email, objectType: "2"}, function (err, interests) {
         if (err) {
             console.log(err);
             return res.send({

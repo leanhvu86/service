@@ -7,4 +7,5 @@ module.exports = app => {
   app.post("/dislikeRecipe",VerifyToken, interests.deleteInterest);
   app.get("/getInterest", interests.getInterests);
   app.post("/findInterest", interests.findInterest);
+  app.post("/findInterestGallery", interests.findInterest)
 };
