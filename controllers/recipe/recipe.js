@@ -155,7 +155,7 @@ exports.createRecipe = (req, res) => {
 }
 exports.acceptRecipe = async (req, res, next) => {
     var mongoose = require('mongoose');
-    var id = mongoose.Types.ObjectId(req.body.recipe._id);
+    var id = mongoose.Types.ObjectId(req.body.recipe.recipe._id);
     await Recipe.findOne({_id: id}, function (err, recipe) {
         if (err || recipe === null) {
             return res.send({
@@ -163,41 +163,58 @@ exports.acceptRecipe = async (req, res, next) => {
                 'message': 'user not found'
             })
         } else {
-            recipe.status = 1;
-            recipe.save((function (err) {
+            Users.findOne({email: req.body.recipe.email}, function (err, userSchema) {
                 if (err) {
                     return res.send({
                         status: 401,
-                        message: "Error"
+                        message: err
                     });
-                } else {
-                    const message = new Messages({
-                        user: recipe.user.email,
-                        imageUrl: '',
-                        content: 'Chúc mừng bạn đã được duyệt công thức ' + recipe.recipeName,
-                        videoUrl: '',
-                    })
-                    message.save().then(message => {
-                        return res.status(200).send({
-                            status: 200,
-                            message: 'Bạn đã duyệt công thức thành công',
-                            recipe: recipe
-                        });
-                    }).catch(err => {
-                        console.log('not found recipe');
-                        res.send({
-                            'status': 404,
-                            'message': err.message || 'Some error occurred while finding recipe'
-                        })
-                    })
                 }
-            }));
+                if (userSchema) {
+                    recipe.updateUser=userSchema
+                    recipe.status = 1;
+                    recipe.save((function (err) {
+                        if (err) {
+                            return res.send({
+                                status: 401,
+                                message: "Error"
+                            });
+                        } else {
+                            const message = new Messages({
+                                user: recipe.user.email,
+                                imageUrl: '',
+                                content: 'Chúc mừng bạn đã được duyệt công thức ' + recipe.recipeName,
+                                videoUrl: '',
+                            })
+                            message.save().then(message => {
+                                return res.status(200).send({
+                                    status: 200,
+                                    message: 'Bạn đã duyệt công thức thành công',
+                                    recipe: recipe
+                                });
+                            }).catch(err => {
+                                console.log('not found recipe');
+                                res.send({
+                                    'status': 404,
+                                    'message': err.message || 'Some error occurred while finding recipe'
+                                })
+                            })
+                        }
+                    }));
+                } else {
+                    return res.send({
+                        status: 403,
+                        message: err
+                    });
+                }
+            });
         }
     })
 }
 exports.declineRecipe = async (req, res, next) => {
     var mongoose = require('mongoose');
-    var id = mongoose.Types.ObjectId(req.body.recipe._id);
+    console.log(req.body.recipe)
+    var id = mongoose.Types.ObjectId(req.body.recipe.recipe._id);
     await Recipe.findOne({_id: id}, function (err, recipe) {
         if (err || recipe === null) {
             return res.send({
@@ -205,36 +222,52 @@ exports.declineRecipe = async (req, res, next) => {
                 'message': 'user not found'
             })
         } else {
-            recipe.status = -1;
-            recipe.save((function (err) {
+            Users.findOne({email: req.body.recipe.email}, function (err, userSchema) {
                 if (err) {
                     return res.send({
                         status: 401,
-                        message: "Error"
+                        message: err
                     });
-                } else {
-                    const message = new Messages({
-                        user: recipe.user.email,
-                        imageUrl: '',
-                        content: 'Công thức ' + recipe.recipeName + ' đã bị từ chối',
-                        videoUrl: '',
-                    })
-                    message.save().then(message => {
-                        return res.status(200).send({
-                            status: 200,
-                            message: 'Bạn đã từ chối công thức này',
-                            recipe: recipe
-                        });
-                    }).catch(err => {
-                        console.log('not found recipe');
-                        res.send({
-                            'status': 404,
-                            'message': err.message || 'Some error occurred while finding recipe'
-                        })
-                    })
-
                 }
-            }));
+                if (userSchema) {
+                    recipe.updateUser= userSchema
+                    recipe.status = -1;
+                    recipe.save((function (err) {
+                        if (err) {
+                            return res.send({
+                                status: 401,
+                                message: "Error"
+                            });
+                        } else {
+                            const message = new Messages({
+                                user: recipe.user.email,
+                                imageUrl: '',
+                                content: 'Công thức ' + recipe.recipeName + ' đã bị từ chối',
+                                videoUrl: '',
+                            })
+                            message.save().then(message => {
+                                return res.send({
+                                    status: 200,
+                                    message: 'Bạn đã từ chối công thức này',
+                                    recipe: recipe
+                                });
+                            }).catch(err => {
+                                console.log('not found recipe');
+                                res.send({
+                                    'status': 404,
+                                    'message': err.message || 'Some error occurred while finding recipe'
+                                })
+                            })
+
+                        }
+                    }));
+                } else {
+                    return res.send({
+                        status: 403,
+                        message: 'Không tìm thấy user đăng nhập! '
+                    });
+                }
+            });
         }
     })
 }
