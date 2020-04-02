@@ -18,6 +18,7 @@ exports.updateUser = async (req, res, next) => {
         materialStatus: req.body.user.materialStatus,
         signature: req.body.user.signature,
         introduction: req.body.user.introduction,
+        imageUrl: req.body.user.imageUrl,
     };
     var id = mongoose.Types.ObjectId(req.body.user.id);
     await Users.findOne({_id: id}, function (err, user) {
@@ -29,7 +30,7 @@ exports.updateUser = async (req, res, next) => {
             })
         } else {
             console.log(user)
-                user.email = userObject.email,
+            user.email = userObject.email,
                 user.name = userObject.name,
                 user.lastName = userObject.lastName,
                 user.birthday = userObject.birthday,
@@ -37,20 +38,21 @@ exports.updateUser = async (req, res, next) => {
                 user.materialStatus = userObject.materialStatus,
                 user.signature = userObject.signature,
                 user.introduction = userObject.introduction,
-                user.save((function (err) {
-                    if (err) {
-                        return res.send({
-                            status: 401,
-                            message: "Error"
-                        });
-                    } else {
-                        return res.status(200).send({
-                            status: 200,
-                            user: user,
-                            message:'Update thông tin user thành công'
-                        });
-                    }
-                }));
+                user.imageUrl = userObject.imageUrl
+            user.save((function (err) {
+                if (err) {
+                    return res.send({
+                        status: 401,
+                        message: "Error"
+                    });
+                } else {
+                    return res.status(200).send({
+                        status: 200,
+                        user: user,
+                        message: 'Update thông tin user thành công'
+                    });
+                }
+            }));
         }
     })
 }
