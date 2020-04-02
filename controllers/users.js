@@ -4,12 +4,15 @@ const auth = require("../routers/auth");
 const Users = mongoose.model("Users");
 const Tokens = require("../models/Token");
 const nodeMailer = require('nodemailer');
+const Recipe= require("../models/recipe")
+const Gallery= require("../models/gallery")
 //POST new user route (optional, everyone has access)
 
 exports.updateUser = async (req, res, next) => {
     console.log('helo' + req.body.user.id)
     var mongoose = require('mongoose');
     var userObject = {
+        _id:"",
         email: req.body.user.email,
         name: req.body.user.name,
         lastName: req.body.user.lastName,
@@ -38,21 +41,60 @@ exports.updateUser = async (req, res, next) => {
                 user.materialStatus = userObject.materialStatus,
                 user.signature = userObject.signature,
                 user.introduction = userObject.introduction,
-                user.imageUrl = userObject.imageUrl
-            user.save((function (err) {
-                if (err) {
-                    return res.send({
-                        status: 401,
-                        message: "Error"
-                    });
-                } else {
-                    return res.status(200).send({
-                        status: 200,
-                        user: user,
-                        message: 'Update thông tin user thành công'
-                    });
-                }
-            }));
+                user.imageUrl = userObject.imageUrl,
+                user.save((function (err) {
+                    if (err) {
+                        return res.send({
+                            status: 401,
+                            message: "Error"
+                        });
+                    } else {
+                        return res.status(200).send({
+                            status: 200,
+                            user: user,
+                            message: 'Update thông tin user thành công'
+                        });
+                    }
+                }));
+            Recipe.find()
+                .sort({status:1})
+                .limit(100)
+                .then(recipes => {
+                    recipes.forEach(recipe=>{
+                        console.log(recipe.name)
+                        if(recipe.user.email===userObject.email){
+                            console.log('update công thức'+ recipe.name)
+                            recipe.user=user
+                            recipe.save((function (err) {
+                                if (err) {
+                                    console.log('update công thức thất bại'+ recipe.name)
+                                } else {
+                                    console.log('update công thức thành công'+ recipe.name)
+                                }
+                            }));
+                        }
+                   })
+                }).catch(err => {
+               console.log('lỗi khi update ảnh recipe')
+            })
+            Gallery.find()
+                .then(gallerys=>{
+                    gallerys.forEach(gallery=>{
+                        if(gallery.user.email===userObject.email){
+                            gallery.user=user
+                            gallery.save((function (err) {
+                                if (err) {
+                                    console.log('update bộ sưu tập thất bại'+ gallery.name)
+                                } else {
+                                    console.log('update bộ sưu tập thành công'+ gallery.name)
+                                }
+                            }));
+                        }
+                    })
+
+                }).catch(err => {
+                console.log('lỗi khi update ảnh recipe')
+            })
         }
     })
 }
