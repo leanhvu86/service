@@ -5,6 +5,6 @@ module.exports = app => {
   app.post("/addComment", VerifyToken,comments.createComment);
 
   app.post("/removeComment",VerifyToken, comments.deleteComment);
-  app.get("/getComment", comments.getComments);
+  app.get("/getComments", comments.getComments);
   app.get("/findComment", comments.findComment);
 };

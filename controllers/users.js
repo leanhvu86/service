@@ -142,12 +142,12 @@ exports.create =
                         port: 465,
                         secure: true,
                         auth: {
-                            user: 'leanhvu86@gmail.com',
-                            pass: 'leanhvu123'
+                            user: 'amthuc.anchay.2020@gmail.com',
+                            pass: 'Colenvuoi1@'
                         }
                     });
                     let mailOptions = {
-                        from: 'Ban quản trị website Ẩm thực ăn chay <leanhvu86@gmail.com>', // sender address
+                        from: 'Ban quản trị website Ẩm thực ăn chay <amthuc.anchay.2020@gmail.com>', // sender address
                         to: user.email, // list of receivers
                         subject: 'Chào mừng đến trang web Ẩm thực Ăn chay', // Subject line
                         text: req.body.body, // plain text body
@@ -169,6 +169,58 @@ exports.create =
                             user: finalUser.toAuthJSON()
                         })
                     );
+                }
+            });
+        });
+
+exports.changePassword =
+    (auth.optional,
+        (req, res, next) => {
+            var user = {
+                email: req.body.user.email,
+                password: req.body.user.password
+            };
+            console.log(user.email)
+            Users.findOne({email: user.email}, function (err, users) {
+                if (users !== null) {
+                    users.setPassword(user.password);
+                    let transporter = nodeMailer.createTransport({
+                        host: 'smtp.gmail.com',
+                        port: 465,
+                        secure: true,
+                        auth: {
+                            user: 'amthuc.anchay.2020@gmail.com',
+                            pass: 'Colenvuoi1@'
+                        }
+                    });
+                    let mailOptions = {
+                        from: 'Ban quản trị website Ẩm thực ăn chay <amthuc.anchay.2020@gmail.com>', // sender address
+                        to: user.email, // list of receivers
+                        subject: 'Mật khẩu thay đổi', // Subject line
+                        text: req.body.body, // plain text body
+                        html: 'Bạn đã yêu cầu thay đổi mật khẩu. ' +
+                            '<br> Vui lòng không tiết lộ mật khẩu cho bất kì ai:' +
+                            '<br> Mật khẩu mới của bạn là' + user.password
+                        // html body
+                    };
+
+                    transporter.sendMail(mailOptions, (error, info) => {
+                        if (error) {
+                            return console.log(error);
+                        }
+                    });
+                    return users.save().then(() =>
+                        res.status(200).send({
+                            message: 'Chúc mừng bạn đổi mật khẩu tài khoản thành công. Vui lòng check mail',
+                            status: 200,
+                            user: users
+                        })
+                    );
+                }else {
+                    return res.send({
+                        status: 401,
+                        message: 'Không tìm thấy tài khoản đăng ký của bạn'
+                    });
                 }
             });
         });
@@ -486,12 +538,12 @@ exports.bannedUser = async (req, res, next) => {
                         port: 465,
                         secure: true,
                         auth: {
-                            user: 'leanhvu86@gmail.com',
-                            pass: 'leanhvu123'
+                            user: 'amthuc.anchay.2020@gmail.com',
+                            pass: 'Colenvuoi1@'
                         }
                     });
                     let mailOptions = {
-                        from: 'Ban quản trị website Ẩm thực ăn chay <leanhvu86@gmail.com>', // sender address
+                        from: 'Ban quản trị website Ẩm thực ăn chay <amthuc.anchay.2020@gmail.com>', // sender address
                         to: user.email, // list of receivers
                         subject: 'Chào mừng đến trang web Ẩm thực Ăn chay', // Subject line
                         text: req.body.body, // plain text body
@@ -542,12 +594,12 @@ exports.activeMember = async (req, res, next) => {
                         port: 465,
                         secure: true,
                         auth: {
-                            user: 'leanhvu86@gmail.com',
-                            pass: 'leanhvu123'
+                            user: 'amthuc.anchay.2020@gmail.com',
+                            pass: 'Colenvuoi1@'
                         }
                     });
                     let mailOptions = {
-                        from: 'Ban quản trị website Ẩm thực ăn chay <leanhvu86@gmail.com>', // sender address
+                        from: 'Ban quản trị website Ẩm thực ăn chay <amthuc.anchay.2020@gmail.com>', // sender address
                         to: user.email, // list of receivers
                         subject: 'Chào mừng đến trang web Ẩm thực Ăn chay', // Subject line
                         text: req.body.body, // plain text body

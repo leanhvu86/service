@@ -19,7 +19,7 @@ exports.getComments = (async (req, res, next) => {
 });
 
 exports.findComment = async (req, res, next) => {
-    await Comments.findOne({user: req.body.user.email}, function (err, comments) {
+    await Comments.findOne({type: 1}, function (err, comments) {
         if (err) {
             console.log(err);
             return res.send({
@@ -40,17 +40,82 @@ exports.createComment = (req, res) => {
         recipe: req.body.comment.recipe,
         content: req.body.comment.content,
         imageUrl: req.body.comment.imageUrl,
-        type: req.body.comment.type
+        type: req.body.comment.type,
+        order:0,
     })
-    Users.findOne({email:req.body.comment.user}, function (err, userSchema) {
+    Users.findOne({email: req.body.comment.user}, function (err, userSchema) {
         if (err) {
             return res.send({
                 status: 401,
-                message: err
+                'message': err
             });
         }
         if (userSchema) {
-            comment.user=userSchema
+            Comments.find()
+                .then(commentChecks => {
+                let cmCheck = new Comments();
+                commentChecks.forEach(element => {
+                    if (element.recipe._id === comment.recipe._id && element.user.email === comment.user
+                        && element.content === comment.content && element.imageUrl === comment.imageUrl&& element.type===1) {
+                        cmCheck = element;
+                        console.log(element._id)
+                    }
+                    if(element.recipe._id===comment.recipe._id&&element.content!==''){
+                        comment.order++
+                    }
+                })
+                    const check=false;
+                if (cmCheck.user !== undefined) {
+                    console.log(cmCheck.user.toString())
+                    return res.send({
+                        'status': 205,
+                        'message': 'Bạn đã thực hiện công thức này'
+                    })
+                } else {
+                    comment.order++;
+                    console.log(cmCheck)
+                    comment.user = userSchema
+                    comment.save()
+                        .then(data => {
+                            Recipe.findOne({_id: req.body.comment.recipe._id}, function (err, recipe) {
+                                if (err) {
+                                    console.log(err);
+                                    return res.send({
+                                        'status': 401,
+                                        'message': 'không tìm thấy công thức'
+                                    })
+                                } else {
+                                    recipe.doneCount++;
+                                    recipe.save((function (err) {
+                                        if (err) {
+                                            console.log(err);
+                                            return res.send({
+                                                status: 401,
+                                                'message': "Error"
+                                            });
+                                        } else {
+                                            return res.send({
+                                                recipe: recipe,
+                                                comment: comment,
+                                                status: 200,
+                                                'message': "Thêm bình luận thành công"
+                                            });
+                                        }
+                                    }));
+                                }
+                            })
+                        }).catch(err => {
+                        res.status(500).send({
+                            'message': err.message || 'Some error occurred while creating the comment'
+                        })
+                    })
+                }
+            }).catch(err => {
+                res.send({
+                    'status': 205,
+                    'message': err.message || 'Some error occurred while creating the comment'
+                })
+            })
         } else {
             return res.send({
                 status: 403,
@@ -58,42 +123,9 @@ exports.createComment = (req, res) => {
             });
         }
     });
-    comment.save()
-        .then(data => {
-            Recipe.findOne({_id: req.body.comment.recipe._id}, function (err, recipe) {
-                if (err) {
-                    console.log(err);
-                    return res.send({
-                        'status': 401,
-                        'message': 'recipe not found'
-                    })
-                } else {
-                    recipe.doneCount++;
-                    recipe.save((function (err) {
-                        if (err) {
-                            console.log(err);
-                            return res.send({
-                                status: 401,
-                                message: "Error"
-                            });
-                        } else {
-                            return res.send({
-                                recipe: recipe,
-                                comment:comment,
-                                status: 200,
-                                message: "Thêm điểm thành công"
-                            });
-                        }
-                    }));
-                }
-            })
-        }).catch(err => {
-        res.status(500).send({
-            message: err.message || 'Some error occurred while creating the note'
-        })
-    })
+
 }
-exports.deleteComment= (auth.optional,
+exports.deleteComment = (auth.optional,
     (req, res, next) => {
         const comment = new Comments({
             user: req.body.comment.user.email,
