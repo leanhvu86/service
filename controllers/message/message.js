@@ -35,7 +35,10 @@ exports.findMessage = async (req, res, next) => {
                 message: messages
             })
         }
+    }).sort({
+        createdAt: -1
     })
+        .limit(10)
 }
 exports.createMessage = (req, res) => {
     const message = new Messages({

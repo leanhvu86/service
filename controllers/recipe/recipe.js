@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+const Summarys = mongoose.model('Summarys');
 const Recipe = mongoose.model('Recipes');
 const Users = mongoose.model("Users");
 const Messages = mongoose.model('Messages');
@@ -187,11 +188,30 @@ exports.acceptRecipe = async (req, res, next) => {
                                 videoUrl: '',
                             })
                             message.save().then(message => {
-                                return res.status(200).send({
-                                    status: 200,
-                                    message: 'Bạn đã duyệt công thức thành công',
-                                    recipe: recipe
-                                });
+                                Summarys.find()
+                                    .then(summary => {
+                                        let sum=summary[0]
+                                        console.log(sum)
+                                        sum.recipeCount++;
+                                        sum.save()
+                                            .then(data => {
+                                                return res.status(200).send({
+                                                    status: 200,
+                                                    message: 'Bạn đã duyệt công thức thành công',
+                                                    recipe: recipe
+                                                });
+                                            }).catch(err => {
+                                            res.status(500).send({
+                                                message: err.message || 'Some error occurred while creating the gallery'
+                                            })
+                                        })
+                                    }).catch(err => {
+                                    console.log(err);
+                                    res.send({
+                                        'status': 404,
+                                        'message': err.message || 'Some error occurred while finding summary'
+                                    })
+                                })
                             }).catch(err => {
                                 console.log('not found recipe');
                                 res.send({

@@ -3,6 +3,7 @@ const auth = require("../../routers/auth");
 const Gallery = mongoose.model('Gallerys');
 const Recipe = mongoose.model('Recipes');
 const Users = mongoose.model("Users");
+const Summarys = mongoose.model('Summarys');
 exports.getGallerys = (async (req, res, next) => {
 
     await Gallery.find()
@@ -119,11 +120,31 @@ exports.createGallery = (req, res) => {
             gallery.user = userSchema
             gallery.save()
                 .then(data => {
-                    return res.send({
-                        gallery: gallery,
-                        status: 200,
-                        message: "Thêm bộ sưu tập thành công"
-                    });
+                    Summarys.find()
+                        .then(summary => {
+                            let sum=summary[0]
+                            console.log(sum)
+                            sum.galleryCount++;
+                            sum.save()
+                                .then(data => {
+                                    return res.send({
+                                        summary:data,
+                                        gallery: gallery,
+                                        status: 200,
+                                        message: "Thêm bộ sưu tập thành công"
+                                    });
+                                }).catch(err => {
+                                res.status(500).send({
+                                    message: err.message || 'Some error occurred while creating the gallery'
+                                })
+                            })
+                        }).catch(err => {
+                        console.log(err);
+                        res.send({
+                            'status': 404,
+                            'message': err.message || 'Some error occurred while finding summary'
+                        })
+                    })
                 }).catch(err => {
                 res.status(500).send({
                     message: err.message || 'Some error occurred while creating the gallery'

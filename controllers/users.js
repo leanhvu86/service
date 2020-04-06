@@ -4,15 +4,17 @@ const auth = require("../routers/auth");
 const Users = mongoose.model("Users");
 const Tokens = require("../models/Token");
 const nodeMailer = require('nodemailer');
-const Recipe= require("../models/recipe")
-const Gallery= require("../models/gallery")
+const Recipe = require("../models/recipe")
+const Gallery = require("../models/gallery")
+const Summarys = mongoose.model('Summarys');
 //POST new user route (optional, everyone has access)
+const Messages = mongoose.model('Messages');
 
 exports.updateUser = async (req, res, next) => {
     console.log('helo' + req.body.user.id)
     var mongoose = require('mongoose');
     var userObject = {
-        _id:"",
+        _id: "",
         email: req.body.user.email,
         name: req.body.user.name,
         lastName: req.body.user.lastName,
@@ -52,41 +54,41 @@ exports.updateUser = async (req, res, next) => {
                         return res.status(200).send({
                             status: 200,
                             user: user,
-                            message: 'Update thông tin user thành công'
+                            message: 'Update thông tin tài khoản thành công'
                         });
                     }
                 }));
             Recipe.find()
-                .sort({status:1})
+                .sort({status: 1})
                 .limit(100)
                 .then(recipes => {
-                    recipes.forEach(recipe=>{
+                    recipes.forEach(recipe => {
                         console.log(recipe.name)
-                        if(recipe.user.email===userObject.email){
-                            console.log('update công thức'+ recipe.name)
-                            recipe.user=user
+                        if (recipe.user.email === userObject.email) {
+                            console.log('update công thức' + recipe.name)
+                            recipe.user = user
                             recipe.save((function (err) {
                                 if (err) {
-                                    console.log('update công thức thất bại'+ recipe.name)
+                                    console.log('update công thức thất bại' + recipe.name)
                                 } else {
-                                    console.log('update công thức thành công'+ recipe.name)
+                                    console.log('update công thức thành công' + recipe.name)
                                 }
                             }));
                         }
-                   })
+                    })
                 }).catch(err => {
-               console.log('lỗi khi update ảnh recipe')
+                console.log('lỗi khi update ảnh recipe')
             })
             Gallery.find()
-                .then(gallerys=>{
-                    gallerys.forEach(gallery=>{
-                        if(gallery.user.email===userObject.email){
-                            gallery.user=user
+                .then(gallerys => {
+                    gallerys.forEach(gallery => {
+                        if (gallery.user.email === userObject.email) {
+                            gallery.user = user
                             gallery.save((function (err) {
                                 if (err) {
-                                    console.log('update bộ sưu tập thất bại'+ gallery.name)
+                                    console.log('update bộ sưu tập thất bại' + gallery.name)
                                 } else {
-                                    console.log('update bộ sưu tập thành công'+ gallery.name)
+                                    console.log('update bộ sưu tập thành công' + gallery.name)
                                 }
                             }));
                         }
@@ -173,7 +175,7 @@ exports.create =
             });
         });
 
-exports.changePassword =
+exports.resetPassword =
     (auth.optional,
         (req, res, next) => {
             var user = {
@@ -216,7 +218,7 @@ exports.changePassword =
                             user: users
                         })
                     );
-                }else {
+                } else {
                     return res.send({
                         status: 401,
                         message: 'Không tìm thấy tài khoản đăng ký của bạn'
@@ -254,6 +256,54 @@ exports.testEmail = (req, res, next) => {
         });
     }
 
+};
+exports.changePassword = (req, res, next) => {
+    var user = {
+        email: req.body.user.user,
+        password: req.body.user.oldPassword,
+        newPassword: req.body.user.password,
+    };
+    Users.findOne({email: user.email}, function (err, userSchema) {
+        if (err) {
+            return res.send({
+                status: 401,
+                message: 'Tài khoản đăng nhập không tồn tại'
+            });
+        }
+        if (!userSchema.validatePassword(user.password)) {
+            return res.send({
+                status: 401,
+                message: "Mật khẩu đăng nhập không chính xác"
+            });
+        } else {
+            userSchema.setPassword(user.newPassword);
+            userSchema.save().then(data => {
+                const message = new Messages({
+                    user: user.email,
+                    imageUrl: '',
+                    content: 'Bạn đã thay đổi mật khẩu thành công',
+                    videoUrl: '',
+                })
+                message.save().then(message => {
+                    res.status(200).send({
+                        message: 'Bạn đã đổi mật khẩu thành công',
+                        status: 200,
+                        user: userSchema.toAuthJSON()
+                    })
+                }).catch(err => {
+                    res.send({
+                        'status': 404,
+                        'message': 'Bạn đổi mật khẩu thất bại'
+                    })
+                })
+
+            }).catch(err => {
+                res.status(500).send({
+                    message: 'Bạn đổi mật khẩu thất bại'
+                })
+            });
+        }
+    });
 };
 //POST login route (optional, everyone has access)
 exports.login =
@@ -328,12 +378,33 @@ exports.login =
                     finalUser.token = user.token;
                     finalUser.save().then(() => console.log("save token thanh cong"));
                     req.session.email = user.email;
-                    return res.send({
-                        status: 200,
-                        user: user.toAuthJSON(),
-                        role: role,
-                        image: userSchema.imageUrl
-                    });
+                    Summarys.find()
+                        .then(summary => {
+                            let sum = summary[0]
+                            console.log(sum)
+                            sum.loginCount++;
+                            sum.save()
+                                .then(data => {
+                                    return res.send({
+                                        status: 200,
+                                        user: user.toAuthJSON(),
+                                        role: role,
+                                        summary: data,
+                                        image: userSchema.imageUrl
+                                    });
+                                }).catch(err => {
+                                res.status(500).send({
+                                    message: err.message || 'Some error occurred while creating the gallery'
+                                })
+                            })
+                        }).catch(err => {
+                        console.log(err);
+                        res.send({
+                            'status': 404,
+                            'message': err.message || 'Some error occurred while finding summary'
+                        })
+                    })
+
                 } else {
                     return res.send({
                         status: 403,
@@ -614,7 +685,27 @@ exports.activeMember = async (req, res, next) => {
                         }
                         console.log('Message %s sent: %s', info.messageId, info.response);
                     });
-                    return res.status(200).send(user);
+                    Summarys.find()
+                        .then(summary => {
+                            let sum = summary[0]
+                            console.log(sum)
+                            sum.userCount++;
+                            sum.save()
+                                .then(data => {
+                                    console.log(data)
+                                    return res.status(200).send(user);
+                                }).catch(err => {
+                                res.status(500).send({
+                                    message: err.message || 'Some error occurred while creating the gallery'
+                                })
+                            })
+                        }).catch(err => {
+                        console.log(err);
+                        res.send({
+                            'status': 404,
+                            'message': err.message || 'Some error occurred while finding summary'
+                        })
+                    })
                 }
             }));
         }

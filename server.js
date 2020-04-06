@@ -27,7 +27,7 @@ require("./models/comment");
 require("./config/facebookconfig");
 require("./config/googleconfig");
 require("./models/message");
-
+require("./models/summary");
 global.__root   = __dirname + '/';
 //Configure isProduction variable
 
@@ -111,6 +111,7 @@ require("./routers/comment.router")(server);
 require("./routers/util.router")(server);
 require("./routers/message.router")(server);
 require("./routers/gallery.router")(server);
+require("./routers/summary.router")(server);
 if (!isProduction) {
     server.use(errorHandler());
 }
