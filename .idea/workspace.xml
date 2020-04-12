@@ -37,7 +37,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/routers" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../front-end" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
@@ -180,6 +180,11 @@
       <workItem from="1585850120601" duration="503000" />
       <workItem from="1585922359731" duration="2391000" />
       <workItem from="1586005709550" duration="13233000" />
+      <workItem from="1586354258903" duration="2635000" />
+      <workItem from="1586517804597" duration="710000" />
+      <workItem from="1586532714396" duration="2236000" />
+      <workItem from="1586619682638" duration="2872000" />
+      <workItem from="1586659037386" duration="7207000" />
     </task>
     <servers />
   </component>
@@ -191,18 +196,14 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="275" y="31" key="#Notifications/0.0.1366.738@0.0.1366.738" timestamp="1583379149493" />
-    <state x="137" y="24" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1578023806433">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state x="137" y="24" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.738@0.0.1366.738" timestamp="1578023806433" />
     <state x="426" y="179" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1579656389505">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="426" y="179" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.738@0.0.1366.738" timestamp="1579656389505" />
-    <state x="463" y="111" key="FileChooserDialogImpl" timestamp="1584055521421">
+    <state x="463" y="111" key="FileChooserDialogImpl" timestamp="1586664986628">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="463" y="111" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1584055521421" />
+    <state x="463" y="111" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1586664986628" />
     <state x="184" y="12" key="SettingsEditor" timestamp="1585850572429">
       <screen x="0" y="0" width="1366" height="738" />
     </state>

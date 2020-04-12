@@ -7,7 +7,8 @@ exports.getComments = (async (req, res, next) => {
 
     await Comments.find()
         .then(comments => {
-            res.status(200).send(comments
+            console.log(comments.length)
+            res.status(200).send({comments:comments}
             )
         }).catch(err => {
             console.log(err);

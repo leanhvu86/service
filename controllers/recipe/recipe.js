@@ -19,6 +19,25 @@ exports.getRecipes = (async (req, res, next) => {
             })
         })
 });
+exports.getNewRecipes = (async (req, res, next) => {
+    await Recipe.find({
+        status: {
+            $gt: -1
+        }
+    })
+        .sort({
+            createdAt: -1
+        })
+        .limit(10).then(recipes => {
+            res.status(200).send(recipes
+            )
+        }).catch(err => {
+            res.send({
+                'status': 404,
+                'message': err.message || 'Some error occurred while finding recipe'
+            })
+        })
+});
 exports.getAllRecipes = (async (req, res, next) => {
     await Recipe.find()
         .sort({status:1})

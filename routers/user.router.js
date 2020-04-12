@@ -92,6 +92,7 @@ module.exports = app => {
   app.post("/resetPassword", users.resetPassword);
   app.get("/logout", users.logout);
   app.get("/getTopUsers",users.getTopUsers);
+  app.get("/getNewUsers",users.getNewUsers);
   app.get('/active/:id', users.activeMember)
   app.get('/getMemerInfo/:id', users.getMemerInfo)
 };

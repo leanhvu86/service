@@ -176,7 +176,7 @@ exports.create =
         });
 
 exports.resetPassword =
-    (auth.optional,
+    (auth.optional, 
         (req, res, next) => {
             var user = {
                 email: req.body.user.email,
@@ -505,6 +505,25 @@ exports.removePoint = (req, res, next) => {
 };
 exports.getUsers = (async (req, res, next) => {
     await Users.find()
+        .then(users => {
+            res.status(200).send(users
+            )
+        }).catch(err => {
+            res.send({
+                'status': 404,
+                'message': err.message || 'Some error occurred while finding users'
+            })
+        })
+});
+
+exports.getNewUsers = (async (req, res, next) => {
+     Users.find({
+         role: {
+             $gte: 0
+         }
+     })
+        .sort({createdAt:-1})
+        .limit(10)
         .then(users => {
             res.status(200).send(users
             )
