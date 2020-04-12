@@ -44,10 +44,8 @@ exports.findGallery = async (req, res, next) => {
         } else {
             Gallery.find()
                 .then(gallerys => {
-                    console.log(userSchema.email)
                     gallerys = gallerys.filter(
                         gallery => gallery.user.email === userSchema.email);
-                    console.log(gallerys.length)
                     res.status(200).send({gallerys: gallerys}
                     )
                 }).catch(err => {
@@ -118,6 +116,32 @@ exports.galleryDetail = (req, res) => {
         });
     })
 }
+exports.updateGallery = (req, res) => {
+    var mongoose = require('mongoose');
+    var id = mongoose.Types.ObjectId(req.body.gallery._id);
+    console.log(id)
+    console.log(req.body.gallery.name)
+    console.log(req.body.gallery.content)
+    console.log(req.body.gallery.recipes.length)
+    Gallery.findOne({_id: id}, function (err, gallery) {
+        if (err) {
+            return res.send({
+                status: 401,
+                message: err
+            });
+        }
+        gallery.name=req.body.gallery.name
+        gallery.content=req.body.gallery.content
+        gallery.recipe=req.body.gallery.recipes
+        gallery.save()
+            .then(data=>{
+                return res.send({
+                    gallery: data,
+                    status: 200
+                });
+            })
+    })
+}
 exports.createGallery = (req, res) => {
     const gallery = new Gallery({
         user: req.body.gallery.user,
@@ -139,7 +163,6 @@ exports.createGallery = (req, res) => {
                     Summarys.find()
                         .then(summary => {
                             let sum = summary[0]
-                            console.log(sum)
                             sum.galleryCount++;
                             sum.save()
                                 .then(data => {

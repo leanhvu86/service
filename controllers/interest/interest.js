@@ -28,7 +28,6 @@ exports.findInterest = async (req, res, next) => {
                 'message': 'interest not found'
             })
         } else {
-            console.log(interests)
             res.status(200).send({interests:interests}
             )
         }
@@ -44,7 +43,6 @@ exports.findInterestGallery = async (req, res, next) => {
                 'message': 'interest not found'
             })
         } else {
-            console.log(interests)
             res.status(200).send({interests:interests}
             )
         }
