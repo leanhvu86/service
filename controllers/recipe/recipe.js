@@ -1,17 +1,16 @@
 const mongoose = require('mongoose');
-
 const Summarys = mongoose.model('Summarys');
 const Recipe = mongoose.model('Recipes');
 const Users = mongoose.model("Users");
 const Messages = mongoose.model('Messages');
-exports.getRecipes = (async (req, res, next) => {
+exports.getRecipes = (async (req, res) => {
     await Recipe.find
     ({
         status: 1
     })
         .then(recipes => {
             res.status(200).send(recipes
-            )
+            );
         }).catch(err => {
             res.send({
                 'status': 404,
@@ -19,7 +18,7 @@ exports.getRecipes = (async (req, res, next) => {
             })
         })
 });
-exports.getNewRecipes = (async (req, res, next) => {
+exports.getNewRecipes = (async (req, res) => {
     await Recipe.find({
         status: {
             $gt: -1
@@ -30,27 +29,27 @@ exports.getNewRecipes = (async (req, res, next) => {
         })
         .limit(10).then(recipes => {
             res.status(200).send(recipes
-            )
+            );
         }).catch(err => {
             res.send({
                 'status': 404,
                 'message': err.message || 'Some error occurred while finding recipe'
-            })
-        })
+            });
+        });
 });
-exports.getAllRecipes = (async (req, res, next) => {
+exports.getAllRecipes = (async (req, res) => {
     await Recipe.find()
-        .sort({status:1})
+        .sort({status: 1})
         .limit(100)
         .then(recipes => {
             res.status(200).send(recipes
-            )
+            );
         }).catch(err => {
             res.send({
                 'status': 404,
                 'message': err.message || 'Some error occurred while finding recipe'
-            })
-        })
+            });
+        });
 });
 exports.findRecipe = async (req, res, next) => {
     var mongoose = require('mongoose');
@@ -60,11 +59,11 @@ exports.findRecipe = async (req, res, next) => {
             return res.send({
                 'status': 401,
                 'message': 'recipe not found'
-            })
+            });
         } else {
             Users.findOne({email: recipe.user.email}, function (err, userSchema) {
                 if (err) {
-                    console.log(err)
+                    console.log(err);
                     return res.send({
                         status: 401,
                         message: err
@@ -80,7 +79,6 @@ exports.findRecipe = async (req, res, next) => {
                                 message: "Error"
                             });
                         } else {
-                            console.log(recipe)
                             return res.status(200).send({
                                 status: 200,
                                 recipe: recipe
@@ -96,7 +94,7 @@ exports.findRecipe = async (req, res, next) => {
             });
         }
     })
-}
+};
 
 
 exports.createRecipe = (req, res) => {
@@ -113,7 +111,7 @@ exports.createRecipe = (req, res) => {
         country: req.body.recipe.country,
         foodType: req.body.recipe.foodType,
         cookWay: req.body.recipe.cookWay,
-    })
+    });
     const user = req.body.recipe.user;
     Users.findOne({email: user}, function (err, userSchema) {
         if (err) {
@@ -134,29 +132,29 @@ exports.createRecipe = (req, res) => {
                             imageUrl: '',
                             content: 'Chúc mừng bạn đã thêm mới công thức thành công!',
                             videoUrl: '',
-                        })
-                        message.save().then(message => {
+                        });
+                        message.save().then(() => {
                             res.status(200).send({
                                 data: data,
                                 message: 'Chúc mừng bạn đã thêm mới công thức thành công!'
-                            })
+                            });
                         }).catch(err => {
                             console.log('not found recipe');
                             res.send({
                                 'status': 404,
                                 'message': err.message || 'Some error occurred while finding recipe'
-                            })
-                        })
+                            });
+                        });
                     }).catch(err => {
                     res.status(500).send({
                         message: err.message || 'Some error occurred while creating the note'
-                    })
-                })
+                    });
+                });
             }).catch(err => {
                 res.status(500).send({
                     message: err.message || 'Some error occurred while creating the note'
-                })
-            })
+                });
+            });
 
         } else {
             return res.send({
@@ -169,11 +167,11 @@ exports.createRecipe = (req, res) => {
         res.send({
             'status': 404,
             'message': err.message || 'Some error occurred while finding recipe'
-        })
-    })
+        });
+    });
 
-}
-exports.acceptRecipe = async (req, res, next) => {
+};
+exports.acceptRecipe = async (req, res) => {
     var mongoose = require('mongoose');
     var id = mongoose.Types.ObjectId(req.body.recipe.recipe._id);
     await Recipe.findOne({_id: id}, function (err, recipe) {
@@ -181,7 +179,7 @@ exports.acceptRecipe = async (req, res, next) => {
             return res.send({
                 'status': 401,
                 'message': 'user not found'
-            })
+            });
         } else {
             Users.findOne({email: req.body.recipe.email}, function (err, userSchema) {
                 if (err) {
@@ -191,7 +189,7 @@ exports.acceptRecipe = async (req, res, next) => {
                     });
                 }
                 if (userSchema) {
-                    recipe.updateUser=userSchema
+                    recipe.updateUser = userSchema;
                     recipe.status = 1;
                     recipe.save((function (err) {
                         if (err) {
@@ -205,12 +203,12 @@ exports.acceptRecipe = async (req, res, next) => {
                                 imageUrl: '',
                                 content: 'Chúc mừng bạn đã được duyệt công thức ' + recipe.recipeName,
                                 videoUrl: '',
-                            })
+                            });
                             message.save().then(message => {
                                 Summarys.find()
                                     .then(summary => {
-                                        let sum=summary[0]
-                                        console.log(sum)
+                                        let sum = summary[0];
+                                        console.log(sum);
                                         sum.recipeCount++;
                                         sum.save()
                                             .then(data => {
@@ -222,22 +220,22 @@ exports.acceptRecipe = async (req, res, next) => {
                                             }).catch(err => {
                                             res.status(500).send({
                                                 message: err.message || 'Some error occurred while creating the gallery'
-                                            })
-                                        })
+                                            });
+                                        });
                                     }).catch(err => {
                                     console.log(err);
                                     res.send({
                                         'status': 404,
                                         'message': err.message || 'Some error occurred while finding summary'
-                                    })
-                                })
+                                    });
+                                });
                             }).catch(err => {
                                 console.log('not found recipe');
                                 res.send({
                                     'status': 404,
                                     'message': err.message || 'Some error occurred while finding recipe'
-                                })
-                            })
+                                });
+                            });
                         }
                     }));
                 } else {
@@ -248,18 +246,17 @@ exports.acceptRecipe = async (req, res, next) => {
                 }
             });
         }
-    })
-}
-exports.declineRecipe = async (req, res, next) => {
+    });
+};
+exports.declineRecipe = async (req, res) => {
     var mongoose = require('mongoose');
-    console.log(req.body.recipe)
     var id = mongoose.Types.ObjectId(req.body.recipe.recipe._id);
     await Recipe.findOne({_id: id}, function (err, recipe) {
         if (err || recipe === null) {
             return res.send({
                 'status': 401,
                 'message': 'user not found'
-            })
+            });
         } else {
             Users.findOne({email: req.body.recipe.email}, function (err, userSchema) {
                 if (err) {
@@ -269,7 +266,7 @@ exports.declineRecipe = async (req, res, next) => {
                     });
                 }
                 if (userSchema) {
-                    recipe.updateUser= userSchema
+                    recipe.updateUser = userSchema;
                     recipe.status = -1;
                     recipe.save((function (err) {
                         if (err) {
@@ -283,8 +280,8 @@ exports.declineRecipe = async (req, res, next) => {
                                 imageUrl: '',
                                 content: 'Công thức ' + recipe.recipeName + ' đã bị từ chối',
                                 videoUrl: '',
-                            })
-                            message.save().then(message => {
+                            });
+                            message.save().then(() => {
                                 return res.send({
                                     status: 200,
                                     message: 'Bạn đã từ chối công thức này',
@@ -295,8 +292,8 @@ exports.declineRecipe = async (req, res, next) => {
                                 res.send({
                                     'status': 404,
                                     'message': err.message || 'Some error occurred while finding recipe'
-                                })
-                            })
+                                });
+                            });
 
                         }
                     }));
@@ -309,18 +306,18 @@ exports.declineRecipe = async (req, res, next) => {
             });
         }
     })
-}
+};
 exports.createMultiple = (req, res) => {
     Recipe.insertMany(req.body.recipes, function (err, recipes) {
         if (err) {
             res.status(500).send({
                 message: 'Luu multiple that bai'
-            })
+            });
         } else {
             res.status(200).send({
                 message: 'Luu Multiple thanh cong',
                 recipes: recipes
-            })
+            });
         }
     });
-}
+};

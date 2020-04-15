@@ -26,10 +26,11 @@ exports.findMessage = async (req, res, next) => {
             })
         } else {
            for(let mess of messages){
-              mess.news++
-              mess.save().then( mes=>{
-
-              })
+               if(mess.news===0){
+                   mess.news++;
+                   mess.save().then( mes=>{
+                   });
+               }
            }
             res.status(200).send({
                 message: messages

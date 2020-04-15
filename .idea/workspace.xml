@@ -37,7 +37,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../front-end" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
@@ -184,7 +184,11 @@
       <workItem from="1586517804597" duration="710000" />
       <workItem from="1586532714396" duration="2236000" />
       <workItem from="1586619682638" duration="2872000" />
-      <workItem from="1586659037386" duration="7207000" />
+      <workItem from="1586659037386" duration="8231000" />
+      <workItem from="1586696062189" duration="4813000" />
+      <workItem from="1586837573474" duration="57000" />
+      <workItem from="1586944379481" duration="1300000" />
+      <workItem from="1586951087112" duration="4857000" />
     </task>
     <servers />
   </component>
@@ -200,10 +204,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="426" y="179" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.738@0.0.1366.738" timestamp="1579656389505" />
-    <state x="463" y="111" key="FileChooserDialogImpl" timestamp="1586664986628">
+    <state x="463" y="111" key="FileChooserDialogImpl" timestamp="1586837628421">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="463" y="111" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1586664986628" />
+    <state x="463" y="111" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1586837628421" />
     <state x="184" y="12" key="SettingsEditor" timestamp="1585850572429">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
@@ -216,10 +220,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="92" y="92" width="1182" height="554" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog/0.0.1366.738@0.0.1366.738" timestamp="1583576862550" />
-    <state x="559" y="0" width="607" height="738" key="find.popup" timestamp="1585237128049">
+    <state x="559" y="0" width="607" height="738" key="find.popup" timestamp="1586685821884">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="559" y="0" width="607" height="738" key="find.popup/0.0.1366.738@0.0.1366.738" timestamp="1585237128049" />
+    <state x="559" y="0" width="607" height="738" key="find.popup/0.0.1366.738@0.0.1366.738" timestamp="1586685821884" />
     <state x="339" y="165" key="run.anything.popup" timestamp="1583576647957">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
