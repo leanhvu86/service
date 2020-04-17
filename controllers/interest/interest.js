@@ -3,7 +3,7 @@ const auth = require("../../routers/auth");
 const Interests = mongoose.model('Interests');
 const Recipe = mongoose.model('Recipes');
 const Gallery = mongoose.model('Gallerys');
-exports.getInterests = (async (req, res, next) => {
+exports.getInterests = (async (req, res) => {
 
     await Interests.find()
         .then(interests => {
@@ -18,8 +18,8 @@ exports.getInterests = (async (req, res, next) => {
         })
 });
 
-exports.findInterest = async (req, res, next) => {
-    console.log(req.body)
+exports.findInterest = async (req, res) => {
+    console.log(req.body);
     await Interests.find({user: req.body.user.email}, function (err, interests) {
         if (err) {
             console.log(err);
@@ -31,10 +31,10 @@ exports.findInterest = async (req, res, next) => {
             res.status(200).send({interests:interests}
             )
         }
-    })
-}
-exports.findInterestGallery = async (req, res, next) => {
-    console.log(req.body)
+    });
+};
+exports.findInterestGallery = async (req, res) => {
+    console.log(req.body);
     await Interests.find({user: req.body.user.email, objectType: "2"}, function (err, interests) {
         if (err) {
             console.log(err);
@@ -46,20 +46,20 @@ exports.findInterestGallery = async (req, res, next) => {
             res.status(200).send({interests:interests}
             )
         }
-    })
-}
+    });
+};
 exports.createInterest = (req, res) => {
     const interest = new Interests({
         user: req.body.object.user,
         objectId: req.body.object.objectId,
         objectType: req.body.object.objectType
-    })
+    });
     var mongoose = require('mongoose');
     let id = mongoose.Types.ObjectId(req.body.object.objectId._id);
-    console.log(req.body.object)
+    console.log(req.body.object);
     interest.save()
-        .then(data => {
-            if(req.body.object.objectType=='2'){
+        .then(() => {
+            if(req.body.object.objectType==='2'){
                 Recipe.findOne({_id: id}, function (err, recipe) {
                     if (err && recipe == null) {
                         console.log(err);
@@ -120,17 +120,17 @@ exports.createInterest = (req, res) => {
             message: err.message || 'Some error occurred while creating the note'
         })
     })
-}
+};
 exports.deleteInterest = (auth.optional,
-    (req, res, next) => {
+    (req, res) => {
         const interest = new Interests({
             user: req.body.object.user,
             objectId: req.body.object.objectId,
             objectType: req.body.object.objectType
-        })
-        var mongoose = require('mongoose');
+        });
+        const mongoose = require('mongoose');
         let id = mongoose.Types.ObjectId(req.body.object.objectId._id);
-        console.log(req.body.object)
+        console.log(req.body.object);
         Interests.find({user: interest.user})
             .then((interests) => {
                 if (!interests) {
@@ -149,6 +149,7 @@ exports.deleteInterest = (auth.optional,
                                     message: "lỗi xóa lượt ưu thích"
                                 });
                             }
+                            console.log(result);
                             if(req.body.object.objectType==='2'){
                                 Recipe.findOne({_id: id}, function (err, recipe) {
                                     if (err && recipe == null) {

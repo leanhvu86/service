@@ -6,10 +6,10 @@ createToken = auth => {
     return JWT.sign({
         id: auth.id
     }, JWT_SECRET, { expiresIn: 60 * 120 });
-}
+};
 
 module.exports = {
-    facebookOAuth: async (req, res, next) => {
+    facebookOAuth: async (req, res) => {
 
         if(!req.user) {
             return res.send(401, 'User not authenticated');

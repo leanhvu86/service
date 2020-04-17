@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const auth = require("../../routers/auth");
 const Ingredients = mongoose.model('Ingredients');
-exports.getIngredients = (async (req, res, next) => {
+exports.getIngredients = (async (req, res) => {
     // try {
     //     const ingredients = ingredient.find({}, '-_id');
     //     console.log('danh sach tinh tp' + ingredients);
@@ -43,8 +43,8 @@ exports.getIngredients = (async (req, res, next) => {
         })
 });
 
-exports.findIngredient = async (req, res, next) => {
-    console.log(req.body.user)
+exports.findIngredient = async (req, res) => {
+    console.log(req.body.user);
     await Ingredient.findOne({user: req.body.user}, function (err, ingredients) {
         if (err) {
             console.log(err);
@@ -58,15 +58,15 @@ exports.findIngredient = async (req, res, next) => {
                 ingredient: ingredients
             })
         }
-    })
-}
+    });
+};
 exports.createIngredient = (req, res) => {
     const ingredient = new Ingredients({
         quantitative: req.body.ingredient.quantitative,
         typeOfquantitative: req.body.ingredient.typeOfquantitative,
         ingredientName: req.body.ingredient.ingredientName,
         note: req.body.ingredient.note
-    })
+    });
 
     ingredient.save()
         .then(data => {
@@ -76,16 +76,16 @@ exports.createIngredient = (req, res) => {
             message: err.message || 'Some error occurred while creating the note'
         })
     })
-}
-exports.deleteIngredient =  (auth.optional,
-    (req, res, next) => {
+};
+exports.deleteIngredient = (auth.optional,
+    (req, res) => {
         const ingredient = new Ingredients({
             _id: req.body.ingredient._id,
             quantitative: req.body.ingredient.quantitative,
             typeOfquantitative: req.body.ingredient.typeOfquantitative,
             ingredientName: req.body.ingredient.ingredientName,
             note: req.body.ingredient.note
-        })
+        });
         Ingredients.deleteOne({_id: ingredient._id}, function (err, result) {
 
             if (err) {
@@ -95,7 +95,7 @@ exports.deleteIngredient =  (auth.optional,
                     message: "lỗi xóa lượt ưu thích"
                 });
             } else {
-
+                console.log(result);
                 return res.send({
                     status: 200,
                     message: "Xóa lượt ưu thích thành công"

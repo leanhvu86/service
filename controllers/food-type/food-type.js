@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const FoodType = mongoose.model('FoodTypes');
-exports.getFoodTypes = (async (req, res, next) => {
+exports.getFoodTypes = (async (req, res) => {
     // try {
     //     const foodTypes = foodType.find({}, '-_id');
     //     console.log('danh sach tinh tp' + foodTypes);
@@ -44,8 +44,8 @@ exports.getFoodTypes = (async (req, res, next) => {
         })
 });
 
-exports.findFoodType = async (req, res, next) => {
-    console.log(req.body.foodTypeName)
+exports.findFoodType = async (req, res) => {
+    console.log(req.body.foodTypeName);
     await FoodType.findOne({foodTypeName: req.body.foodTypeName}, function (err, foodType) {
         if (err) {
             console.log(err);
@@ -59,14 +59,14 @@ exports.findFoodType = async (req, res, next) => {
                 foodType: foodType
             })
         }
-    })
-}
+    });
+};
 exports.createFoodType = (req, res) => {
     const foodType = new FoodType({
         foodTypeCode: req.body.foodTypeCode,
         foodTypeName: req.body.foodTypeName,
         status: 1
-    })
+    });
 
     foodType.save()
         .then(data => {
@@ -76,22 +76,22 @@ exports.createFoodType = (req, res) => {
             message: err.message || 'Some error occurred while creating the foodType'
         })
     })
-}
+};
 
 exports.createMultiple = (req, res) => {
-    console.log(req.body.foodTypes)
+    console.log(req.body.foodTypes);
     FoodType.insertMany(req.body.foodTypes, function (err, foodTypes) {
         if (err) {
             res.status(500).send({
                 message: 'Luu multiple that bai'
-            })
+            });
             console.log(err);
         } else{
             res.status(200).send({
                 message:'Luu Multiple thanh cong',
                 foodTypes:foodTypes
-            })
+            });
             console.log("foodTypes Added Successfully");
         }
     });
-}
+};

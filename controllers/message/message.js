@@ -61,7 +61,7 @@ exports.createMessage = (req, res) => {
         }
     });
     message.save()
-        .then(data => {
+        .then(() => {
             return res.send({
                 result: message,
                 status: 200,

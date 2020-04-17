@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const CookWay = mongoose.model('CookWays');
-exports.getCookWays = (async (req, res, next) => {
+exports.getCookWays = (async (req, res) => {
     // try {
     //     const cookWays = cookWay.find({}, '-_id');
     //     console.log('danh sach tinh tp' + cookWays);
@@ -44,8 +44,8 @@ exports.getCookWays = (async (req, res, next) => {
         })
 });
 
-exports.findCookWay = async (req, res, next) => {
-    console.log(req.body.cookWayName)
+exports.findCookWay = async (req, res) => {
+    console.log(req.body.cookWayName);
     await CookWay.findOne({cookWayName: req.body.cookWayName}, function (err, cookWay) {
         if (err) {
             console.log(err);
@@ -57,16 +57,16 @@ exports.findCookWay = async (req, res, next) => {
             res.send({
                 'status': 200,
                 cookWay: cookWay
-            })
+            });
         }
-    })
-}
+    });
+};
 exports.createCookWay = (req, res) => {
     const cookWay = new CookWay({
         cookWayCode: req.body.cookWayCode,
         cookWayName: req.body.cookWayName,
         status: 1
-    })
+    });
 
     cookWay.save()
         .then(data => {
@@ -76,21 +76,21 @@ exports.createCookWay = (req, res) => {
             message: err.message || 'Some error occurred while creating the note'
         })
     })
-}
+};
 
 exports.createMultiple = (req, res) => {
     CookWay.insertMany(req.body.cookWays, function (err, cookWays) {
         if (err) {
             res.status(500).send({
                 message: 'Luu multiple that bai'
-            })
+            });
             console.log(err);
         } else{
             res.status(200).send({
                 message:'Luu Multiple thanh cong',
                 cookWays:cookWays
-            })
+            });
             console.log("cookWays Added Successfully");
         }
     });
-}
+};

@@ -1,6 +1,5 @@
-
 module.exports = app => {
-  const untils = require("../controllers/utils/util");
-  var VerifyToken = require(__root + 'auth/VerifyToken');
-  app.post("/sendMail",untils.sendMail);
+    const utils = require("../controllers/utils/util");
+    const VerifyToken = require(__root + 'auth/VerifyToken');
+    app.post("/sendMail", VerifyToken, utils.sendMail);
 };

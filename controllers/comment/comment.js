@@ -3,7 +3,7 @@ const auth = require("../../routers/auth");
 const Comments = mongoose.model('Comments');
 const Recipe = mongoose.model('Recipes');
 const Users = mongoose.model("Users");
-exports.getComments = (async (req, res, next) => {
+exports.getComments = (async (req, res) => {
 
     await Comments.find()
         .then(comments => {
@@ -18,7 +18,7 @@ exports.getComments = (async (req, res, next) => {
         })
 });
 
-exports.findComment = async (req, res, next) => {
+exports.findComment = async (req, res) => {
     await Comments.findOne({type: 1}, function (err, comments) {
         if (err) {
             console.log(err);
@@ -33,7 +33,7 @@ exports.findComment = async (req, res, next) => {
             })
         }
     })
-}
+};
 exports.createComment = (req, res) => {
     const comment = new Comments({
         user: req.body.comment.user,
@@ -42,7 +42,7 @@ exports.createComment = (req, res) => {
         imageUrl: req.body.comment.imageUrl,
         type: req.body.comment.type,
         order:0,
-    })
+    });
     Users.findOne({email: req.body.comment.user}, function (err, userSchema) {
         if (err) {
             return res.send({
@@ -58,25 +58,24 @@ exports.createComment = (req, res) => {
                     if (element.recipe._id === comment.recipe._id && element.user.email === comment.user
                         && element.content === comment.content && element.imageUrl === comment.imageUrl&& element.type===1) {
                         cmCheck = element;
-                        console.log(element._id)
+                        console.log(element._id);
                     }
                     if(element.recipe._id===comment.recipe._id&&element.content!==''){
-                        comment.order++
+                        comment.order++;
                     }
-                })
-                    const check=false;
-                if (cmCheck.user !== undefined) {
-                    console.log(cmCheck.user.toString())
+                });
+                    if (cmCheck.user !== undefined) {
+                        console.log(cmCheck.user.toString());
                     return res.send({
                         'status': 205,
                         'message': 'Bạn đã thực hiện công thức này'
                     })
                 } else {
                     comment.order++;
-                    console.log(cmCheck)
-                    comment.user = userSchema
+                    console.log(cmCheck);
+                    comment.user = userSchema;
                     comment.save()
-                        .then(data => {
+                        .then(() => {
                             Recipe.findOne({_id: req.body.comment.recipe._id}, function (err, recipe) {
                                 if (err) {
                                     console.log(err);
@@ -107,8 +106,8 @@ exports.createComment = (req, res) => {
                         }).catch(err => {
                         res.status(500).send({
                             'message': err.message || 'Some error occurred while creating the comment'
-                        })
-                    })
+                        });
+                    });
                 }
             }).catch(err => {
                 res.send({
@@ -124,13 +123,13 @@ exports.createComment = (req, res) => {
         }
     });
 
-}
+};
 exports.deleteComment = (auth.optional,
-    (req, res, next) => {
+    (req, res) => {
         const comment = new Comments({
             user: req.body.comment.user.email,
             recipe: req.body.comment.recipe
-        })
+        });
         Comments.find({user: comment.user})
             .then((comments) => {
                 if (!comments) {
@@ -150,6 +149,7 @@ exports.deleteComment = (auth.optional,
                                     message: "lỗi xóa comment"
                                 });
                             } else {
+                                console.log(result);
                                 Recipe.findOne({_id: req.body.comment.recipe._id}, function (err, recipe) {
                                     if (err) {
                                         console.log(err);

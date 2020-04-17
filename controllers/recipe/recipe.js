@@ -51,7 +51,7 @@ exports.getAllRecipes = (async (req, res) => {
             });
         });
 });
-exports.findRecipe = async (req, res, next) => {
+exports.findRecipe = async (req, res) => {
     var mongoose = require('mongoose');
     var id = mongoose.Types.ObjectId(req.params.id);
     await Recipe.findOne({_id: id}, function (err, recipe) {
@@ -123,7 +123,7 @@ exports.createRecipe = (req, res) => {
         if (userSchema) {
 
             userSchema.totalPoint = userSchema.totalPoint + 2;
-            userSchema.save().then(data => {
+            userSchema.save().then(() => {
                 recipe.user = userSchema;
                 recipe.save()
                     .then(data => {
@@ -204,14 +204,14 @@ exports.acceptRecipe = async (req, res) => {
                                 content: 'Chúc mừng bạn đã được duyệt công thức ' + recipe.recipeName,
                                 videoUrl: '',
                             });
-                            message.save().then(message => {
+                            message.save().then(() => {
                                 Summarys.find()
                                     .then(summary => {
                                         let sum = summary[0];
                                         console.log(sum);
                                         sum.recipeCount++;
                                         sum.save()
-                                            .then(data => {
+                                            .then(() => {
                                                 return res.status(200).send({
                                                     status: 200,
                                                     message: 'Bạn đã duyệt công thức thành công',

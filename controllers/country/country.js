@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const Country = mongoose.model('Countrys');
-exports.getCountrys = (async (req, res, next) => {
+exports.getCountrys = (async (req, res) => {
     // try {
     //     const countrys = country.find({}, '-_id');
     //     console.log('danh sach tinh tp' + countrys);
@@ -44,8 +44,8 @@ exports.getCountrys = (async (req, res, next) => {
         })
 });
 
-exports.findCountry = async (req, res, next) => {
-    console.log(req.body.countryName)
+exports.findCountry = async (req, res) => {
+    console.log(req.body.countryName);
     await Country.findOne({countryName: req.body.countryName}, function (err, country) {
         if (err) {
             console.log(err);
@@ -60,13 +60,13 @@ exports.findCountry = async (req, res, next) => {
             })
         }
     })
-}
+};
 exports.createCountry = (req, res) => {
     const country = new Country({
         countryCode: req.body.countryCode,
         countryName: req.body.countryName,
         status: 1
-    })
+    });
 
     country.save()
         .then(data => {
@@ -76,21 +76,21 @@ exports.createCountry = (req, res) => {
             message: err.message || 'Some error occurred while creating the note'
         })
     })
-}
+};
 
 exports.createMultiple = (req, res) => {
-    console.log(req.body.countrys)
-    Country.insertMany(req.body.countrys, function (err, countrys) {
+    console.log(req.body.countrys);
+    Country.insertMany(req.body.countrys, function (err) {
         if (err) {
             res.status(500).send({
                 message: 'Luu multiple that bai'
-            })
+            });
             console.log(err);
         } else{
             res.status(200).send({
                 message:'Luu Multiple thanh cong'
-            })
+            });
             console.log("countrys Added Successfully");
         }
     });
-}
+};

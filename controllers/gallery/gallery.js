@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const auth = require("../../routers/auth");
 const Gallery = mongoose.model('Gallerys');
-const Recipe = mongoose.model('Recipes');
+mongoose.model('Recipes');
 const Users = mongoose.model("Users");
-const Summarys = mongoose.model('Summarys');
-exports.getGallerys = (async (req, res, next) => {
+const Summary= mongoose.model('Summarys');
+exports.getGallerys = (async (req, res) => {
 
     await Gallery.find()
         .then(gallerys => {
@@ -18,7 +18,7 @@ exports.getGallerys = (async (req, res, next) => {
             })
         })
 });
-exports.getTopGallerys = (async (req, res, next) => {
+exports.getTopGallerys = (async (req, res) => {
 
     await Gallery.find()
         .sort({totalPoint: -1})
@@ -34,7 +34,7 @@ exports.getTopGallerys = (async (req, res, next) => {
             })
         })
 });
-exports.findGallery = async (req, res, next) => {
+exports.findGallery = async (req, res) => {
     Users.findOne({email: req.body.gallery.email}, function (err, userSchema) {
         if (!userSchema) {
             return res.send({
@@ -58,7 +58,7 @@ exports.findGallery = async (req, res, next) => {
         }
     });
 
-}
+};
 exports.addGallery = (req, res) => {
     var mongoose = require('mongoose');
     var id = mongoose.Types.ObjectId(req.body.gallery._id);
@@ -69,8 +69,8 @@ exports.addGallery = (req, res) => {
                 message: err
             });
         }
-        let recipeArray = gallery.recipe
-        let recipe = req.body.gallery.recipe
+        let recipeArray = gallery.recipe;
+        let recipe = req.body.gallery.recipe;
         let check = false;
         recipeArray.forEach(reTemp => {
             if (reTemp.recipeName === recipe.recipeName && reTemp.user.email === recipe.user.email) {
@@ -84,9 +84,9 @@ exports.addGallery = (req, res) => {
             }
         });
         if (check === false) {
-            recipeArray.push(recipe)
+            recipeArray.push(recipe);
             gallery.save()
-                .then(data => {
+                .then(() => {
                     return res.send({
                         gallery: gallery,
                         status: 200,
@@ -99,7 +99,7 @@ exports.addGallery = (req, res) => {
             })
         }
     });
-}
+};
 exports.galleryDetail = (req, res) => {
     var mongoose = require('mongoose');
     var id = mongoose.Types.ObjectId(req.params.id);
@@ -114,15 +114,11 @@ exports.galleryDetail = (req, res) => {
             gallery: gallery,
             status: 200
         });
-    })
-}
+    });
+};
 exports.updateGallery = (req, res) => {
     var mongoose = require('mongoose');
     var id = mongoose.Types.ObjectId(req.body.gallery._id);
-    console.log(id)
-    console.log(req.body.gallery.name)
-    console.log(req.body.gallery.content)
-    console.log(req.body.gallery.recipes.length)
     Gallery.findOne({_id: id}, function (err, gallery) {
         if (err) {
             return res.send({
@@ -130,9 +126,9 @@ exports.updateGallery = (req, res) => {
                 message: err
             });
         }
-        gallery.name=req.body.gallery.name
-        gallery.content=req.body.gallery.content
-        gallery.recipe=req.body.gallery.recipes
+        gallery.name=req.body.gallery.name;
+        gallery.content=req.body.gallery.content;
+        gallery.recipe=req.body.gallery.recipes;
         gallery.save()
             .then(data=>{
                 return res.send({
@@ -140,15 +136,15 @@ exports.updateGallery = (req, res) => {
                     status: 200
                 });
             })
-    })
-}
+    });
+};
 exports.createGallery = (req, res) => {
     const gallery = new Gallery({
         user: req.body.gallery.user,
         name: req.body.gallery.name,
         content: req.body.gallery.content,
         image: req.body.gallery.image
-    })
+    });
     Users.findOne({email: req.body.gallery.user}, function (err, userSchema) {
         if (err) {
             return res.send({
@@ -157,12 +153,12 @@ exports.createGallery = (req, res) => {
             });
         }
         if (userSchema) {
-            gallery.user = userSchema
+            gallery.user = userSchema;
             gallery.save()
-                .then(data => {
-                    Summarys.find()
+                .then(() => {
+                    Summary.find()
                         .then(summary => {
-                            let sum = summary[0]
+                            let sum = summary[0];
                             sum.galleryCount++;
                             sum.save()
                                 .then(data => {
@@ -187,8 +183,8 @@ exports.createGallery = (req, res) => {
                 }).catch(err => {
                 res.status(500).send({
                     message: err.message || 'Some error occurred while creating the gallery'
-                })
-            })
+                });
+            });
         } else {
             return res.send({
                 status: 403,
@@ -196,9 +192,9 @@ exports.createGallery = (req, res) => {
             });
         }
     });
-}
+};
 exports.deleteGallery = (auth.optional,
-    (req, res, next) => {
+    (req, res) => {
 
         var mongoose = require('mongoose');
         var id = mongoose.Types.ObjectId(req.body.gallery._id);
@@ -217,6 +213,7 @@ exports.deleteGallery = (auth.optional,
                             message: "lỗi xóa bộ sưu tập"
                         });
                     } else {
+                        console.log(result);
                         return res.send({
                             status: 200,
                             message: "xóa bộ sưu tập thành công"

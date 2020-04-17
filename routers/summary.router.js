@@ -1,7 +1,7 @@
 
 module.exports = app => {
-  const summarys = require("../controllers/summary/summary");
-  var VerifyToken = require(__root + 'auth/VerifyToken');
-  app.post("/addSummary",summarys.createSummary);
-  app.post("/getSummary", summarys.getSummarys);
+  const summary = require("../controllers/summary/summary");
+  require(__root + 'auth/VerifyToken');
+  app.post("/addSummary",summary.createSummary);
+  app.post("/getSummary", summary.getSummarys);
 };

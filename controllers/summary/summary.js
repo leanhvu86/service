@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
-const auth = require("../../routers/auth");
-const Summarys = mongoose.model('Summarys');
-exports.getSummarys = (async (req, res, next) => {
+require("../../routers/auth");
+const Summary = mongoose.model('Summarys');
+exports.getSummarys = (async (req, res) => {
 
-    await Summarys.find()
+    await Summary.find()
         .then(summary => {
-            let sum=summary[0]
-            console.log(sum)
+            let sum=summary[0];
+            console.log(sum);
             sum.connectCount++;
             sum.save()
                 .then(data => {
@@ -30,9 +30,9 @@ exports.getSummarys = (async (req, res, next) => {
 });
 
 exports.createSummary = (req, res) => {
-    Summarys.find()
+    Summary.find()
         .then(summary => {
-            summary.connectCount++
+            summary.connectCount++;
             summary.save()
                 .then(data=>{
                     res.send({
@@ -54,4 +54,4 @@ exports.createSummary = (req, res) => {
             'message': err.message || 'Some error occurred while finding summary'
         })
     })
-}
+};

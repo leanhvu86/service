@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const passport = require("passport");
+require("mongoose");
+require("passport");
 const auth = require("../routers/auth");
 const Tokens = require("../models/Token");
 //POST new user route (optional, everyone has access)
@@ -8,7 +8,7 @@ const Tokens = require("../models/Token");
 //GET current route (required, only authenticated users have access)
 exports.currentAuthen =
   (auth.optional,
-  async (req, res, next) => {
+  async (req, res) => {
 
     const {body: {token}} = req;
     return Tokens.find({ token: token })
@@ -29,7 +29,7 @@ exports.currentAuthen =
 
 
 exports.deleteToken =  (auth.optional,
-    (req, res, next) => {
+    (req, res) => {
         const {body: {token}} = req;
         console.log(token);
         Tokens.findOne({ token: token }, function(err, tokenSchema) {

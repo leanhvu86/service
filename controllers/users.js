@@ -1,19 +1,19 @@
 const mongoose = require("mongoose");
-const passport = require("passport");
+require("passport");
 const auth = require("../routers/auth");
 const Users = mongoose.model("Users");
 const Tokens = require("../models/Token");
 const nodeMailer = require('nodemailer');
-const Recipe = require("../models/recipe")
-const Gallery = require("../models/gallery")
+const Recipe = require("../models/recipe");
+const Gallery = require("../models/gallery");
 const Summarys = mongoose.model('Summarys');
 //POST new user route (optional, everyone has access)
 const Messages = mongoose.model('Messages');
 
-exports.updateUser = async (req, res, next) => {
-    console.log('helo' + req.body.user.id)
-    var mongoose = require('mongoose');
-    var userObject = {
+exports.updateUser = async (req, res) => {
+    console.log('helo' + req.body.user.id);
+    const mongoose = require('mongoose');
+    const userObject = {
         _id: req.body.user.id,
         email: req.body.user.email,
         name: req.body.user.name,
@@ -25,17 +25,17 @@ exports.updateUser = async (req, res, next) => {
         introduction: req.body.user.introduction,
         imageUrl: req.body.user.imageUrl,
     };
-    var id = mongoose.Types.ObjectId(req.body.user.id);
+    const id = mongoose.Types.ObjectId(req.body.user.id);
     await Users.findOne({_id: id}, function (err, user) {
         if (err || user === null) {
-            console.log(user)
+            console.log(user);
             return res.send({
                 'status': 401,
                 'message': 'Không tìm thấy tài khoản người dùng'
             })
         } else {
             let check = false;
-            console.log(userObject)
+            console.log(userObject);
             user.email = userObject.email,
                 user.name = userObject.name,
                 user.lastName = userObject.lastName,
@@ -58,8 +58,6 @@ exports.updateUser = async (req, res, next) => {
                             user: user,
                             message: 'Cập nhật thông tin tài khoản thành công'
                         });
-
-
                     }
                 }));
             Recipe.find()
@@ -67,22 +65,22 @@ exports.updateUser = async (req, res, next) => {
                 .limit(100)
                 .then(recipes => {
                     recipes.forEach(recipe => {
-                        console.log(recipe.name)
+                        console.log(recipe.name);
                         if (recipe.user.email === userObject.email) {
-                            console.log('update công thức' + recipe.name)
-                            recipe.user = user
+                            console.log('update công thức' + recipe.name);
+                            recipe.user = user;
                             recipe.save((function (err) {
                                 if (err) {
-                                    console.log('update công thức thất bại' + recipe.recipeName)
+                                    console.log('update công thức thất bại' + recipe.recipeName);
                                 } else {
-                                    console.log('update công thức thành công' + recipe.recipeName)
+                                    console.log('update công thức thành công' + recipe.recipeName);
                                 }
                             }));
                         }
                     })
-                }).catch(err => {
-                console.log('lỗi khi update ảnh recipe')
-            })
+                }).catch(() => {
+                console.log('lỗi khi update ảnh recipe');
+            });
             Gallery.find()
                 .then(gallerys => {
                     gallerys.forEach(gallery => {
@@ -90,24 +88,23 @@ exports.updateUser = async (req, res, next) => {
                             gallery.user = user;
                             gallery.save((function (err) {
                                 if (err) {
-                                    console.log('update bộ sưu tập thất bại' + gallery.name)
+                                    console.log('update bộ sưu tập thất bại' + gallery.name);
                                 } else {
-                                    console.log('update bộ sưu tập thành công' + gallery.name)
+                                    console.log('update bộ sưu tập thành công' + gallery.name);
                                 }
                             }));
                         }
-                    })
-
-                }).catch(err => {
-                console.log('lỗi khi update ảnh recipe')
-            })
-            }
-    })
-}
+                    });
+                }).catch(() => {
+                console.log('lỗi khi update ảnh recipe');
+            });
+        }
+    });
+};
 exports.create =
     (auth.optional,
-        (req, res, next) => {
-            var user = {
+        (req, res) => {
+            const user = {
                 email: req.body.user.email,
                 password: req.body.user.password,
                 name: req.body.user.user,
@@ -167,6 +164,7 @@ exports.create =
                         if (error) {
                             return console.log(error);
                         }
+                        console.log('Message %s sent: %s', info.messageId, info.response);
                     });
                     return finalUser.save().then(() =>
                         res.status(200).send({
@@ -181,12 +179,12 @@ exports.create =
 
 exports.resetPassword =
     (auth.optional,
-        (req, res, next) => {
-            var user = {
+        (req, res) => {
+            const user = {
                 email: req.body.user.email,
                 password: req.body.user.password
             };
-            console.log(user.email)
+            console.log(user.email);
             Users.findOne({email: user.email}, function (err, users) {
                 if (users !== null) {
                     users.setPassword(user.password);
@@ -214,6 +212,7 @@ exports.resetPassword =
                         if (error) {
                             return console.log(error);
                         }
+                        console.log('Message %s sent: %s', info.messageId, info.response);
                     });
                     return users.save().then(() =>
                         res.status(200).send({
@@ -231,7 +230,7 @@ exports.resetPassword =
             });
         });
 
-exports.testEmail = (req, res, next) => {
+exports.testEmail = (req, res) => {
     if (req.body.email !== undefined || req.body.email !== '') {
         Users.findOne({email: req.body.email}, function (err, userSchema) {
             if (err) {
@@ -261,7 +260,7 @@ exports.testEmail = (req, res, next) => {
     }
 
 };
-exports.changePassword = (req, res, next) => {
+exports.changePassword = (req, res) => {
     var user = {
         email: req.body.user.user,
         password: req.body.user.oldPassword,
@@ -288,27 +287,27 @@ exports.changePassword = (req, res, next) => {
                 });
             } else {
                 userSchema.setPassword(user.newPassword);
-                userSchema.save().then(data => {
+                userSchema.save().then(() => {
                     const message = new Messages({
                         user: user.email,
                         imageUrl: '',
                         content: 'Bạn đã thay đổi mật khẩu thành công',
                         videoUrl: '',
-                    })
-                    message.save().then(message => {
+                    });
+                    message.save().then(() => {
                         res.status(200).send({
                             message: 'Bạn đã đổi mật khẩu thành công',
                             status: 200,
                             user: userSchema.toAuthJSON()
                         })
-                    }).catch(err => {
+                    }).catch(() => {
                         res.send({
                             'status': 404,
                             'message': 'Bạn đổi mật khẩu thất bại'
                         })
                     })
 
-                }).catch(err => {
+                }).catch(() => {
                     res.status(500).send({
                         message: 'Bạn đổi mật khẩu thất bại'
                     })
@@ -320,8 +319,8 @@ exports.changePassword = (req, res, next) => {
 //POST login route (optional, everyone has access)
 exports.login =
     (auth.optional,
-        (req, res, next) => {
-            var user = {
+        (req, res) => {
+            const user = {
                 name: req.body.user.user,
                 email: req.body.user.email,
                 password: req.body.user.password
@@ -381,7 +380,7 @@ exports.login =
                         email: userSchema.email
                     });
                     if (userSchema.imageUrl === undefined) {
-                        userSchema.imageUrl = 'jbiajl3qqdzshdw0z749'
+                        userSchema.imageUrl = 'jbiajl3qqdzshdw0z749';
                     }
                     role = userSchema.role;
                     if (role === 0) {
@@ -392,8 +391,8 @@ exports.login =
                     req.session.email = user.email;
                     Summarys.find()
                         .then(summary => {
-                            let sum = summary[0]
-                            console.log(sum)
+                            let sum = summary[0];
+                            console.log(sum);
                             sum.loginCount++;
                             sum.save()
                                 .then(data => {
@@ -437,7 +436,7 @@ exports.logout =
                 res.redirect("/login");
             }
         });
-exports.addPoint = (req, res, next) => {
+exports.addPoint = (req, res) => {
     console.log("testet" + req.body.user);
     Users.findOne({email: req.body.user.email}, function (err, userSchema) {
         if (err) {
@@ -472,7 +471,7 @@ exports.addPoint = (req, res, next) => {
         }
     });
 };
-exports.removePoint = (req, res, next) => {
+exports.removePoint = (req, res) => {
     console.log("testet" + req.body.user.email);
     Users.findOne({email: req.body.user.email}, function (err, userSchema) {
         if (err) {
@@ -487,7 +486,6 @@ exports.removePoint = (req, res, next) => {
         if (userSchema) {
             console.log(userSchema.totalPoint);
             if (userSchema.totalPoint !== undefined) {
-                let point = userSchema.totalPoint
                 if (parseInt(userSchema.totalPoint) > 0) {
                     userSchema.totalPoint--;
                     console.log(userSchema.totalPoint);
@@ -515,7 +513,7 @@ exports.removePoint = (req, res, next) => {
         }
     });
 };
-exports.getUsers = (async (req, res, next) => {
+exports.getUsers = (async (req, res) => {
     await Users.find()
         .then(users => {
             res.status(200).send(users
@@ -528,7 +526,7 @@ exports.getUsers = (async (req, res, next) => {
         })
 });
 
-exports.getNewUsers = (async (req, res, next) => {
+exports.getNewUsers = (async (req, res) => {
     Users.find({
         role: {
             $gte: 0
@@ -547,20 +545,20 @@ exports.getNewUsers = (async (req, res, next) => {
     })
 });
 
-exports.updateRole = async (req, res, next) => {
-    console.log('helo' + req.body.user.id)
-    console.log('helo' + req.body.user.role)
-    var mongoose = require('mongoose');
-    var id = mongoose.Types.ObjectId(req.body.user.id);
+exports.updateRole = async (req, res) => {
+    console.log('helo' + req.body.user.id);
+    console.log('helo' + req.body.user.role);
+    const mongoose = require('mongoose');
+    const id = mongoose.Types.ObjectId(req.body.user.id);
     await Users.findOne({_id: id}, function (err, user) {
         if (err || user === null) {
-            console.log(user)
+            console.log(user);
             return res.send({
                 'status': 401,
                 'message': 'user not found'
             })
         } else {
-            console.log(user)
+            console.log(user);
             user.role = req.body.user.role;
             if (user.role === 0) {
                 user.warningReport = 0;
@@ -581,22 +579,22 @@ exports.updateRole = async (req, res, next) => {
                 }
             }));
         }
-    })
-}
+    });
+};
 
-exports.updateReport = async (req, res, next) => {
-    console.log('helo' + req.body.user.id)
+exports.updateReport = async (req, res) => {
+    console.log('helo' + req.body.user.id);
     var mongoose = require('mongoose');
     var id = mongoose.Types.ObjectId(req.body.user.id);
     await Users.findOne({_id: id}, function (err, user) {
         if (err || user === null) {
-            console.log(user)
+            console.log(user);
             return res.send({
                 'status': 401,
                 'message': 'user not found'
             })
         } else {
-            console.log(user)
+            console.log(user);
             user.warningReport++;
             user.save((function (err) {
                 if (err) {
@@ -612,21 +610,21 @@ exports.updateReport = async (req, res, next) => {
                 }
             }));
         }
-    })
-}
-exports.bannedUser = async (req, res, next) => {
-    console.log('helo' + req.body.user.id)
+    });
+};
+exports.bannedUser = async (req, res) => {
+    console.log('helo' + req.body.user.id);
     var mongoose = require('mongoose');
     var id = mongoose.Types.ObjectId(req.body.user.id);
     await Users.findOne({_id: id}, function (err, user) {
         if (err || user === null) {
-            console.log(user)
+            console.log(user);
             return res.send({
                 'status': 401,
                 'message': 'user not found'
             })
         } else {
-            console.log(user)
+            console.log(user);
             user.status = -2;
             user.save((function (err) {
                 if (err) {
@@ -667,21 +665,21 @@ exports.bannedUser = async (req, res, next) => {
                 }
             }));
         }
-    })
-}
-exports.activeMember = async (req, res, next) => {
-    console.log('helo' + req.params.id)
-    var mongoose = require('mongoose');
-    var id = mongoose.Types.ObjectId(req.params.id);
+    });
+};
+exports.activeMember = async (req, res) => {
+    console.log('helo' + req.params.id);
+    const mongoose = require('mongoose');
+    const id = mongoose.Types.ObjectId(req.params.id);
     await Users.findOne({_id: id}, function (err, user) {
         if (err || user === null) {
-            console.log(user)
+            console.log(user);
             return res.send({
                 'status': 401,
                 'message': 'user not found'
             })
         } else {
-            console.log(user)
+            console.log(user);
             user.role = 0;
             user.status = 1;
             user.save((function (err) {
@@ -718,12 +716,11 @@ exports.activeMember = async (req, res, next) => {
                     });
                     Summarys.find()
                         .then(summary => {
-                            let sum = summary[0]
-                            console.log(sum)
+                            let sum = summary[0];
+                            console.log(sum);
                             sum.userCount++;
                             sum.save()
-                                .then(data => {
-                                    console.log(data)
+                                .then(() => {
                                     return res.status(200).send(user);
                                 }).catch(err => {
                                 res.status(500).send({
@@ -740,15 +737,15 @@ exports.activeMember = async (req, res, next) => {
                 }
             }));
         }
-    })
-}
-exports.getMemerInfo = async (req, res, next) => {
-    console.log('helo' + req.params.id)
-    var mongoose = require('mongoose');
-    var id = mongoose.Types.ObjectId(req.params.id);
+    });
+};
+exports.getMemberInfo = async (req, res) => {
+    console.log('helo' + req.params.id);
+    const mongoose = require('mongoose');
+    const id = mongoose.Types.ObjectId(req.params.id);
     await Users.findOne({_id: id}, function (err, user) {
         if (err || user === null) {
-            console.log(user)
+            console.log(user);
             return res.send({
                 'status': 401,
                 'message': 'user not found'
@@ -758,8 +755,8 @@ exports.getMemerInfo = async (req, res, next) => {
 
         }
     })
-}
-exports.getTopUsers = (async (req, res, next) => {
+};
+exports.getTopUsers = (async (req, res) => {
     await Users.find()
         .sort({totalPoint: -1})
         .limit(10)
