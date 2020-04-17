@@ -78,7 +78,7 @@ exports.addGallery = (req, res) => {
                     check = true;
                     return res.send({
                         status: 401,
-                        message: 'Công thức của bạn đã có trong bộ sưu tập rồi! Vui lòng tạo công thức khác'
+                        message: 'Công thức của bạn đã có trong bộ sưu tập rồi! Vui lòng chọn bộ sưu tập khác'
                     });
                 }
             }

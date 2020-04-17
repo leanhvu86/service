@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const auth = require("../../routers/auth");
 const Messages = mongoose.model('Messages');
 const Users = mongoose.model("Users");
-exports.getMessages = (async (req, res, next) => {
+exports.getMessages = (async (req, res) => {
     await Messages.find()
         .then(messages => {
             res.status(200).send(messages
@@ -12,11 +12,11 @@ exports.getMessages = (async (req, res, next) => {
             res.send({
                 'status': 404,
                 'message': err.message || 'Some error occurred while finding message'
-            })
-        })
+            });
+        });
 });
 
-exports.findMessage = async (req, res, next) => {
+exports.findMessage = async (req, res) => {
     await Messages.find({user: req.body.user.email}, function (err, messages) {
         if (err) {
             console.log(err);
@@ -25,13 +25,11 @@ exports.findMessage = async (req, res, next) => {
                 'message': 'message not found'
             })
         } else {
-           for(let mess of messages){
-               if(mess.news===0){
-                   mess.news++;
-                   mess.save().then( mes=>{
-                   });
-               }
-           }
+            for (let mess of messages) {
+                mess.news++;
+                mess.save().then(() => {
+                });
+            }
             res.status(200).send({
                 message: messages
             })
@@ -40,13 +38,13 @@ exports.findMessage = async (req, res, next) => {
         createdAt: -1
     })
         .limit(10)
-}
+};
 exports.createMessage = (req, res) => {
     const message = new Messages({
         user: req.body.message.user,
         content: req.body.message.content
-    })
-    Users.findOne({email:req.body.message.user}, function (err, userSchema) {
+    });
+    Users.findOne({email: req.body.message.user}, function (err, userSchema) {
         if (err) {
             return res.send({
                 status: 401,
@@ -54,7 +52,7 @@ exports.createMessage = (req, res) => {
             });
         }
         if (userSchema) {
-            message.user=userSchema
+            message.user = userSchema
         } else {
             return res.send({
                 status: 403,
@@ -63,22 +61,23 @@ exports.createMessage = (req, res) => {
         }
     });
     message.save()
-        .then(data => {return res.send({
-            result:message,
-            status: 200,
-            message: "Thêm điểm thành công"
-        });
+        .then(data => {
+            return res.send({
+                result: message,
+                status: 200,
+                message: "Thêm điểm thành công"
+            });
         }).catch(err => {
         res.status(500).send({
             message: err.message || 'Some error occurred while creating the note'
-        })
-    })
-}
-exports.deleteMessage= (auth.optional,
-    (req, res, next) => {
+        });
+    });
+};
+exports.deleteMessage = (auth.optional,
+    (req, res) => {
         const message = new Messages({
             user: req.body.message.user.email
-        })
+        });
         Messages.find({user: message.user})
             .then((messages) => {
                 if (!messages) {
@@ -86,19 +85,20 @@ exports.deleteMessage= (auth.optional,
                         message: "can not found current user"
                     });
                 }
-                        Messages.deleteOne({_id: messageed._id}, function (err, result) {
-                            if (err) {
-                                console.log(err);
-                                return res.send({
-                                    status: 401,
-                                    message: "lỗi xóa lượt ưu thích"
-                                });
-                            } else { return res.send({
-                                result: result,
-                                status: 200,
-                                message: "xóa điểm thành công"
-                            });
-                            }
+                Messages.deleteOne({_id: messageed._id}, function (err, result) {
+                    if (err) {
+                        console.log(err);
+                        return res.send({
+                            status: 401,
+                            message: "lỗi xóa lượt ưu thích"
                         });
+                    } else {
+                        return res.send({
+                            result: result,
+                            status: 200,
+                            message: "xóa điểm thành công"
+                        });
+                    }
+                });
             });
     });

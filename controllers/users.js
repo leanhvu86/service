@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const passport = require("passport");
+require("passport");
 const auth = require("../routers/auth");
 const Users = mongoose.model("Users");
 const Tokens = require("../models/Token");
@@ -10,11 +10,11 @@ const Summarys = mongoose.model('Summarys');
 //POST new user route (optional, everyone has access)
 const Messages = mongoose.model('Messages');
 
-exports.updateUser = async (req, res, next) => {
-    console.log('helo' + req.body.user.id)
+exports.updateUser = async (req, res) => {
+    console.log('helo' + req.body.user.id);
     var mongoose = require('mongoose');
     var userObject = {
-        _id: "",
+        _id: req.body.user.id,
         email: req.body.user.email,
         name: req.body.user.name,
         lastName: req.body.user.lastName,
@@ -25,16 +25,17 @@ exports.updateUser = async (req, res, next) => {
         introduction: req.body.user.introduction,
         imageUrl: req.body.user.imageUrl,
     };
-    var id = mongoose.Types.ObjectId(req.body.user.id);
+    const id = mongoose.Types.ObjectId(req.body.user.id);
     await Users.findOne({_id: id}, function (err, user) {
         if (err || user === null) {
             console.log(user)
             return res.send({
                 'status': 401,
-                'message': 'user not found'
-            })
+                'message': 'Không tìm thấy tài khoản người dùng'
+            });
         } else {
-            console.log(user)
+            let check = false;
+            console.log(userObject);
             user.email = userObject.email,
                 user.name = userObject.name,
                 user.lastName = userObject.lastName,
@@ -44,65 +45,63 @@ exports.updateUser = async (req, res, next) => {
                 user.signature = userObject.signature,
                 user.introduction = userObject.introduction,
                 user.imageUrl = userObject.imageUrl,
-                user.save((function (err) {
-                    if (err) {
-                        return res.send({
-                            status: 401,
-                            message: "Error"
+                user.save().then(data => {
+                    check = true;
+                    return res.status(200).send({
+                        status: 200,
+                        user: data,
+                        message: 'Cập nhật thông tin tài khoản thành công'
+                    });
+                }).catch(() => {
+                    return res.send({
+                        status: 401,
+                        message: "Cập nhật thông tin tài khoản không thành công"
+                    });
+                });
+            if (check === true) {
+                Recipe.find()
+                    .sort({status: 1})
+                    .limit(100)
+                    .then(recipes => {
+                        recipes.forEach(recipe => {
+                            if (recipe.user._id === userObject._id) {
+                                recipe.user = user;
+                                recipe.save((function (err) {
+                                    if (err) {
+                                        console.log('cập nhật công thức thất bại' + recipe.recipeName);
+                                    } else {
+                                        console.log('update công thức thành công' + recipe.recipeName);
+                                    }
+                                }));
+                            }
                         });
-                    } else {
-                        return res.status(200).send({
-                            status: 200,
-                            user: user,
-                            message: 'Update thông tin tài khoản thành công'
+                    }).catch(() => {
+                    console.log('lỗi khi cập nhật ảnh công thức');
+                });
+                Gallery.find()
+                    .then(gallerys => {
+                        gallerys.forEach(gallery => {
+                            if (gallery.user._id === userObject._id) {
+                                gallery.user = user;
+                                gallery.save((function (err) {
+                                    if (err) {
+                                        console.log('update bộ sưu tập thất bại' + gallery.name);
+                                    } else {
+                                        console.log('update bộ sưu tập thành công' + gallery.name);
+                                    }
+                                }));
+                            }
                         });
-                    }
-                }));
-            Recipe.find()
-                .sort({status: 1})
-                .limit(100)
-                .then(recipes => {
-                    recipes.forEach(recipe => {
-                        console.log(recipe.name)
-                        if (recipe.user.email === userObject.email) {
-                            console.log('update công thức' + recipe.name)
-                            recipe.user = user
-                            recipe.save((function (err) {
-                                if (err) {
-                                    console.log('update công thức thất bại' + recipe.name)
-                                } else {
-                                    console.log('update công thức thành công' + recipe.name)
-                                }
-                            }));
-                        }
-                    })
-                }).catch(err => {
-                console.log('lỗi khi update ảnh recipe')
-            })
-            Gallery.find()
-                .then(gallerys => {
-                    gallerys.forEach(gallery => {
-                        if (gallery.user.email === userObject.email) {
-                            gallery.user = user
-                            gallery.save((function (err) {
-                                if (err) {
-                                    console.log('update bộ sưu tập thất bại' + gallery.name)
-                                } else {
-                                    console.log('update bộ sưu tập thành công' + gallery.name)
-                                }
-                            }));
-                        }
-                    })
-
-                }).catch(err => {
-                console.log('lỗi khi update ảnh recipe')
-            })
+                    }).catch(() => {
+                    console.log('lỗi khi cập nhật ảnh bộ sưu tập');
+                });
+            }
         }
-    })
-}
+    });
+};
 exports.create =
     (auth.optional,
-        (req, res, next) => {
+        (req, res) => {
             var user = {
                 email: req.body.user.email,
                 password: req.body.user.password,
@@ -176,13 +175,13 @@ exports.create =
         });
 
 exports.resetPassword =
-    (auth.optional, 
-        (req, res, next) => {
+    (auth.optional,
+        (req, res) => {
             var user = {
                 email: req.body.user.email,
                 password: req.body.user.password
             };
-            console.log(user.email)
+            console.log(user.email);
             Users.findOne({email: user.email}, function (err, users) {
                 if (users !== null) {
                     users.setPassword(user.password);
@@ -255,7 +254,6 @@ exports.testEmail = (req, res, next) => {
             message: 'email not found'
         });
     }
-
 };
 exports.changePassword = (req, res, next) => {
     var user = {
@@ -276,39 +274,46 @@ exports.changePassword = (req, res, next) => {
                 message: "Mật khẩu đăng nhập không chính xác"
             });
         } else {
-            userSchema.setPassword(user.newPassword);
-            userSchema.save().then(data => {
-                const message = new Messages({
-                    user: user.email,
-                    imageUrl: '',
-                    content: 'Bạn đã thay đổi mật khẩu thành công',
-                    videoUrl: '',
-                })
-                message.save().then(message => {
-                    res.status(200).send({
-                        message: 'Bạn đã đổi mật khẩu thành công',
-                        status: 200,
-                        user: userSchema.toAuthJSON()
+            if (user.password === user.newPassword) {
+                return res.send({
+                    status: 401,
+                    message: 'Bạn phải thay đổi mật khẩu đăng nhập khác'
+                });
+            } else {
+                userSchema.setPassword(user.newPassword);
+                userSchema.save().then(data => {
+                    const message = new Messages({
+                        user: user.email,
+                        imageUrl: '',
+                        content: 'Bạn đã thay đổi mật khẩu thành công',
+                        videoUrl: '',
                     })
-                }).catch(err => {
-                    res.send({
-                        'status': 404,
-                        'message': 'Bạn đổi mật khẩu thất bại'
+                    message.save().then(message => {
+                        res.status(200).send({
+                            message: 'Bạn đã đổi mật khẩu thành công',
+                            status: 200,
+                            user: userSchema.toAuthJSON()
+                        })
+                    }).catch(() => {
+                        res.send({
+                            'status': 404,
+                            'message': 'Bạn đổi mật khẩu thất bại'
+                        })
                     })
-                })
 
-            }).catch(err => {
-                res.status(500).send({
-                    message: 'Bạn đổi mật khẩu thất bại'
-                })
-            });
+                }).catch(err => {
+                    res.status(500).send({
+                        message: 'Bạn đổi mật khẩu thất bại'
+                    })
+                });
+            }
         }
     });
 };
 //POST login route (optional, everyone has access)
 exports.login =
     (auth.optional,
-        (req, res, next) => {
+        (req, res) => {
             var user = {
                 name: req.body.user.user,
                 email: req.body.user.email,
@@ -517,22 +522,22 @@ exports.getUsers = (async (req, res, next) => {
 });
 
 exports.getNewUsers = (async (req, res, next) => {
-     Users.find({
-         role: {
-             $gte: 0
-         }
-     })
-        .sort({createdAt:-1})
+    Users.find({
+        role: {
+            $gte: 0
+        }
+    })
+        .sort({createdAt: -1})
         .limit(10)
         .then(users => {
             res.status(200).send(users
             )
         }).catch(err => {
-            res.send({
-                'status': 404,
-                'message': err.message || 'Some error occurred while finding users'
-            })
+        res.send({
+            'status': 404,
+            'message': err.message || 'Some error occurred while finding users'
         })
+    })
 });
 
 exports.updateRole = async (req, res, next) => {
