@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-require("passport");
+const passport = require("passport");
 const auth = require("../routers/auth");
 const Users = mongoose.model("Users");
 const Tokens = require("../models/Token");
@@ -10,8 +10,8 @@ const Summarys = mongoose.model('Summarys');
 //POST new user route (optional, everyone has access)
 const Messages = mongoose.model('Messages');
 
-exports.updateUser = async (req, res) => {
-    console.log('helo' + req.body.user.id);
+exports.updateUser = async (req, res, next) => {
+    console.log('helo' + req.body.user.id)
     var mongoose = require('mongoose');
     var userObject = {
         _id: req.body.user.id,
@@ -25,17 +25,17 @@ exports.updateUser = async (req, res) => {
         introduction: req.body.user.introduction,
         imageUrl: req.body.user.imageUrl,
     };
-    const id = mongoose.Types.ObjectId(req.body.user.id);
+    var id = mongoose.Types.ObjectId(req.body.user.id);
     await Users.findOne({_id: id}, function (err, user) {
         if (err || user === null) {
             console.log(user)
             return res.send({
                 'status': 401,
                 'message': 'Không tìm thấy tài khoản người dùng'
-            });
+            })
         } else {
             let check = false;
-            console.log(userObject);
+            console.log(userObject)
             user.email = userObject.email,
                 user.name = userObject.name,
                 user.lastName = userObject.lastName,
@@ -45,63 +45,68 @@ exports.updateUser = async (req, res) => {
                 user.signature = userObject.signature,
                 user.introduction = userObject.introduction,
                 user.imageUrl = userObject.imageUrl,
-                user.save().then(data => {
-                    check = true;
-                    return res.status(200).send({
-                        status: 200,
-                        user: data,
-                        message: 'Cập nhật thông tin tài khoản thành công'
-                    });
-                }).catch(() => {
-                    return res.send({
-                        status: 401,
-                        message: "Cập nhật thông tin tài khoản không thành công"
-                    });
-                });
-            if (check === true) {
-                Recipe.find()
-                    .sort({status: 1})
-                    .limit(100)
-                    .then(recipes => {
-                        recipes.forEach(recipe => {
-                            if (recipe.user._id === userObject._id) {
-                                recipe.user = user;
-                                recipe.save((function (err) {
-                                    if (err) {
-                                        console.log('cập nhật công thức thất bại' + recipe.recipeName);
-                                    } else {
-                                        console.log('update công thức thành công' + recipe.recipeName);
-                                    }
-                                }));
-                            }
+                user.save((function (err) {
+                    if (err) {
+                        return res.send({
+                            status: 401,
+                            message: "Cập nhật thông tin tài khoản không thành công"
                         });
-                    }).catch(() => {
-                    console.log('lỗi khi cập nhật ảnh công thức');
-                });
-                Gallery.find()
-                    .then(gallerys => {
-                        gallerys.forEach(gallery => {
-                            if (gallery.user._id === userObject._id) {
-                                gallery.user = user;
-                                gallery.save((function (err) {
-                                    if (err) {
-                                        console.log('update bộ sưu tập thất bại' + gallery.name);
-                                    } else {
-                                        console.log('update bộ sưu tập thành công' + gallery.name);
-                                    }
-                                }));
-                            }
+                    } else {
+                        check = true;
+                        return res.status(200).send({
+                            status: 200,
+                            user: user,
+                            message: 'Cập nhật thông tin tài khoản thành công'
                         });
-                    }).catch(() => {
-                    console.log('lỗi khi cập nhật ảnh bộ sưu tập');
-                });
+
+
+                    }
+                }));
+            Recipe.find()
+                .sort({status: 1})
+                .limit(100)
+                .then(recipes => {
+                    recipes.forEach(recipe => {
+                        console.log(recipe.name)
+                        if (recipe.user.email === userObject.email) {
+                            console.log('update công thức' + recipe.name)
+                            recipe.user = user
+                            recipe.save((function (err) {
+                                if (err) {
+                                    console.log('update công thức thất bại' + recipe.recipeName)
+                                } else {
+                                    console.log('update công thức thành công' + recipe.recipeName)
+                                }
+                            }));
+                        }
+                    })
+                }).catch(err => {
+                console.log('lỗi khi update ảnh recipe')
+            })
+            Gallery.find()
+                .then(gallerys => {
+                    gallerys.forEach(gallery => {
+                        if (gallery.user.email === userObject.email) {
+                            gallery.user = user;
+                            gallery.save((function (err) {
+                                if (err) {
+                                    console.log('update bộ sưu tập thất bại' + gallery.name)
+                                } else {
+                                    console.log('update bộ sưu tập thành công' + gallery.name)
+                                }
+                            }));
+                        }
+                    })
+
+                }).catch(err => {
+                console.log('lỗi khi update ảnh recipe')
+            })
             }
-        }
-    });
-};
+    })
+}
 exports.create =
     (auth.optional,
-        (req, res) => {
+        (req, res, next) => {
             var user = {
                 email: req.body.user.email,
                 password: req.body.user.password,
@@ -176,12 +181,12 @@ exports.create =
 
 exports.resetPassword =
     (auth.optional,
-        (req, res) => {
+        (req, res, next) => {
             var user = {
                 email: req.body.user.email,
                 password: req.body.user.password
             };
-            console.log(user.email);
+            console.log(user.email)
             Users.findOne({email: user.email}, function (err, users) {
                 if (users !== null) {
                     users.setPassword(user.password);
@@ -254,6 +259,7 @@ exports.testEmail = (req, res, next) => {
             message: 'email not found'
         });
     }
+
 };
 exports.changePassword = (req, res, next) => {
     var user = {
@@ -274,6 +280,7 @@ exports.changePassword = (req, res, next) => {
                 message: "Mật khẩu đăng nhập không chính xác"
             });
         } else {
+
             if (user.password === user.newPassword) {
                 return res.send({
                     status: 401,
@@ -294,7 +301,7 @@ exports.changePassword = (req, res, next) => {
                             status: 200,
                             user: userSchema.toAuthJSON()
                         })
-                    }).catch(() => {
+                    }).catch(err => {
                         res.send({
                             'status': 404,
                             'message': 'Bạn đổi mật khẩu thất bại'
@@ -313,7 +320,7 @@ exports.changePassword = (req, res, next) => {
 //POST login route (optional, everyone has access)
 exports.login =
     (auth.optional,
-        (req, res) => {
+        (req, res, next) => {
             var user = {
                 name: req.body.user.user,
                 email: req.body.user.email,
