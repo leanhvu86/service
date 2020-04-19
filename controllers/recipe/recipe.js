@@ -134,10 +134,30 @@ exports.createRecipe = (req, res) => {
                             videoUrl: '',
                         });
                         message.save().then(() => {
-                            res.status(200).send({
-                                data: data,
-                                message: 'Chúc mừng bạn đã thêm mới công thức thành công!'
+                            Summarys.find()
+                                .then(summary => {
+                                    let sum = summary[0];
+                                    console.log(sum);
+                                    sum.recipeCount++;
+                                    sum.save()
+                                        .then(() => {
+                                            res.status(200).send({
+                                                data: data,
+                                                message: 'Chúc mừng bạn đã thêm mới công thức thành công!'
+                                            });
+                                        }).catch(err => {
+                                        res.status(500).send({
+                                            message: 'Lỗi khi tổng kết số công thức của trang web'
+                                        });
+                                    });
+                                }).catch(err => {
+                                console.log(err);
+                                res.send({
+                                    'status': 404,
+                                    message: 'Lỗi khi tổng kết số công thức của trang web'
+                                });
                             });
+
                         }).catch(err => {
                             console.log('not found recipe');
                             res.send({
@@ -205,29 +225,10 @@ exports.acceptRecipe = async (req, res) => {
                                 videoUrl: '',
                             });
                             message.save().then(() => {
-                                Summarys.find()
-                                    .then(summary => {
-                                        let sum = summary[0];
-                                        console.log(sum);
-                                        sum.recipeCount++;
-                                        sum.save()
-                                            .then(() => {
-                                                return res.status(200).send({
-                                                    status: 200,
-                                                    message: 'Bạn đã duyệt công thức thành công',
-                                                    recipe: recipe
-                                                });
-                                            }).catch(err => {
-                                            res.status(500).send({
-                                                message: err.message || 'Some error occurred while creating the gallery'
-                                            });
-                                        });
-                                    }).catch(err => {
-                                    console.log(err);
-                                    res.send({
-                                        'status': 404,
-                                        'message': err.message || 'Some error occurred while finding summary'
-                                    });
+                                return res.status(200).send({
+                                    status: 200,
+                                    message: 'Bạn đã duyệt công thức thành công',
+                                    recipe: recipe
                                 });
                             }).catch(err => {
                                 console.log('not found recipe');
