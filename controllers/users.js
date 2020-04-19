@@ -65,7 +65,6 @@ exports.updateUser = async (req, res) => {
                 .limit(100)
                 .then(recipes => {
                     recipes.forEach(recipe => {
-                        console.log(recipe.name);
                         if (recipe.user.email === userObject.email) {
                             console.log('update công thức' + recipe.name);
                             recipe.user = user;
@@ -87,8 +86,9 @@ exports.updateUser = async (req, res) => {
                         if (gallery.user.email === userObject.email) {
                             gallery.user = user;
                             const recipes = gallery.recipe;
-                            recipes.forEach(recipe=>{
-                                if(recipe.user._id=== gallery.user._id){
+                            recipes.forEach(recipe => {
+                                console.log(recipe.recipeName + gallery.user.name);
+                                if (recipe.user._id === gallery.user._id) {
                                     recipe.user = user;
                                     console.log(recipe.recipeName)
                                 }

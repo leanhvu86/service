@@ -8,5 +8,6 @@ module.exports = app => {
     app.get("/getTopGalleries", gallery.getTopGallerys);
     app.post("/findGallery", VerifyToken, gallery.findGallery);
     app.get("/galleryDetail/:id", gallery.galleryDetail);
-    app.post("/updateGallery",gallery.updateGallery);
+    app.post("/updateGallery", VerifyToken,gallery.updateGallery);
+    app.post("/deleteGallery", VerifyToken,gallery.deleteGallery);
 };

@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const auth = require("../../routers/auth");
 const Gallery = mongoose.model('Gallerys');
-mongoose.model('Recipes');
 const Users = mongoose.model("Users");
 const Summary= mongoose.model('Summarys');
 exports.getGallerys = (async (req, res) => {
@@ -195,9 +194,8 @@ exports.createGallery = (req, res) => {
 };
 exports.deleteGallery = (auth.optional,
     (req, res) => {
-
-        var mongoose = require('mongoose');
-        var id = mongoose.Types.ObjectId(req.body.gallery._id);
+    console.log(req.body.gallery.id)
+        const id = mongoose.Types.ObjectId(req.body.gallery.id);
         Gallery.find({id: id})
             .then((gallerys) => {
                 if (!gallerys) {
@@ -205,7 +203,7 @@ exports.deleteGallery = (auth.optional,
                         message: "Bộ sưu tập không tồn  tại"
                     });
                 }
-                Gallerys.deleteOne({_id: id}, function (err, result) {
+                Gallery.deleteOne({_id: id}, function (err, result) {
                     if (err) {
                         console.log(err);
                         return res.send({
@@ -213,11 +211,23 @@ exports.deleteGallery = (auth.optional,
                             message: "lỗi xóa bộ sưu tập"
                         });
                     } else {
-                        console.log(result);
-                        return res.send({
-                            status: 200,
-                            message: "xóa bộ sưu tập thành công"
-                        });
+                        Summary.find()
+                            .then(summary => {
+                                let sum = summary[0];
+                                sum.galleryCount--;
+                                sum.save()
+                                    .then(() => {
+                                        return res.send({
+                                            status: 200,
+                                            message: "xóa bộ sưu tập thành công"
+                                        });
+                                    }).catch(err => {
+                                    console.log(err)
+                                })
+                            }).catch(err => {
+                            console.log(err);
+
+                        })
                     }
                 });
             });
