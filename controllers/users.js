@@ -86,6 +86,13 @@ exports.updateUser = async (req, res) => {
                     gallerys.forEach(gallery => {
                         if (gallery.user.email === userObject.email) {
                             gallery.user = user;
+                            const recipes = gallery.recipe;
+                            recipes.forEach(recipe=>{
+                                if(recipe.user._id=== gallery.user._id){
+                                    recipe.user = user;
+                                    console.log(recipe.recipeName)
+                                }
+                            });
                             gallery.save((function (err) {
                                 if (err) {
                                     console.log('update bộ sưu tập thất bại' + gallery.name);
@@ -328,7 +335,7 @@ exports.login =
             if (!user.email) {
                 return res.status(422).json({
                     errors: {
-                        email: "is required"
+                        email: "Vui lòng điền email"
                     }
                 });
             }
@@ -336,7 +343,7 @@ exports.login =
             if (!user.password) {
                 return res.status(422).json({
                     errors: {
-                        password: "is required"
+                        password: "Vui lòng điền mật khẩu"
                     }
                 });
             }
@@ -351,13 +358,13 @@ exports.login =
                 if (!userSchema) {
                     return res.send({
                         status: 401,
-                        message: "Username or password invalid"
+                        message: "Tài khoản không tồn tại"
                     });
                 }
                 if (!userSchema.validatePassword(user.password)) {
                     return res.send({
                         status: 401,
-                        message: "Username or password invalid"
+                        message: "Tài khoản không tồn tại"
                     });
                 }
                 if (userSchema.role < -1) {
@@ -369,7 +376,7 @@ exports.login =
                 if (userSchema.role < 0) {
                     return res.send({
                         status: 403,
-                        message: "Username chưa xác thực email"
+                        message: "Tài khoản chưa xác thực email"
                     });
                 }
                 if (user) {
@@ -419,7 +426,7 @@ exports.login =
                 } else {
                     return res.send({
                         status: 403,
-                        message: "Account not found"
+                        message: "Không tìm thấy tài khoản"
                     });
                 }
             });
