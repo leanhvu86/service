@@ -183,7 +183,82 @@ exports.create =
                 }
             });
         });
+exports.createAdminAccount =
+    (auth.optional,
+        (req, res) => {
+            const user = {
+                email: req.body.user.email,
+                password: req.body.user.password,
+                name: req.body.user.user,
+                totalPoint: 0,
+                status:1,
+                role:2
+                //,
+                //imageUrl: req.body.user.imageUrl
+            };
 
+            const finalUser = new Users(user);
+            Users.findOne({email: user.email}, function (err, users) {
+                if (users !== null) {
+                    return res.send({
+                        status: 422,
+                        message: "Email đã tồn tại trong hệ thống. Vui lòng chọn email khác"
+
+                    });
+                } else {
+                    if (!user.email) {
+                        return res.status(422).send({
+                            status: 422,
+                            message:
+                                "email is required"
+
+                        });
+                    }
+
+                    if (!user.password) {
+                        return res.status(423).send({
+                            status: 422,
+                            message:
+                                "Password không được để trống"
+
+                        });
+                    }
+
+                    finalUser.setPassword(user.password);
+                    let transporter = nodeMailer.createTransport({
+                        host: 'smtp.gmail.com',
+                        port: 465,
+                        secure: true,
+                        auth: {
+                            user: 'amthuc.anchay.2020@gmail.com',
+                            pass: 'Colenvuoi1@'
+                        }
+                    });
+                    let mailOptions = {
+                        from: 'Ban quản trị website Ẩm thực ăn chay <amthuc.anchay.2020@gmail.com>', // sender address
+                        to: user.email, // list of receivers
+                        subject: 'Chào mừng đến trang web Ẩm thực Ăn chay', // Subject line
+                        text: req.body.body, // plain text body
+                        html: 'Chúc mừng bạn đã đăng ký thành công tài khoản quản lý trang trên trang web Ẩm thực ăn chay '
+                        // html body
+                    };
+
+                    transporter.sendMail(mailOptions, (error, info) => {
+                        if (error) {
+                            return console.log(error);
+                        }
+                        console.log('Message %s sent: %s', info.messageId, info.response);
+                    });
+                    return finalUser.save().then(() =>
+                        res.status(200).send({
+                            message: 'Chúc mừng bạn đăng ký tài khoản thành công. Vui lòng check mail',
+                            status: 200,
+                            user: finalUser.toAuthJSON()
+                        })
+                    );
+                }
+            });
+        });
 exports.resetPassword =
     (auth.optional,
         (req, res) => {

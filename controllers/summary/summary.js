@@ -55,3 +55,20 @@ exports.createSummary = (req, res) => {
         })
     })
 };
+exports.createFirstSummary = (req, res) => {
+    const summary= new Summary();
+    summary.save()
+        .then(data=>{
+            res.send({
+                summary:data,
+                'status':200,
+                'message':'Tọa mới summary thành công'
+            })
+        }).catch(err => {
+        console.log(err);
+        res.send({
+            'status': 404,
+            'message': err.message || 'Some error occurred while finding summary'
+        });
+    });
+};

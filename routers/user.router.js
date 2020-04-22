@@ -78,6 +78,7 @@ var VerifyToken = require(__root + 'auth/VerifyToken');
 module.exports = app => {
   const users = require("../controllers/users");
   app.post("/register", users.create);
+  app.post("/createAdminAccount", users.createAdminAccount);
   app.get("/getUsers", users.getUsers);
   app.post("/login", users.login);
   app.post("/testEmail", users.testEmail);
