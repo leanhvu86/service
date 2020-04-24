@@ -32,9 +32,9 @@ global.__root   = __dirname + '/';
 //Configure isProduction variable
 
 //Initiate our server
-const server = express();
+const app = express();
 const isProduction = process.env.NODE_ENV === "production";
-server.use(function (req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
         "Access-Control-Allow-Headers",
@@ -45,7 +45,7 @@ server.use(function (req, res, next) {
 
 // enabling CORS for all requests
 // Add headers
-server.use(function (req, res, next) {
+app.use(function (req, res, next) {
     // Website you wish to allow to connect
     res.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
 
@@ -70,15 +70,15 @@ server.use(function (req, res, next) {
     next();
 });
 
-server.use(require("morgan")("dev"));
-server.use(bodyParser.urlencoded({extended: false}));
-server.use(bodyParser.json());
-server.use(express.static(path.join(__dirname, "public")));
-server.use("/facebook", facebook);
-server.use("/google", google);
+app.use(require("morgan")("dev"));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/facebook", facebook);
+app.use("/google", google);
 
 //CORS Middleware
-server.use(function (req, res, next) {
+app.use(function (req, res, next) {
     //Enabling CORS
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
@@ -88,7 +88,7 @@ server.use(function (req, res, next) {
     );
     next();
 });
-server.use(
+app.use(
     session({
         secret: "passport-tutorial",
         cookie: {maxAge: 60000},
@@ -96,27 +96,27 @@ server.use(
         saveUninitialized: false
     })
 );
-require("./routers/province.route")(server);
-require("./routers/user.router")(server);
-require("./routers/route-rail.route")(server);
-require("./routers/token.router")(server);
-require("./routers/country.route")(server);
-require("./routers/food-type.route")(server);
-require("./routers/cook-way.route")(server);
-require("./routers/recipe.route")(server);
-require("./routers/interest.router")(server);
-require("./routers/ingredient.router")(server);
-require("./routers/cook-step.route")(server);
-require("./routers/comment.router")(server);
-require("./routers/util.router")(server);
-require("./routers/message.router")(server);
-require("./routers/gallery.router")(server);
-require("./routers/summary.router")(server);
+require("./routers/province.route")(app);
+require("./routers/user.router")(app);
+require("./routers/route-rail.route")(app);
+require("./routers/token.router")(app);
+require("./routers/country.route")(app);
+require("./routers/food-type.route")(app);
+require("./routers/cook-way.route")(app);
+require("./routers/recipe.route")(app);
+require("./routers/interest.router")(app);
+require("./routers/ingredient.router")(app);
+require("./routers/cook-step.route")(app);
+require("./routers/comment.router")(app);
+require("./routers/util.router")(app);
+require("./routers/message.router")(app);
+require("./routers/gallery.router")(app);
+require("./routers/summary.router")(app);
 if (!isProduction) {
-    server.use(errorHandler());
+    app.use(errorHandler());
 }
 
-server.use(
+app.use(
     session({
         key: "user",
         secret: "somerandonstuffs",
@@ -141,7 +141,7 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (obj, done) {
     done(null, obj);
 });
-server.post("/logintest", function (req, res, next) {
+app.post("/logintest", function (req, res, next) {
     passport.authenticate("local", function (err, user, info) {
         if (err) {
             return next(err);
@@ -190,7 +190,10 @@ passport.use(
     )
 );
 
-server.use(passport.initialize());
-server.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
-server.listen(8000, () => console.log("Server running on http://localhost:8000/"));
+var server = app.listen(process.env.PORT || 8000, function () {
+    var port = server.address().port;
+    console.log("Express is working on port " + port);
+});

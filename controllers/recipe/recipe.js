@@ -141,12 +141,14 @@ exports.createRecipe = (req, res) => {
                                     sum.recipeCount++;
                                     sum.save()
                                         .then(() => {
-                                            res.status(200).send({
+                                            res.send({
+                                                status:200,
                                                 data: data,
                                                 message: 'Chúc mừng bạn đã thêm mới công thức thành công!'
                                             });
                                         }).catch(err => {
-                                        res.status(500).send({
+                                        res.send({
+                                            status:200, 
                                             message: 'Lỗi khi tổng kết số công thức của trang web'
                                         });
                                     });
