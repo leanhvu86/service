@@ -163,7 +163,7 @@ exports.create =
                         text: req.body.body, // plain text body
                         html: 'Chúc mừng bạn đã đăng ký thành công tài khoản trên trang web Ẩm thực ăn chay ' +
                             '<br> Vui lòng xác thực tài khoản đăng ký bằng link sau:' +
-                            '<br> http://localhost:4200/active/' + finalUser._id
+                            '<br> https://amthuc-anchay-poly.herokuapp.com/active/' + finalUser._id
                         // html body
                     };
 
