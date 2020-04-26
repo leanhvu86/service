@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const auth = require("../../routers/auth");
 const Gallery = mongoose.model('Gallerys');
 const Users = mongoose.model("Users");
-const Summary= mongoose.model('Summarys');
+const Summary = mongoose.model('Summarys');
 exports.getGallerys = (async (req, res) => {
 
     await Gallery.find()
@@ -60,6 +60,7 @@ exports.findGallery = async (req, res) => {
 };
 exports.addGallery = (req, res) => {
     var mongoose = require('mongoose');
+    console.log(req.body);
     var id = mongoose.Types.ObjectId(req.body.gallery._id);
     Gallery.findOne({_id: id}, function (err, gallery) {
         if (err) {
@@ -71,9 +72,11 @@ exports.addGallery = (req, res) => {
         let recipeArray = gallery.recipe;
         let recipe = req.body.gallery.recipe;
         let check = false;
+
         recipeArray.forEach(reTemp => {
             if (reTemp.recipeName === recipe.recipeName && reTemp.user.email === recipe.user.email) {
-                if(check===false){
+                console.log(reTemp.recipeName);
+                if (check === false) {
                     check = true;
                     return res.send({
                         status: 401,
@@ -125,11 +128,11 @@ exports.updateGallery = (req, res) => {
                 message: err
             });
         }
-        gallery.name=req.body.gallery.name;
-        gallery.content=req.body.gallery.content;
-        gallery.recipe=req.body.gallery.recipes;
+        gallery.name = req.body.gallery.name;
+        gallery.content = req.body.gallery.content;
+        gallery.recipe = req.body.gallery.recipes;
         gallery.save()
-            .then(data=>{
+            .then(data => {
                 return res.send({
                     gallery: data,
                     status: 200
@@ -194,7 +197,7 @@ exports.createGallery = (req, res) => {
 };
 exports.deleteGallery = (auth.optional,
     (req, res) => {
-    console.log(req.body.gallery.id)
+        console.log(req.body.gallery.id)
         const id = mongoose.Types.ObjectId(req.body.gallery.id);
         Gallery.find({id: id})
             .then((gallerys) => {
