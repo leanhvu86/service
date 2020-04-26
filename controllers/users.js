@@ -442,7 +442,7 @@ exports.login =
                         message: "Tài khoản không tồn tại"
                     });
                 }
-                if (userSchema.role < -1) {
+                if (userSchema.status < 0) {
                     return res.send({
                         status: 403,
                         message: "Tài khoản của bạn đã bị khóa!"
