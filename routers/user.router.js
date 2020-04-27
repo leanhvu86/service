@@ -85,7 +85,7 @@ module.exports = app => {
   app.post("/testEmail", users.testEmail);
   app.post("/loginAdmin", users.loginAdmin);
  // app.post("/addPoint", VerifyToken,users.addPoint);
-  app.post("/removePoint",VerifyToken, users.removePoint);
+  // app.post("/removePoint",VerifyToken, users.removePoint);
   app.post("/updateRole",VerifyRoleByToken, users.updateRole);
   app.post("/updateReport",VerifyRoleByToken, users.updateReport);
   app.post("/bannedUser",VerifyRoleByToken,VerifyToken, users.bannedUser);
