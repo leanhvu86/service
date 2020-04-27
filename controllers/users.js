@@ -15,7 +15,7 @@ exports.updateUser = async (req, res) => {
     const mongoose = require('mongoose');
     const userObject = {
         _id: req.body.user.id,
-        email: req.body.user.email,
+       // email: req.body.user.email,
         name: req.body.user.name,
         lastName: req.body.user.lastName,
         birthday: req.body.user.birthday,
