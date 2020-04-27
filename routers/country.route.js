@@ -1,11 +1,13 @@
 
 module.exports = (app) => {
     const CountryRouter = require('../controllers/country/country');
+    var VerifyToken = require(__root + 'auth/VerifyToken');
 
+    var VerifyRoleByToken = require(__root + 'auth/VerifyRoleByToken');
     app.get('/countrys', CountryRouter.getCountrys);
     app.get('/getCountry', CountryRouter.findCountry);
-    app.post('/createCountry', CountryRouter.createCountry);
-    app.post('/createMultipleCountrys', CountryRouter.createMultiple);
+    app.post('/createCountry',VerifyToken, VerifyRoleByToken,CountryRouter.createCountry);
+    app.post('/createMultipleCountrys', VerifyToken,VerifyRoleByToken,CountryRouter.createMultiple);
     // app.get('/logout', users.logout)
 
     // app.get('/currentAuthen', users.currentAuthen)

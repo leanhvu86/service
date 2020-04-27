@@ -3,6 +3,8 @@ const auth = require("../../routers/auth");
 const Interests = mongoose.model('Interests');
 const Recipe = mongoose.model('Recipes');
 const Gallery = mongoose.model('Gallerys');
+
+const Users = mongoose.model("Users");
 exports.getInterests = (async (req, res) => {
 
     await Interests.find()
@@ -57,6 +59,15 @@ exports.createInterest = (req, res) => {
     var mongoose = require('mongoose');
     let id = mongoose.Types.ObjectId(req.body.object.objectId._id);
     console.log(req.body.object);
+    const userId= req.email.toString();
+    console.log(userId);
+    console.log(interest.user);
+    if(userId !== interest.user){
+        return res.send({
+            'status': 401,
+            'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
+        })
+    }
     interest.save()
         .then(() => {
             if(req.body.object.objectType==='2'){
@@ -77,11 +88,38 @@ exports.createInterest = (req, res) => {
                                     message: "Error"
                                 });
                             } else {
-                                return res.send({
-                                    recipe: recipe,
-                                    status: 200,
-                                    message: "like công thức thành công"
+                                Users.findOne({email:interest.user}, function (err, userSchema) {
+                                    if (err) {
+                                        return res.send({
+                                            status: 401,
+                                            message: "Error"
+                                        });
+                                    }
+                                    if (userSchema) {
+                                        userSchema.totalPoint++;
+                                        userSchema.save((function (err) {
+                                            if (err) {
+                                                console.log(err);
+                                                return res.send({
+                                                    status: 401,
+                                                    message: "Error"
+                                                });
+                                            } else {
+                                                return res.send({
+                                                    recipe: recipe,
+                                                    status: 200,
+                                                    message: "like công thức thành công"
+                                                });
+                                            }
+                                        }))
+                                    } else {
+                                        return res.send({
+                                            status: 403,
+                                            message: "Account không tìm thấy"
+                                        });
+                                    }
                                 });
+
                             }
                         }));
                     }
@@ -131,6 +169,16 @@ exports.deleteInterest = (auth.optional,
         const mongoose = require('mongoose');
         let id = mongoose.Types.ObjectId(req.body.object.objectId._id);
         console.log(req.body.object);
+
+        const userId= req.email.toString();
+        console.log(userId);
+        console.log(interest.user);
+        if(userId !== interest.user){
+            return res.send({
+                'status': 401,
+                'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
+            })
+        }
         Interests.find({user: interest.user})
             .then((interests) => {
                 if (!interests) {
@@ -154,19 +202,38 @@ exports.deleteInterest = (auth.optional,
                                 Recipe.findOne({_id: id}, function (err, recipe) {
                                     if (err && recipe == null) {
                                         console.log(err);
-                                        return res.send({
-                                            'status': 401,
-                                            'message': 'recipe not found'
-                                        })
+
                                     } else {
                                         recipe.totalPoint = recipe.totalPoint - 1;
                                         recipe.save((function (err) {
                                             if (err) {
-                                                return res.send({
-                                                    status: 401,
-                                                    message: "Error"
-                                                });
+                                                console.log(err);
                                             }
+                                            Users.findOne({email: interest.user}, function (err, userSchema) {
+                                                if (err) {
+                                                    console.log(err);
+
+                                                }
+                                                if (userSchema) {
+                                                    console.log(userSchema.totalPoint);
+                                                    if (userSchema.totalPoint !== undefined) {
+                                                        if (parseInt(userSchema.totalPoint) > 0) {
+                                                            userSchema.totalPoint--;
+                                                            console.log(userSchema.totalPoint);
+                                                        } else {
+                                                            console.log('hết điểm để trù rồi bạn ạ');
+                                                        }
+                                                        userSchema.save((function (err) {
+                                                            if (err) {
+                                                                console.log(err);
+
+                                                            } else {
+                                                                console.log('Trừ điểm thành cồng');
+                                                            }
+                                                        }))
+                                                    }
+                                                }
+                                            });
                                         }));
                                     }
                                 })
@@ -189,6 +256,31 @@ exports.deleteInterest = (auth.optional,
                                                     message: "Error"
                                                 });
                                             }
+                                            Users.findOne({email: interest.user}, function (err, userSchema) {
+                                                if (err) {
+                                                    console.log(err);
+
+                                                }
+                                                if (userSchema) {
+                                                    console.log(userSchema.totalPoint);
+                                                    if (userSchema.totalPoint !== undefined) {
+                                                        if (parseInt(userSchema.totalPoint) > 0) {
+                                                            userSchema.totalPoint--;
+                                                            console.log(userSchema.totalPoint);
+                                                        } else {
+                                                            console.log('Hết điểm để trừ rồi bạn ạ');
+                                                        }
+                                                        userSchema.save((function (err) {
+                                                            if (err) {
+                                                                console.log(err);
+
+                                                            } else {
+                                                                console.log('Trừ điểm thành cồng');
+                                                            }
+                                                        }))
+                                                    }
+                                                }
+                                            });
                                         }));
                                     }
                                 })

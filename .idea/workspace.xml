@@ -37,7 +37,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="javascript.nodejs.core.library.configured.version" value="10.16.0" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../front-end" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -46,11 +46,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\dự án 2\front end\service\auth" />
       <recent name="F:\dự án 2\front end\service\routers" />
       <recent name="F:\dự án 2\front end\service\models" />
       <recent name="F:\dự án 2\front end\service\controllers\gallery" />
       <recent name="F:\dự án 2\front end\service\controllers\message" />
-      <recent name="F:\dự án 2\front end\service\controllers\utils" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="F:\dự án 2\front end\service\auth" />
@@ -192,6 +192,9 @@
       <workItem from="1587743183344" duration="6273000" />
       <workItem from="1587826778660" duration="8565000" />
       <workItem from="1587884388557" duration="4839000" />
+      <workItem from="1587961832679" duration="6210000" />
+      <workItem from="1587980832944" duration="78000" />
+      <workItem from="1587997573118" duration="6550000" />
     </task>
     <servers />
   </component>
@@ -215,10 +218,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="426" y="179" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.738@0.0.1366.738" timestamp="1579656389505" />
-    <state x="463" y="111" key="FileChooserDialogImpl" timestamp="1587695294847">
+    <state x="463" y="111" key="FileChooserDialogImpl" timestamp="1588002554737">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="463" y="111" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1587695294847" />
+    <state x="463" y="111" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1588002554737" />
     <state x="184" y="12" key="SettingsEditor" timestamp="1587292151454">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
@@ -231,10 +234,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="92" y="92" width="1182" height="554" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog/0.0.1366.738@0.0.1366.738" timestamp="1583576862550" />
-    <state x="559" y="0" width="607" height="738" key="find.popup" timestamp="1587572461385">
+    <state x="559" y="0" width="607" height="738" key="find.popup" timestamp="1588000523825">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="559" y="0" width="607" height="738" key="find.popup/0.0.1366.738@0.0.1366.738" timestamp="1587572461385" />
+    <state x="559" y="0" width="607" height="738" key="find.popup/0.0.1366.738@0.0.1366.738" timestamp="1588000523825" />
     <state x="339" y="165" key="run.anything.popup" timestamp="1583576647957">
       <screen x="0" y="0" width="1366" height="738" />
     </state>

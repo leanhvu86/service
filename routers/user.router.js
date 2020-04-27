@@ -73,24 +73,24 @@
 // app.use('/api', require('./api'));
 
 // module.exports = app;
-
+var VerifyUserByToken = require(__root + 'auth/VerifyUserByToken');
 var VerifyToken = require(__root + 'auth/VerifyToken');
 var VerifyRoleByToken = require(__root + 'auth/VerifyRoleByToken');
 module.exports = app => {
   const users = require("../controllers/users");
   app.post("/register", users.create);
   app.post("/createAdminAccount", users.createAdminAccount);
-  app.get("/getUsers", users.getUsers);
+  app.get("/getUsers",VerifyRoleByToken, users.getUsers);
   app.post("/login", users.login);
   app.post("/testEmail", users.testEmail);
-  app.post("/loginv2", users.login);
+  app.post("/loginAdmin", users.loginAdmin);
   app.post("/addPoint", VerifyToken,users.addPoint);
   app.post("/removePoint",VerifyToken, users.removePoint);
-  app.post("/updateRole",VerifyRoleByToken,VerifyToken, users.updateRole);
-  app.post("/updateReport",VerifyRoleByToken,VerifyToken, users.updateReport);
+  app.post("/updateRole",VerifyRoleByToken, users.updateRole);
+  app.post("/updateReport",VerifyRoleByToken, users.updateReport);
   app.post("/bannedUser",VerifyRoleByToken,VerifyToken, users.bannedUser);
-  app.post("/updateUser",VerifyToken, users.updateUser);
-  app.post("/changePassword",VerifyToken, users.changePassword);
+  app.post("/updateUser",VerifyUserByToken, users.updateUser);
+  app.post("/changePassword",VerifyUserByToken, users.changePassword);
   app.post("/resetPassword",VerifyToken, users.resetPassword);
   app.get("/logout", users.logout);
   app.get("/getTopUsers",users.getTopUsers);

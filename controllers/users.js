@@ -25,6 +25,15 @@ exports.updateUser = async (req, res) => {
         introduction: req.body.user.introduction,
         imageUrl: req.body.user.imageUrl,
     };
+    const userId= req.userId.toString();
+    console.log(userId);
+    console.log(req.body.user.id);
+    if(userId !== req.body.user.id){
+        return res.send({
+            'status': 401,
+            'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
+        })
+    }
     const id = mongoose.Types.ObjectId(req.body.user.id);
     await Users.findOne({_id: id}, function (err, user) {
         if (err || user === null) {
@@ -507,6 +516,115 @@ exports.login =
             });
         });
 
+//POST login route (optional, everyone has access)
+exports.loginAdmin =
+    (auth.optional,
+        (req, res) => {
+            const user = {
+                name: req.body.user.user,
+                email: req.body.user.email,
+                password: req.body.user.password
+            };
+            if (!user.email) {
+                return res.status(422).json({
+                    errors: {
+                        email: "Vui lòng điền email"
+                    }
+                });
+            }
+
+            if (!user.password) {
+                return res.status(422).json({
+                    errors: {
+                        password: "Vui lòng điền mật khẩu"
+                    }
+                });
+            }
+
+            Users.findOne({email: user.email}, function (err, userSchema) {
+                if (err) {
+                    return res.send({
+                        status: 401,
+                        message: "Error"
+                    });
+                }
+                if (!userSchema) {
+                    return res.send({
+                        status: 401,
+                        message: "Tài khoản không tồn tại"
+                    });
+                }
+                if (!userSchema.validatePassword(user.password)) {
+                    return res.send({
+                        status: 401,
+                        message: "Tài khoản không tồn tại"
+                    });
+                }
+                if (userSchema.status < 0) {
+                    return res.send({
+                        status: 403,
+                        message: "Tài khoản của bạn đã bị khóa!"
+                    });
+                }
+                if (userSchema.role < 1) {
+                    return res.send({
+                        status: 403,
+                        message: "Tài khoản không có quyền đăng nhập"
+                    });
+                }
+                if (user) {
+                    const user = new Users();
+                    user.token = user.generateJWT();
+                    req.session.token = user.token;
+                    const finalUser = new Tokens({
+                        email: userSchema.email
+                    });
+                    if (userSchema.imageUrl === undefined) {
+                        userSchema.imageUrl = 'jbiajl3qqdzshdw0z749';
+                    }
+                    role = userSchema.role;
+                    if (role === 0) {
+                        role = '';
+                    }
+                    finalUser.token = user.token;
+                    finalUser.save().then(token => console.log("save token thanh cong"));
+                    req.session.email = user.email;
+                    Summarys.find()
+                        .then(summary => {
+                            let sum = summary[0];
+                            console.log(sum);
+                            sum.loginCount++;
+                            sum.save()
+                                .then(data => {
+                                    return res.send({
+                                        status: 200,
+                                        user: finalUser.toAuthJSON(),
+                                        role: role,
+                                        summary: data,
+                                        image: userSchema.imageUrl
+                                    });
+                                }).catch(err => {
+                                res.status(500).send({
+                                    message: err.message || 'Some error occurred while creating the gallery'
+                                })
+                            })
+                        }).catch(err => {
+                        console.log(err);
+                        res.send({
+                            'status': 404,
+                            'message': err.message || 'Some error occurred while finding summary'
+                        })
+                    })
+
+                } else {
+                    return res.send({
+                        status: 403,
+                        message: "Không tìm thấy tài khoản"
+                    });
+                }
+            });
+        });
+
 exports.logout =
     ("/logout",
         (req, res) => {
@@ -519,39 +637,8 @@ exports.logout =
             }
         });
 exports.addPoint = (req, res) => {
-    console.log("testet" + req.body.user);
-    Users.findOne({email: req.body.user.email}, function (err, userSchema) {
-        if (err) {
-            return res.send({
-                status: 401,
-                message: "Error"
-            });
-        }
-        console.log("UserName: " + userSchema.email);
-        console.log("Password:" + userSchema.password);
-        if (userSchema) {
-            userSchema.totalPoint++;
-            userSchema.save((function (err) {
-                if (err) {
-                    console.log(err);
-                    return res.send({
-                        status: 401,
-                        message: "Error"
-                    });
-                } else {
-                    return res.send({
-                        status: 200,
-                        message: "Thêm điểm thành công"
-                    });
-                }
-            }))
-        } else {
-            return res.send({
-                status: 403,
-                message: "Account không tìm thấy"
-            });
-        }
-    });
+    console.log("testet" + req.body.user.email);
+
 };
 exports.removePoint = (req, res) => {
     console.log("testet" + req.body.user.email);
@@ -563,8 +650,6 @@ exports.removePoint = (req, res) => {
                 message: "Error"
             });
         }
-        console.log("UserName: " + userSchema.email);
-        console.log("Password:" + userSchema.password);
         if (userSchema) {
             console.log(userSchema.totalPoint);
             if (userSchema.totalPoint !== undefined) {

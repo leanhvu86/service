@@ -69,6 +69,15 @@ exports.addGallery = (req, res) => {
                 message: err
             });
         }
+        const userId= req.email.toString();
+        console.log(userId);
+        console.log(gallery.user.email);
+        if(userId !== gallery.user,email){
+            return res.send({
+                'status': 401,
+                'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
+            })
+        }
         let recipeArray = gallery.recipe;
         let recipe = req.body.gallery.recipe;
         let check = false;
@@ -121,12 +130,22 @@ exports.galleryDetail = (req, res) => {
 exports.updateGallery = (req, res) => {
     var mongoose = require('mongoose');
     var id = mongoose.Types.ObjectId(req.body.gallery._id);
+
     Gallery.findOne({_id: id}, function (err, gallery) {
         if (err) {
             return res.send({
                 status: 401,
                 message: err
             });
+        }
+        const userId= req.userId.toString();
+        console.log(userId);
+        console.log(gallery.user._id.toString);
+        if(userId !== gallery.user._id.toString){
+            return res.send({
+                'status': 401,
+                'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
+            })
         }
         gallery.name = req.body.gallery.name;
         gallery.content = req.body.gallery.content;
@@ -147,6 +166,15 @@ exports.createGallery = (req, res) => {
         content: req.body.gallery.content,
         image: req.body.gallery.image
     });
+    const userId= req.email.toString();
+    console.log(userId);
+    console.log(gallery.user);
+    if(userId !== gallery.user){
+        return res.send({
+            'status': 401,
+            'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
+        })
+    }
     Users.findOne({email: req.body.gallery.user}, function (err, userSchema) {
         if (err) {
             return res.send({
@@ -205,6 +233,15 @@ exports.deleteGallery = (auth.optional,
                     return res.status(400).send({
                         message: "Bộ sưu tập không tồn  tại"
                     });
+                }
+                const userId= req.userId;
+                console.log(userId);
+                console.log(gallerys.user._id);
+                if(userId!== gallerys.user._id){
+                    return res.send({
+                        'status': 401,
+                        'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
+                    })
                 }
                 Gallery.deleteOne({_id: id}, function (err, result) {
                     if (err) {
