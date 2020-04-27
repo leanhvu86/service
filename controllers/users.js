@@ -708,44 +708,51 @@ exports.bannedUser = async (req, res) => {
         } else {
             console.log(user);
             user.status = -2;
-            user.save((function (err) {
-                if (err) {
-                    return res.send({
-                        status: 401,
-                        message: "Error"
-                    });
-                } else {
-                    let transporter = nodeMailer.createTransport({
-                        host: 'smtp.gmail.com',
-                        port: 465,
-                        secure: true,
-                        auth: {
-                            user: 'amthuc.anchay.2020@gmail.com',
-                            pass: 'Colenvuoi1@'
-                        }
-                    });
-                    let mailOptions = {
-                        from: 'Ban quản trị website Ẩm thực ăn chay <amthuc.anchay.2020@gmail.com>', // sender address
-                        to: user.email, // list of receivers
-                        subject: 'Chào mừng đến trang web Ẩm thực Ăn chay', // Subject line
-                        text: req.body.body, // plain text body
-                        html: 'Tài khoản của bạn đã bị khóa vì vi pham quy định của diễn đàn, pháp luật của nhà nước.' +
-                            'Vui lòng liên hệ lại với email: amthuc.anchay.support@gmaillcom'
-                        // html body
-                    };
+            if(user.role>1){
+                return res.send({
+                    status: 401,
+                    message: "Tài khoản quản trị trang không được tác động!"
+                });
+            }else{
+                user.save((function (err) {
+                    if (err) {
+                        return res.send({
+                            status: 401,
+                            message: "Error"
+                        });
+                    } else {
+                        let transporter = nodeMailer.createTransport({
+                            host: 'smtp.gmail.com',
+                            port: 465,
+                            secure: true,
+                            auth: {
+                                user: 'amthuc.anchay.2020@gmail.com',
+                                pass: 'Colenvuoi1@'
+                            }
+                        });
+                        let mailOptions = {
+                            from: 'Ban quản trị website Ẩm thực ăn chay <amthuc.anchay.2020@gmail.com>', // sender address
+                            to: user.email, // list of receivers
+                            subject: 'Chào mừng đến trang web Ẩm thực Ăn chay', // Subject line
+                            text: req.body.body, // plain text body
+                            html: 'Tài khoản của bạn đã bị khóa vì vi pham quy định của diễn đàn, pháp luật của nhà nước.' +
+                                'Vui lòng liên hệ lại với email: amthuc.anchay.support@gmaillcom'
+                            // html body
+                        };
 
-                    transporter.sendMail(mailOptions, (error, info) => {
-                        if (error) {
-                            return console.log(error);
-                        }
-                        console.log('Message %s sent: %s', info.messageId, info.response);
-                    });
-                    return res.status(200).send({
-                        status: 200,
-                        user: user
-                    });
-                }
-            }));
+                        transporter.sendMail(mailOptions, (error, info) => {
+                            if (error) {
+                                return console.log(error);
+                            }
+                            console.log('Message %s sent: %s', info.messageId, info.response);
+                        });
+                        return res.status(200).send({
+                            status: 200,
+                            user: user
+                        });
+                    }
+                }));
+            }
         }
     });
 };
