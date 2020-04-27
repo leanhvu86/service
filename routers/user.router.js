@@ -79,7 +79,7 @@ var VerifyRoleByToken = require(__root + 'auth/VerifyRoleByToken');
 module.exports = app => {
   const users = require("../controllers/users");
   app.post("/register", users.create);
-  app.post("/createAdminAccount", users.createAdminAccount);
+ // app.post("/createAdminAccount", users.createAdminAccount);
   app.get("/getUsers",VerifyRoleByToken, users.getUsers);
   app.post("/login", users.login);
   app.post("/testEmail", users.testEmail);
