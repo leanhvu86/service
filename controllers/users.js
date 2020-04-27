@@ -191,8 +191,8 @@ exports.createAdminAccount =
                 password: req.body.user.password,
                 name: req.body.user.user,
                 totalPoint: 0,
-                status:1,
-                role:2
+                status: 1,
+                role: 2
                 //,
                 //imageUrl: req.body.user.imageUrl
             };
@@ -469,7 +469,7 @@ exports.login =
                         role = '';
                     }
                     finalUser.token = user.token;
-                    finalUser.save().then(() => console.log("save token thanh cong"));
+                    finalUser.save().then(token => console.log("save token thanh cong"));
                     req.session.email = user.email;
                     Summarys.find()
                         .then(summary => {
@@ -480,7 +480,7 @@ exports.login =
                                 .then(data => {
                                     return res.send({
                                         status: 200,
-                                        user: user.toAuthJSON(),
+                                        user: finalUser.toAuthJSON(),
                                         role: role,
                                         summary: data,
                                         image: userSchema.imageUrl
@@ -708,12 +708,12 @@ exports.bannedUser = async (req, res) => {
         } else {
             console.log(user);
             user.status = -2;
-            if(user.role>1){
+            if (user.role > 1) {
                 return res.send({
                     status: 401,
                     message: "Tài khoản quản trị trang không được tác động!"
                 });
-            }else{
+            } else {
                 user.save((function (err) {
                     if (err) {
                         return res.send({

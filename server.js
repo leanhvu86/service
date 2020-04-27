@@ -11,6 +11,7 @@ var google = require("./routers/google");
 const passport = require("passport");
 
 require("./models/User");
+require("./models/Token");
 require("./db/db");
 require("./config/passport");
 require("./models/province");

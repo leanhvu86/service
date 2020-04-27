@@ -75,6 +75,7 @@
 // module.exports = app;
 
 var VerifyToken = require(__root + 'auth/VerifyToken');
+var VerifyRoleByToken = require(__root + 'auth/VerifyRoleByToken');
 module.exports = app => {
   const users = require("../controllers/users");
   app.post("/register", users.create);
@@ -85,12 +86,12 @@ module.exports = app => {
   app.post("/loginv2", users.login);
   app.post("/addPoint", VerifyToken,users.addPoint);
   app.post("/removePoint",VerifyToken, users.removePoint);
-  app.post("/updateRole", users.updateRole);
-  app.post("/updateReport", users.updateReport);
-  app.post("/bannedUser", users.bannedUser);
-  app.post("/updateUser", users.updateUser);
-  app.post("/changePassword", users.changePassword);
-  app.post("/resetPassword", users.resetPassword);
+  app.post("/updateRole",VerifyRoleByToken,VerifyToken, users.updateRole);
+  app.post("/updateReport",VerifyRoleByToken,VerifyToken, users.updateReport);
+  app.post("/bannedUser",VerifyRoleByToken,VerifyToken, users.bannedUser);
+  app.post("/updateUser",VerifyToken, users.updateUser);
+  app.post("/changePassword",VerifyToken, users.changePassword);
+  app.post("/resetPassword",VerifyToken, users.resetPassword);
   app.get("/logout", users.logout);
   app.get("/getTopUsers",users.getTopUsers);
   app.get("/getNewUsers",users.getNewUsers);
