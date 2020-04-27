@@ -51,10 +51,10 @@ exports.createComment = (req, res) => {
             });
         }
         if (userSchema) {
-            const userId= req.userId.toString();
+            const userId= req.email;
             console.log(userId);
             console.log(userSchema._id.toString);
-            if(userId !== userSchema._id.toString){
+            if(userId !== userSchema.email){
                 return res.send({
                     'status': 401,
                     'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
