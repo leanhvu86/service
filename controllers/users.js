@@ -45,7 +45,7 @@ exports.updateUser = async (req, res) => {
         } else {
             let check = false;
             console.log(userObject);
-            user.email = userObject.email,
+            //user.email = userObject.email,
                 user.name = userObject.name,
                 user.lastName = userObject.lastName,
                 user.birthday = userObject.birthday,
