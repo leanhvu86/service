@@ -89,7 +89,7 @@ module.exports = app => {
   app.post("/updateRole",VerifyRoleByToken, users.updateRole);
   app.post("/updateReport",VerifyRoleByToken, users.updateReport);
   app.post("/bannedUser",VerifyRoleByToken,VerifyToken, users.bannedUser);
-  app.post("/updateUser",VerifyUserByToken, users.updateUser);
+  //app.post("/updateUser",VerifyUserByToken, users.updateUser);
   app.post("/changePassword",VerifyUserByToken, users.changePassword);
   app.post("/resetPassword",VerifyToken, users.resetPassword);
   app.get("/logout", users.logout);
