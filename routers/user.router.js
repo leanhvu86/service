@@ -91,7 +91,7 @@ module.exports = app => {
   app.post("/bannedUser",VerifyRoleByToken,VerifyToken, users.bannedUser);
   app.post("/updateUser",VerifyUserByToken, users.updateUser);
   app.post("/changePassword",VerifyUserByToken, users.changePassword);
-  app.post("/resetPassword",VerifyToken, users.resetPassword);
+  app.post("/resetPassword",users.resetPassword);
   app.get("/logout", users.logout);
   app.get("/getTopUsers",users.getTopUsers);
   app.get("/getNewUsers",users.getNewUsers);

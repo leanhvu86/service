@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 require("passport");
+var md5 = require('md5');
 const auth = require("../routers/auth");
 const Users = mongoose.model("Users");
 const Tokens = require("../models/Token");
@@ -278,7 +279,9 @@ exports.resetPassword =
             console.log(user.email);
             Users.findOne({email: user.email}, function (err, users) {
                 if (users !== null) {
-                    // const password = Báuser.password
+                    user.password=md5(user.password);
+
+                    console.log(md5(user.password));
                     users.setPassword(user.password);
                     let transporter = nodeMailer.createTransport({
                         host: 'smtp.gmail.com',
@@ -296,7 +299,7 @@ exports.resetPassword =
                         text: req.body.body, // plain text body
                         html: 'Bạn đã yêu cầu thay đổi mật khẩu. ' +
                             '<br> Vui lòng không tiết lộ mật khẩu cho bất kì ai:' +
-                            '<br> Mật khẩu mới của bạn là' + user.password
+                            '<br> Mật khẩu mới của bạn là: ' + user.password
                         // html body
                     };
 
@@ -309,8 +312,7 @@ exports.resetPassword =
                     return users.save().then(() =>
                         res.status(200).send({
                             message: 'Chúc mừng bạn đổi mật khẩu tài khoản thành công. Vui lòng check mail',
-                            status: 200,
-                            user: users
+                            status: 200
                         })
                     );
                 } else {
