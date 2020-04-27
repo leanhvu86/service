@@ -278,6 +278,7 @@ exports.resetPassword =
             console.log(user.email);
             Users.findOne({email: user.email}, function (err, users) {
                 if (users !== null) {
+                    // const password = Báuser.password
                     users.setPassword(user.password);
                     let transporter = nodeMailer.createTransport({
                         host: 'smtp.gmail.com',

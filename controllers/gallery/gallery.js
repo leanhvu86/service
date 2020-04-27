@@ -72,7 +72,7 @@ exports.addGallery = (req, res) => {
         const userId= req.email.toString();
         console.log(userId);
         console.log(gallery.user.email);
-        if(userId !== gallery.user,email){
+        if(userId !== gallery.user.email){
             return res.send({
                 'status': 401,
                 'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
@@ -81,7 +81,6 @@ exports.addGallery = (req, res) => {
         let recipeArray = gallery.recipe;
         let recipe = req.body.gallery.recipe;
         let check = false;
-
         recipeArray.forEach(reTemp => {
             if (reTemp.recipeName === recipe.recipeName && reTemp.user.email === recipe.user.email) {
                 console.log(reTemp.recipeName);
@@ -130,7 +129,6 @@ exports.galleryDetail = (req, res) => {
 exports.updateGallery = (req, res) => {
     var mongoose = require('mongoose');
     var id = mongoose.Types.ObjectId(req.body.gallery._id);
-
     Gallery.findOne({_id: id}, function (err, gallery) {
         if (err) {
             return res.send({
@@ -138,18 +136,27 @@ exports.updateGallery = (req, res) => {
                 message: err
             });
         }
-        const userId= req.userId.toString();
-        console.log(userId);
+
+        console.log(gallery.name);
+        const userId= req.email;
         console.log(gallery.user._id.toString);
-        if(userId !== gallery.user._id.toString){
+        if(userId !== gallery.user.email){
             return res.send({
                 'status': 401,
                 'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
             })
         }
+        if(req.body.gallery.name==='' || req.body.gallery.content ===''){
+            return res.send({
+                status: 404,
+                message: 'Vui lòng kiểm tra thông tin các trường'
+            });
+        }
         gallery.name = req.body.gallery.name;
         gallery.content = req.body.gallery.content;
         gallery.recipe = req.body.gallery.recipes;
+
+
         gallery.save()
             .then(data => {
                 return res.send({
@@ -166,6 +173,12 @@ exports.createGallery = (req, res) => {
         content: req.body.gallery.content,
         image: req.body.gallery.image
     });
+    if(gallery.user==='' || gallery.name ===''|| gallery.content===''||gallery.image===''){
+        return res.send({
+            status: 404,
+            message: 'Vui lòng kiểm tra thông tin các trường'
+        });
+    }
     const userId= req.email.toString();
     console.log(userId);
     console.log(gallery.user);
