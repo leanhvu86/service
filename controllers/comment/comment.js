@@ -53,7 +53,7 @@ exports.createComment = (req, res) => {
         if (userSchema) {
             const userId= req.email;
             console.log(userId);
-            console.log(userSchema._id.toString);
+            console.log(userSchema.email);
             if(userId !== userSchema.email){
                 return res.send({
                     'status': 401,
