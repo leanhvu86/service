@@ -62,7 +62,7 @@ exports.createInterest = (req, res) => {
     const userId= req.email.toString();
     console.log(userId);
     console.log(interest.user);
-    if(userId !== interest.user){
+    if(userId !== interest.user){s
         return res.send({
             'status': 401,
             'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
