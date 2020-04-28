@@ -21,6 +21,7 @@ const UsersSchema = new Schema({
     role:{ type: Number, default: -1},
     warningReport:{ type: Number, default: 0 },
     status:{ type: Number, default: 1 },
+    updateAccount:String,
 }, {
     timestamps: true
 });
