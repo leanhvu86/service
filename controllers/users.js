@@ -26,10 +26,10 @@ exports.updateUser = async (req, res) => {
         introduction: req.body.user.introduction,
         imageUrl: req.body.user.imageUrl,
     };
-    const userId= req.userId.toString();
+    const userId = req.userId.toString();
     console.log(userId);
     console.log(req.body.user.id);
-    if(userId !== req.body.user.id){
+    if (userId !== req.body.user.id) {
         return res.send({
             'status': 401,
             'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
@@ -47,7 +47,7 @@ exports.updateUser = async (req, res) => {
             let check = false;
             console.log(userObject);
 
-                user.updateAccount= req.email,
+            user.updateAccount = req.email,
                 user.name = userObject.name,
                 user.lastName = userObject.lastName,
                 user.birthday = userObject.birthday,
@@ -280,7 +280,7 @@ exports.resetPassword =
             console.log(user.email);
             Users.findOne({email: user.email}, function (err, users) {
                 if (users !== null) {
-                    user.password=md5(user.password);
+                    user.password = md5(user.password);
 
                     console.log(md5(user.password));
                     users.setPassword(user.password);
@@ -851,20 +851,19 @@ exports.activeMember = async (req, res) => {
     const id = mongoose.Types.ObjectId(req.params.id);
     await Users.findOne({_id: id}, function (err, user) {
         if (err || user === null) {
-            console.log(user);
             return res.send({
                 'status': 401,
                 'message': 'user not found'
             })
         } else {
             console.log(user);
-            if(user.role>-1){
+            if (user.status > -1) {
                 console.log('helo')
                 return res.send({
                     status: 203,
                     message: "Tài khoản của bạn đã được xác thực bằng email. Vui lòng đăng nhập lại hệ thống"
                 });
-            }else{
+            } else {
                 user.role = 0;
                 user.status = 1;
                 user.save((function (err) {
@@ -908,7 +907,7 @@ exports.activeMember = async (req, res) => {
                                     .then(() => {
                                         res.send({
                                             status: 200,
-                                            message:  ' Chúc mừng bạn đã xác thực email thành công!\n' +
+                                            message: ' Chúc mừng bạn đã xác thực email thành công!\n' +
                                                 '  Vui lòng đăng nhập để tiếp tục trải nghiệm website'
                                         })
                                     }).catch(err => {
