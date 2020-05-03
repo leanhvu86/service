@@ -184,13 +184,32 @@ exports.create =
                         }
                         console.log('Message %s sent: %s', info.messageId, info.response);
                     });
-                    return finalUser.save().then(() =>
-                        res.status(200).send({
-                            message: 'Chúc mừng bạn đăng ký tài khoản thành công. Vui lòng check mail',
-                            status: 200,
-                            user: finalUser.toAuthJSON()
-                        })
-                    );
+                    Summarys.find()
+                        .then(summary => {
+                            let sum = summary[0];
+                            console.log(sum);
+                            sum.userCount++;
+                            sum.save()
+                                .then(() => {
+                                    return finalUser.save().then(() =>
+                                        res.status(200).send({
+                                            message: 'Chúc mừng bạn đăng ký tài khoản thành công. Vui lòng check mail',
+                                            status: 200,
+                                            user: finalUser.toAuthJSON()
+                                        })
+                                    );
+                                }).catch(err => {
+                                res.status(500).send({
+                                    message: err.message || 'Some error occurred while creating the gallery'
+                                })
+                            })
+                        }).catch(err => {
+                        console.log(err);
+                        res.send({
+                            'status': 404,
+                            'message': err.message || 'Some error occurred while finding summary'
+                        });
+                    });
                 }
             });
         });
