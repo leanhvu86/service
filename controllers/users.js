@@ -260,13 +260,32 @@ exports.createAdminAccount =
                         }
                         console.log('Message %s sent: %s', info.messageId, info.response);
                     });
-                    return finalUser.save().then(() =>
-                        res.status(200).send({
-                            message: 'Chúc mừng bạn đăng ký tài khoản thành công. Vui lòng check mail',
-                            status: 200,
-                            user: finalUser.toAuthJSON()
-                        })
-                    );
+                    Summarys.find()
+                        .then(summary => {
+                            let sum = summary[0];
+                            console.log(sum);
+                            sum.userCount++;
+                            sum.save()
+                                .then(() => {
+                                    return finalUser.save().then(() =>
+                                        res.status(200).send({
+                                            message: 'Chúc mừng bạn đăng ký tài khoản thành công. Vui lòng check mail',
+                                            status: 200,
+                                            user: finalUser.toAuthJSON()
+                                        })
+                                    );
+                                }).catch(err => {
+                                res.status(500).send({
+                                    message: err.message || 'Some error occurred while creating the gallery'
+                                })
+                            })
+                        }).catch(err => {
+                        console.log(err);
+                        res.send({
+                            'status': 404,
+                            'message': err.message || 'Some error occurred while finding summary'
+                        });
+                    });
                 }
             });
         });
@@ -856,75 +875,47 @@ exports.activeMember = async (req, res) => {
                 'message': 'user not found'
             })
         } else {
-            console.log(user);
-            if (user.status > -1) {
-                console.log('helo')
-                return res.send({
-                    status: 203,
-                    message: "Tài khoản của bạn đã được xác thực bằng email. Vui lòng đăng nhập lại hệ thống"
-                });
-            } else {
-                user.role = 0;
-                user.status = 1;
-                user.save((function (err) {
-                    if (err) {
-                        return res.send({
-                            status: 401,
-                            message: "Error"
-                        });
-                    } else {
-                        let transporter = nodeMailer.createTransport({
-                            host: 'smtp.gmail.com',
-                            port: 465,
-                            secure: true,
-                            auth: {
-                                user: 'amthuc.anchay.2020@gmail.com',
-                                pass: 'Colenvuoi1@'
-                            }
-                        });
-                        let mailOptions = {
-                            from: 'Ban quản trị website Ẩm thực ăn chay <amthuc.anchay.2020@gmail.com>', // sender address
-                            to: user.email, // list of receivers
-                            subject: 'Chào mừng đến trang web Ẩm thực Ăn chay', // Subject line
-                            text: req.body.body, // plain text body
-                            html: 'Xin chúc mừng! Tài khoản của bạn đã được mở. Vui lòng đăng nhập trang chủ website Ẩm thực Ăn chay' +
-                                ':http://localhost:4200'
-                            // html body
-                        };
+            user.role = 0;
+            user.status = 1;
+            user.save((function (err) {
+                if (err) {
+                    return res.send({
+                        status: 401,
+                        message: "Error"
+                    });
+                } else {
+                    let transporter = nodeMailer.createTransport({
+                        host: 'smtp.gmail.com',
+                        port: 465,
+                        secure: true,
+                        auth: {
+                            user: 'amthuc.anchay.2020@gmail.com',
+                            pass: 'Colenvuoi1@'
+                        }
+                    });
+                    let mailOptions = {
+                        from: 'Ban quản trị website Ẩm thực ăn chay <amthuc.anchay.2020@gmail.com>', // sender address
+                        to: user.email, // list of receivers
+                        subject: 'Chào mừng đến trang web Ẩm thực Ăn chay', // Subject line
+                        text: req.body.body, // plain text body
+                        html: 'Xin chúc mừng! Tài khoản của bạn đã được mở. Vui lòng đăng nhập trang chủ website Ẩm thực Ăn chay' +
+                            ': https://amthuc-anchay-poly.herokuapp.com/'
+                        // html body
+                    };
 
-                        transporter.sendMail(mailOptions, (error, info) => {
-                            if (error) {
-                                return console.log(error);
-                            }
-                            console.log('Message %s sent: %s', info.messageId, info.response);
-                        });
-                        Summarys.find()
-                            .then(summary => {
-                                let sum = summary[0];
-                                console.log(sum);
-                                sum.userCount++;
-                                sum.save()
-                                    .then(() => {
-                                        res.send({
-                                            status: 200,
-                                            message: ' Chúc mừng bạn đã xác thực email thành công!\n' +
-                                                '  Vui lòng đăng nhập để tiếp tục trải nghiệm website'
-                                        })
-                                    }).catch(err => {
-                                    res.status(500).send({
-                                        message: err.message || 'Some error occurred while creating the gallery'
-                                    })
-                                })
-                            }).catch(err => {
-                            console.log(err);
-                            res.send({
-                                'status': 404,
-                                'message': err.message || 'Some error occurred while finding summary'
-                            })
-                        })
-                    }
-                }));
-            }
+                    transporter.sendMail(mailOptions, (error, info) => {
+                        if (error) {
+                            return console.log(error);
+                        }
+                        console.log('Message %s sent: %s', info.messageId, info.response);
+                    });
+                    res.send({
+                        status: 200,
+                        message: ' Chúc mừng bạn đã xác thực email thành công!\n' +
+                            '  Vui lòng đăng nhập để tiếp tục trải nghiệm website'
+                    });
+                }
+            }));
         }
     });
 };
