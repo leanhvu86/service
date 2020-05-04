@@ -204,7 +204,9 @@ exports.deleteInterest = (auth.optional,
                                         console.log(err);
 
                                     } else {
-                                        recipe.totalPoint = recipe.totalPoint - 1;
+										if(recipe.totalPoint > 0){
+											recipe.totalPoint = recipe.totalPoint - 1;
+										}
                                         recipe.save((function (err) {
                                             if (err) {
                                                 console.log(err);
