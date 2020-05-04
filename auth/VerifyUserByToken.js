@@ -14,7 +14,7 @@ function verifyUserByToken(req, res, next) {
     // verifies secret and checks exp
     jwt.verify(token, config.secret, function (err, decoded) {
         if (err)
-            return res.status(500).send({auth: false, message: 'Failed to authenticate token user1.'});
+            return res.status(401).send({auth: false, message: 'Failed to authenticate token user1.'});
 
         // if everything is good, save to request for use in other routes
         //req.userId = decoded.id;
@@ -25,12 +25,12 @@ function verifyUserByToken(req, res, next) {
         Tokens.findOne({_id: id}
             , function (err, token) {
                 if (err || token === null) {
-                    return res.status(500).send({auth: false, message: 'Failed to authenticate token user token.'});
+                    return res.status(401).send({auth: false, message: 'Failed to authenticate token user token.'});
                 } else {
                     Users.findOne({email: token.email}
                         , function (err, user) {
                             if (err || user === null) {
-                                return res.status(500).send({auth: false, message: 'Không tìm thấy tài khoản đăng ký'});
+                                return res.status(401).send({auth: false, message: 'Không tìm thấy tài khoản đăng ký'});
                             } else {
                                 req.userId = user._id;
                                 req.email=user.email;

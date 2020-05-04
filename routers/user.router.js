@@ -82,7 +82,7 @@ module.exports = app => {
  // app.post("/createAdminAccount", users.createAdminAccount);
   app.get("/getUsers",VerifyRoleByToken, users.getUsers);
   app.post("/login", users.login);
-  app.post("/testEmail", users.testEmail);
+  app.post("/testEmail",VerifyToken, users.testEmail);
   app.post("/loginAdmin", users.loginAdmin);
  // app.post("/addPoint", VerifyToken,users.addPoint);
   // app.post("/removePoint",VerifyToken, users.removePoint);

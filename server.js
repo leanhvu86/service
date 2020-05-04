@@ -5,10 +5,11 @@ const session = require("express-session");
 const cors = require("cors");
 const errorHandler = require("errorhandler");
 const FacebookStrategy = require("passport-facebook").Strategy;
-var GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
-var facebook = require("./routers/facebook");
-var google = require("./routers/google");
+const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
+const facebook = require("./routers/facebook");
+const google = require("./routers/google");
 const passport = require("passport");
+const schedule = require('node-schedule');
 
 require("./models/User");
 require("./models/Token");
@@ -29,7 +30,9 @@ require("./config/facebookconfig");
 require("./config/googleconfig");
 require("./models/message");
 require("./models/summary");
-global.__root   = __dirname + '/';
+const cron = require('node-schedule');
+const Tokens = require("./models/Token");
+global.__root = __dirname + '/';
 //Configure isProduction variable
 
 //Initiate our server
@@ -190,7 +193,17 @@ passport.use(
         }
     )
 );
-
+const rule = new cron.RecurrenceRule();
+rule.dayOfWeek = [5, 6, 0, 1, 2, 3, 4,];
+rule.hour = 0;
+rule.minute = 44;
+cron.scheduleJob(rule, function () {
+    Tokens.deleteMany({},function (error) {
+        if(error) console.log(error);
+        console.log('delete tokens successful')
+    })
+    console.log(new Date(), 'The 30th second of the minute.');
+});
 app.use(passport.initialize());
 app.use(passport.session());
 
