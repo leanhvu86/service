@@ -249,7 +249,9 @@ exports.deleteInterest = (auth.optional,
                                             'message': 'recipe not found'
                                         })
                                     } else {
+										if(gallery.totalPoint>0){
                                         gallery.totalPoint--;
+										}
                                         gallery.save((function (err) {
                                             if (err) {
                                                 console.log(err);
