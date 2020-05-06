@@ -39,7 +39,7 @@ exports.getNewRecipes = (async (req, res) => {
 });
 exports.getAllRecipes = (async (req, res) => {
     await Recipe.find()
-        .sort({status: 1})
+        .sort({totalPoint: 1})
         .limit(100)
         .then(recipes => {
             res.status(200).send(recipes
@@ -148,7 +148,7 @@ exports.createRecipe = (req, res) => {
                                             });
                                         }).catch(err => {
                                         res.send({
-                                            status:200, 
+                                            status:200,
                                             message: 'Lỗi khi tổng kết số công thức của trang web'
                                         });
                                     });
