@@ -76,8 +76,8 @@ exports.updateUser = async (req, res) => {
                 .limit(100)
                 .then(recipes => {
                     recipes.forEach(recipe => {
-                        if (recipe.user.email === userObject.email) {
-                            console.log('update công thức' + recipe.name);
+                        if (recipe.user.email === user.email) {
+                            console.log('update công thức' + recipe.recipeName);
                             recipe.user = user;
                             recipe.save((function (err) {
                                 if (err) {
@@ -94,12 +94,14 @@ exports.updateUser = async (req, res) => {
             Gallery.find()
                 .then(gallerys => {
                     gallerys.forEach(gallery => {
-                        if (gallery.user.email === userObject.email) {
+                        if (gallery.user.email === user.email) {
                             gallery.user = user;
                             const recipes = gallery.recipe;
+                            console.log(gallery.recipe.length);
+                            const arrayConfirm=null;
                             recipes.forEach(recipe => {
                                 console.log(recipe.recipeName + gallery.user.name);
-                                if (recipe.user._id === gallery.user._id) {
+                                if (recipe.user.email === user.email) {
                                     recipe.user = user;
                                     console.log(recipe.recipeName)
                                 }
@@ -863,7 +865,7 @@ exports.bannedUser = async (req, res) => {
                             subject: 'Chào mừng đến trang web Ẩm thực Ăn chay', // Subject line
                             text: req.body.body, // plain text body
                             html: 'Tài khoản của bạn đã bị khóa vì vi pham quy định của diễn đàn, pháp luật của nhà nước.' +
-                                'Vui lòng liên hệ lại với email: amthuc.anchay.support@gmaillcom'
+                                'Vui lòng liên hệ lại với email: amthuc.monchay.2020@gmaillcom'
                             // html body
                         };
 
