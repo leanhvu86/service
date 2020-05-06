@@ -195,8 +195,8 @@ passport.use(
 );
 const rule = new cron.RecurrenceRule();
 rule.dayOfWeek = [5, 6, 0, 1, 2, 3, 4,];
-rule.hour = 0;
-rule.minute = 44;
+rule.hour = 8;
+rule.minute = 30;
 cron.scheduleJob(rule, function () {
     Tokens.deleteMany({},function (error) {
         if(error) console.log(error);
