@@ -52,9 +52,11 @@ exports.getAllRecipes = (async (req, res) => {
         });
 });
 exports.findRecipe = async (req, res) => {
-    var mongoose = require('mongoose');
-    var id = mongoose.Types.ObjectId(req.params.id);
-    await Recipe.findOne({_id: id}, function (err, recipe) {
+   /* const mongoose = require('mongoose');
+    const id = mongoose.Types.ObjectId(req.params.id);*/
+    let nameSpace= req.params.id;
+    console.log(nameSpace);
+    await Recipe.findOne({nameSpace: nameSpace}, function (err, recipe) {
         if (err || recipe === null) {
             return res.send({
                 'status': 401,
