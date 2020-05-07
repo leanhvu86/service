@@ -6,19 +6,20 @@ const RecipeSchema = mongoose.Schema({
     videoLink: {type: String, default: ''},
     hardLevel: {type: String, default: ''},
     time: {type: String, default: ''},
-    ingredients:{type: Array},
-    ingredientsGroup:{type:Array},
-    cockStep:{type:Array},
-    country:{type:Array},
-    foodType:{type:Array},
-    cookWay:{type:Array},
-    totalPoint:{type:Number,default: 0},
-    doneCount:{type:Number,default: 0},
-    viewCount:{type:Number,default: 0},
-    user:{type:Object},
-    updateUser:{type:Object},
-    description:{type:String,default:'Làm theo phương pháp mặc định'},
-    status: {type: Number, default: 0}
+    ingredients: {type: Array},
+    ingredientsGroup: {type: Array},
+    cockStep: {type: Array},
+    country: {type: Array},
+    foodType: {type: Array},
+    cookWay: {type: Array},
+    totalPoint: {type: Number, default: 0},
+    doneCount: {type: Number, default: 0},
+    viewCount: {type: Number, default: 0},
+    user: {type: Object},
+    updateUser: {type: Object},
+    description: {type: String, default: 'Làm theo phương pháp mặc định'},
+    status: {type: Number, default: 0},
+    nameSpace: {type: String, default: ''}
 }, {
     timestamps: true
 });

@@ -6,6 +6,6 @@ module.exports = (app) => {
     var VerifyRoleByToken = require(__root + 'auth/VerifyRoleByToken');
     app.get('/foodTypes', FoodTypeRouter.getFoodTypes)
     app.get('/getFoodType', FoodTypeRouter.findFoodType)
-    app.post('/createFoodType',VerifyToken, VerifyRoleByToken,FoodTypeRouter.createFoodType)
-    app.post('/createMultipleFoodTypes',VerifyToken, VerifyRoleByToken,FoodTypeRouter.createMultiple)
+    app.post('/createFoodType', VerifyRoleByToken,FoodTypeRouter.createFoodType)
+    app.post('/createMultipleFoodTypes', VerifyRoleByToken,FoodTypeRouter.createMultiple)
 }

@@ -5,6 +5,6 @@ module.exports = (app) => {
     var VerifyRoleByToken = require(__root + 'auth/VerifyRoleByToken');
     app.get('/cookWays', CookWayRouter.getCookWays);
     app.get('/getCookWay', CookWayRouter.findCookWay);
-    app.post('/createCookWay', VerifyToken, VerifyRoleByToken,CookWayRouter.createCookWay);
-    app.post('/createMultipleCookWay', VerifyToken, VerifyRoleByToken,CookWayRouter.createMultiple);
+    app.post('/createCookWay', VerifyRoleByToken,CookWayRouter.createCookWay);
+    app.post('/createMultipleCookWay', VerifyRoleByToken,CookWayRouter.createMultiple);
 };

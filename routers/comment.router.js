@@ -5,9 +5,9 @@ module.exports = app => {
 
   var VerifyRoleByToken = require(__root + 'auth/VerifyRoleByToken');
   var VerifyUserByToken = require(__root + 'auth/VerifyUserByToken');
-  app.post("/addComment", VerifyToken,VerifyUserByToken,comments.createComment);
+  app.post("/addComment",VerifyUserByToken,comments.createComment);
 
-  app.post("/removeComment",VerifyToken, VerifyRoleByToken,comments.deleteComment);
+  app.post("/removeComment", VerifyRoleByToken,comments.deleteComment);
   app.get("/getComments", comments.getComments);
   app.get("/findComment", comments.findComment);
 };

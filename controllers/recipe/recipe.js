@@ -111,6 +111,7 @@ exports.createRecipe = (req, res) => {
         country: req.body.recipe.country,
         foodType: req.body.recipe.foodType,
         cookWay: req.body.recipe.cookWay,
+        nameSpace:req.body.recipe.nameSpace
     });
     const user = req.body.recipe.user;
     Users.findOne({email: user}, function (err, userSchema) {

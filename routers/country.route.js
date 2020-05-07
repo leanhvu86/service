@@ -6,8 +6,8 @@ module.exports = (app) => {
     var VerifyRoleByToken = require(__root + 'auth/VerifyRoleByToken');
     app.get('/countrys', CountryRouter.getCountrys);
     app.get('/getCountry', CountryRouter.findCountry);
-    app.post('/createCountry',VerifyToken, VerifyRoleByToken,CountryRouter.createCountry);
-    app.post('/createMultipleCountrys', VerifyToken,VerifyRoleByToken,CountryRouter.createMultiple);
+    app.post('/createCountry', VerifyRoleByToken,CountryRouter.createCountry);
+    app.post('/createMultipleCountrys',VerifyRoleByToken,CountryRouter.createMultiple);
     // app.get('/logout', users.logout)
 
     // app.get('/currentAuthen', users.currentAuthen)

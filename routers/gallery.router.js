@@ -9,6 +9,7 @@ module.exports = app => {
     app.get("/getTopGalleries", gallery.getTopGallerys);
     app.post("/findGallery", VerifyToken, gallery.findGallery);
     app.get("/galleryDetail/:id", gallery.galleryDetail);
-    app.post("/updateGallery", VerifyToken,VerifyUserByToken,gallery.updateGallery);
-    app.post("/deleteGallery", VerifyToken,VerifyUserByToken,gallery.deleteGallery);
+    app.post("/updateGallery",VerifyUserByToken,gallery.updateGallery);
+    app.post("/deleteGallery",VerifyUserByToken,gallery.deleteGallery);
 };
+
