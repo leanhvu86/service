@@ -207,7 +207,42 @@ cron.scheduleJob(rule, function () {
 app.use(passport.initialize());
 app.use(passport.session());
 
+// const http = require('http');
+// const server = http.Server(app);
+
+// const socketIO = require('socket.io');
+// const io = socketIO(server);
+server = require('http').createServer(app),
+    io = require('socket.io').listen(server)
+const port = process.env.PORT || 8000;
+ listUserOnline = {}
+io.sockets.on('connection', function (socket) {
+    let check='user-fake-'+socket.id;
+     listUserOnline[check] = socket.id;
+    // tại đây khi mà io đc gửi lên e cho a cái hàm send message lại cho chính cái io đấy ở bên angular gửi tin nhắn đó
+    // socket.emit('wellcome',{mess: }
+    socket.on('setSocketId' ,function(socketData) {
+        let userName = socketData.name +'-'+socketData.userId;
+        console.log(userName);
+        listUserOnline[userName] = socket;
+
+        console.log(Object.keys(listUserOnline))
+    });
+   /* socket.on('new-message',(message)=>{
+        let id= socket.id=socket;
+        console.log(' id nè'+id)
+        console.log(' user nè '+message)
+        listUserOnline[message]=socket;
+    });*/
+    console.log(Object.keys(listUserOnline))
+});
+
+server.listen(port, () => {
+    console.log(`started on port: ${port}`);
+});
+/*
 var server = app.listen(process.env.PORT || 8000, function () {
     var port = server.address().port;
     console.log("Express is working on port " + port);
 });
+*/
