@@ -69,10 +69,10 @@ exports.addGallery = (req, res) => {
                 message: err
             });
         }
-        const userId= req.email.toString();
+        const userId = req.email.toString();
         console.log(userId);
         console.log(gallery.user.email);
-        if(userId !== gallery.user.email){
+        if (userId !== gallery.user.email) {
             return res.send({
                 'status': 401,
                 'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
@@ -138,15 +138,15 @@ exports.updateGallery = (req, res) => {
         }
 
         console.log(gallery.name);
-        const userId= req.email;
+        const userId = req.email;
         console.log(gallery.user._id.toString);
-        if(userId !== gallery.user.email){
+        if (userId !== gallery.user.email) {
             return res.send({
                 'status': 401,
                 'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
             })
         }
-        if(req.body.gallery.name==='' || req.body.gallery.content ===''){
+        if (req.body.gallery.name === '' || req.body.gallery.content === '') {
             return res.send({
                 status: 404,
                 message: 'Vui lòng kiểm tra thông tin các trường'
@@ -173,16 +173,16 @@ exports.createGallery = (req, res) => {
         content: req.body.gallery.content,
         image: req.body.gallery.image
     });
-    if(gallery.user==='' || gallery.name ===''|| gallery.content===''||gallery.image===''){
+    if (gallery.user === '' || gallery.name === '' || gallery.content === '' || gallery.image === '') {
         return res.send({
             status: 404,
             message: 'Vui lòng kiểm tra thông tin các trường'
         });
     }
-    const userId= req.email.toString();
+    const userId = req.email.toString();
     console.log(userId);
     console.log(gallery.user);
-    if(userId !== gallery.user){
+    if (userId !== gallery.user) {
         return res.send({
             'status': 401,
             'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
@@ -238,30 +238,30 @@ exports.createGallery = (req, res) => {
 };
 exports.deleteGallery = (auth.optional,
     (req, res) => {
-        console.log(req.body.gallery.id)
-        const id = mongoose.Types.ObjectId(req.body.gallery.id);
-        Gallery.find({id: id})
-            .then((gallerys) => {
-                if (!gallerys) {
+        console.log(req.body.gallery._id)
+        const id = mongoose.Types.ObjectId(req.body.gallery._id);
+        Gallery.findOne({_id: id})
+            .then((data) => {
+                if (!data) {
                     return res.status(400).send({
                         message: "Bộ sưu tập không tồn  tại"
                     });
                 }
-                const userId= req.userId;
+               /* const userId = req.userId;
                 console.log(userId);
-                console.log(gallerys.user._id);
-                if(userId!== gallerys.user._id){
+                console.log(data);
+                if (userId !== data.user._id) {
                     return res.send({
-                        'status': 401,
+                         status: 401,
                         'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
-                    })
-                }
+                    });
+                }*/
                 Gallery.deleteOne({_id: id}, function (err, result) {
                     if (err) {
                         console.log(err);
                         return res.send({
                             status: 401,
-                            message: "lỗi xóa bộ sưu tập"
+                            message: "Lỗi xóa bộ sưu tập"
                         });
                     } else {
                         Summary.find()
@@ -272,7 +272,7 @@ exports.deleteGallery = (auth.optional,
                                     .then(() => {
                                         return res.send({
                                             status: 200,
-                                            message: "xóa bộ sưu tập thành công"
+                                            message: "Xóa bộ sưu tập thành công"
                                         });
                                     }).catch(err => {
                                     console.log(err)
