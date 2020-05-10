@@ -492,7 +492,7 @@ exports.login =
                 if (!userSchema.validatePassword(user.password)) {
                     return res.send({
                         status: 401,
-                        message: "Tài khoản không tồn tại"
+                        message: "Mật khẩu của bạn sai rồi"
                     });
                 }
                 if (userSchema.status < 0) {
