@@ -535,6 +535,7 @@ exports.login =
                                         status: 200,
                                         user: finalUser.toAuthJSON(),
                                         role: role,
+                                        objectId:userSchema._id,
                                         summary: data,
                                         image: userSchema.imageUrl
                                     });

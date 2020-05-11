@@ -198,8 +198,8 @@ rule.dayOfWeek = [5, 6, 0, 1, 2, 3, 4,];
 rule.hour = 8;
 rule.minute = 30;
 cron.scheduleJob(rule, function () {
-    Tokens.deleteMany({},function (error) {
-        if(error) console.log(error);
+    Tokens.deleteMany({}, function (error) {
+        if (error) console.log(error);
         console.log('delete tokens successful')
     })
     console.log(new Date(), 'The 30th second of the minute.');
@@ -215,25 +215,43 @@ app.use(passport.session());
 server = require('http').createServer(app),
     io = require('socket.io').listen(server)
 const port = process.env.PORT || 8000;
- listUserOnline = {}
+listUserOnline = {}
 io.sockets.on('connection', function (socket) {
-    let check='user-fake-'+socket.id;
-     listUserOnline[check] = socket.id;
+    let cookie = socket.request.headers.cookie;
+    if (cookie !== undefined) {
+        let cookieArray = cookie.split(';');
+        let user = '';
+        cookieArray.forEach(key => {
+            if (key.indexOf('ObjectId') !== -1) {
+                let array = key.split('=');
+                user = array[1].trim();
+            }
+        });
+        if (user !== '') {
+            console.log(user + '-' + socket.id)
+            listUserOnline[user] = socket.id;
+        }
+    }
+    let check = 'user-fake-' + socket.request.headers['user-id'];
+    // listUserOnline[check] = socket.id;
     // tại đây khi mà io đc gửi lên e cho a cái hàm send message lại cho chính cái io đấy ở bên angular gửi tin nhắn đó
     // socket.emit('wellcome',{mess: }
-    socket.on('setSocketId' ,function(socketData) {
-        let userName = socketData.name +'-'+socketData.userId;
-        console.log(userName);
-        listUserOnline[userName] = socket;
+    /*  socket.on('setSocketId' ,function(socketData) {
+          let userName = socketData.name +'-'+socketData.userId;
+          console.log(userName);
+          listUserOnline[userName] = socket;
 
-        console.log(Object.keys(listUserOnline))
+          console.log(Object.keys(listUserOnline))
+      });*/
+    socket.on('new-message', (message) => {
+        let ObjectId = message.objectId;
+        let sendMessage = message.message;
+        let id = listUserOnline[ObjectId];
+        console.log(' id nè' + id)
+        console.log(' user nè ' + sendMessage)
+        // listUserOnline[message]=socket;
+        socket.broadcast.to(id).emit('message', sendMessage);
     });
-   /* socket.on('new-message',(message)=>{
-        let id= socket.id=socket;
-        console.log(' id nè'+id)
-        console.log(' user nè '+message)
-        listUserOnline[message]=socket;
-    });*/
     console.log(Object.keys(listUserOnline))
 });
 

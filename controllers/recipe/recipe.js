@@ -20,9 +20,7 @@ exports.getRecipes = (async (req, res) => {
 });
 exports.getNewRecipes = (async (req, res) => {
     await Recipe.find({
-        status: {
-            $gt: -1
-        }
+        status: 0
     })
         .sort({
             createdAt: -1
