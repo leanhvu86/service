@@ -199,30 +199,37 @@ exports.createGallery = (req, res) => {
             gallery.user = userSchema;
             gallery.save()
                 .then(() => {
-                    Summary.find()
-                        .then(summary => {
-                            let sum = summary[0];
-                            sum.galleryCount++;
-                            sum.save()
-                                .then(data => {
-                                    return res.send({
-                                        summary: data,
-                                        gallery: gallery,
-                                        status: 200,
-                                        message: "Thêm bộ sưu tập thành công"
-                                    });
-                                }).catch(err => {
-                                res.status(500).send({
-                                    message: err.message || 'Some error occurred while creating the gallery'
+                    userSchema.totalPoint++;
+                    userSchema.save().then(()=>{
+                        Summary.find()
+                            .then(summary => {
+                                let sum = summary[0];
+                                sum.galleryCount++;
+                                sum.save()
+                                    .then(data => {
+                                        return res.send({
+                                            summary: data,
+                                            gallery: gallery,
+                                            status: 200,
+                                            message: "Thêm bộ sưu tập thành công"
+                                        });
+                                    }).catch(err => {
+                                    res.status(500).send({
+                                        message: err.message || 'Some error occurred while creating the gallery'
+                                    })
                                 })
+                            }).catch(err => {
+                            console.log(err);
+                            res.send({
+                                'status': 404,
+                                'message': err.message || 'Some error occurred while finding summary'
                             })
-                        }).catch(err => {
-                        console.log(err);
-                        res.send({
-                            'status': 404,
-                            'message': err.message || 'Some error occurred while finding summary'
                         })
-                    })
+                    }).catch(err=>{
+                        res.status(500).send({
+                            message: err.message || 'Some error occurred while creating the gallery'
+                        });
+                    });
                 }).catch(err => {
                 res.status(500).send({
                     message: err.message || 'Some error occurred while creating the gallery'

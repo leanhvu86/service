@@ -886,6 +886,68 @@ exports.bannedUser = async (req, res) => {
         }
     });
 };
+exports.openUser = async (req, res) => { 
+    console.log('helo' + req.body.user.id);
+    var mongoose = require('mongoose');
+    var id = mongoose.Types.ObjectId(req.body.user.id);
+    await Users.findOne({_id: id}, function (err, user) {
+        if (err || user === null) {
+            console.log(user);
+            return res.send({
+                'status': 401,
+                'message': 'user not found'
+            })
+        } else {
+            console.log(user);
+            user.status = 1;
+            if (user.role > 1) {
+                return res.send({
+                    status: 401,
+                    message: "Tài khoản quản trị trang không được tác động!"
+                });
+            } else {
+                user.save((function (err) {
+                    if (err) {
+                        return res.send({
+                            status: 401,
+                            message: "Error"
+                        });
+                    } else {
+                        let transporter = nodeMailer.createTransport({
+                            host: 'smtp.gmail.com',
+                            port: 465,
+                            secure: true,
+                            auth: {
+                                user: 'amthuc.anchay.2020@gmail.com',
+                                pass: 'Colenvuoi1@'
+                            }
+                        });
+                        let mailOptions = {
+                            from: 'Ban quản trị website Ẩm thực ăn chay <amthuc.anchay.2020@gmail.com>', // sender address
+                            to: user.email, // list of receivers
+                            subject: 'Chào mừng đến trang web Ẩm thực Ăn chay', // Subject line
+                            text: req.body.body, // plain text body
+                            html: 'Xin chúc mừng! Tài khoản của bạn đã được mở. Vui lòng đăng nhập trang chủ website Ẩm thực Ăn chay' +
+                                ': https://amthuc-anchay-poly.herokuapp.com/'
+                            // html body
+                        };
+
+                        transporter.sendMail(mailOptions, (error, info) => {
+                            if (error) {
+                                return console.log(error);
+                            }
+                            console.log('Message %s sent: %s', info.messageId, info.response);
+                        });
+                        return res.status(200).send({
+                            status: 200,
+                            user: user
+                        });
+                    }
+                }));
+            }
+        }
+    });
+};
 exports.activeMember = async (req, res) => {
     console.log('helo' + req.params.id);
     const mongoose = require('mongoose');
