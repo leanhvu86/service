@@ -135,58 +135,21 @@ exports.createComment = (req, res) => {
 };
 exports.deleteComment = (auth.optional,
     (req, res) => {
-        const comment = new Comments({
-            user: req.body.comment.user.email,
-            recipe: req.body.comment.recipe
-        });
-        Comments.find({user: comment.user})
-            .then((comments) => {
-                if (!comments) {
-                    return res.status(400).send({
-                        message: "can not found current user"
-                    });
-                }
-
-                for (let commented of comments) {
-                    if (comment.recipe._id === commented.recipe._id) {
-
-                        Comments.deleteOne({_id: commented._id}, function (err, result) {
-                            if (err) {
-                                console.log(err);
-                                return res.send({
-                                    status: 401,
-                                    message: "lỗi xóa comment"
-                                });
-                            } else {
-                                console.log(result);
-                                Recipe.findOne({_id: req.body.comment.recipe._id}, function (err, recipe) {
-                                    if (err) {
-                                        console.log(err);
-                                        return res.send({
-                                            'status': 401,
-                                            'message': 'recipe not found'
-                                        })
-                                    } else {
-                                        recipe.doneCount--;
-                                        recipe.save((function (err) {
-                                            if (err) {
-                                                return res.send({
-                                                    status: 401,
-                                                    message: "Error"
-                                                });
-                                            } else {
-                                                return res.send({
-                                                    recipe: recipe,
-                                                    status: 200,
-                                                    message: "xóa comment thành công"
-                                                });
-                                            }
-                                        }));
-                                    }
-                                })
-                            }
-                        });
-                    }
-                }
+        var mongoose = require('mongoose');
+        var id = mongoose.Types.ObjectId(req.body.comment.id);
+        Comments.deleteOne({ _id: id }, function (err) {
+            console.log('deleting projects');
+            if (err) {
+                console.log(err);
+                return res.send({
+                    status: 401,
+                    message: "lỗi xóa comment"
+                });
+            }
+            // delete project references
+            return res.send({
+                status: 200,
+                message: "xóa comment thành công"
             });
+        });
     });

@@ -98,7 +98,7 @@ exports.updateUser = async (req, res) => {
                             gallery.user = user;
                             const recipes = gallery.recipe;
                             console.log(gallery.recipe.length);
-                            const arrayConfirm=null;
+                            const arrayConfirm = null;
                             recipes.forEach(recipe => {
                                 console.log(recipe.recipeName + gallery.user.name);
                                 if (recipe.user.email === user.email) {
@@ -535,7 +535,7 @@ exports.login =
                                         status: 200,
                                         user: finalUser.toAuthJSON(),
                                         role: role,
-                                        objectId:userSchema._id,
+                                        objectId: userSchema._id,
                                         summary: data,
                                         image: userSchema.imageUrl
                                     });
@@ -742,6 +742,8 @@ exports.getNewUsers = (async (req, res) => {
     Users.find({
         role: {
             $gte: 0
+        }, status: {
+            $gte: -1
         }
     })
         .sort({createdAt: -1})
@@ -886,7 +888,7 @@ exports.bannedUser = async (req, res) => {
         }
     });
 };
-exports.openUser = async (req, res) => { 
+exports.openUser = async (req, res) => {
     console.log('helo' + req.body.user.id);
     var mongoose = require('mongoose');
     var id = mongoose.Types.ObjectId(req.body.user.id);
@@ -1021,7 +1023,13 @@ exports.getMemberInfo = async (req, res) => {
     })
 };
 exports.getTopUsers = (async (req, res) => {
-    await Users.find()
+    await Users.find({
+        role: {
+            $gte: 0
+        }, status: {
+            $gte: -1
+        }
+    })
         .sort({totalPoint: -1})
         .limit(10)
         .then(users => {

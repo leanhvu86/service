@@ -10,7 +10,7 @@ const facebook = require("./routers/facebook");
 const google = require("./routers/google");
 const passport = require("passport");
 const schedule = require('node-schedule');
-
+const RateLimit = require('express-rate-limit');
 require("./models/User");
 require("./models/Token");
 require("./db/db");
@@ -88,7 +88,7 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
     res.header(
         "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, x-client-key,x-access-token, x-client-token, x-client-secret, Authorization"
+        "Origin, X-Requested-With, Content-Type, Accept, x-client-key,x-access-token, x-client-token, x-client-secret,x-access-user, Authorization"
     );
     next();
 });
@@ -207,6 +207,17 @@ cron.scheduleJob(rule, function () {
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.enable('trust proxy');
+// only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc)
+
+var limiter = new RateLimit({
+    windowMs: 5*60*1000, // 5 minutes
+    max: 1000, // limit each IP to 100 requests per windowMs
+    delayMs: 0 // disable delaying - full speed until the max limit is reached
+});
+
+//  apply to all requests
+app.use(limiter);
 // const http = require('http');
 // const server = http.Server(app);
 
@@ -218,6 +229,7 @@ const port = process.env.PORT || 8000;
 listUserOnline = {}
 io.sockets.on('connection', function (socket) {
     let cookie = socket.request.headers.cookie;
+    console.log(socket.request.headers)
     if (cookie !== undefined) {
         let cookieArray = cookie.split(';');
         let user = '';
@@ -228,21 +240,20 @@ io.sockets.on('connection', function (socket) {
             }
         });
         if (user !== '') {
-            console.log(user + '-' + socket.id)
+            //  console.log(user + '-' + socket.id)
             listUserOnline[user] = socket.id;
         }
     }
-    let check = 'user-fake-' + socket.request.headers['user-id'];
     // listUserOnline[check] = socket.id;
     // tại đây khi mà io đc gửi lên e cho a cái hàm send message lại cho chính cái io đấy ở bên angular gửi tin nhắn đó
     // socket.emit('wellcome',{mess: }
-    /*  socket.on('setSocketId' ,function(socketData) {
-          let userName = socketData.name +'-'+socketData.userId;
-          console.log(userName);
-          listUserOnline[userName] = socket;
+    socket.on('setSocketId', function (socketData) {
+        let userName = socketData.name + '-' + socketData.userId;
+        console.log(userName);
+        listUserOnline[userName] = socket;
 
-          console.log(Object.keys(listUserOnline))
-      });*/
+        console.log(Object.keys(listUserOnline))
+    });
     socket.on('new-message', (message) => {
         let ObjectId = message.objectId;
         let sendMessage = message.message;
