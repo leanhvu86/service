@@ -59,9 +59,9 @@ exports.findGallery = async (req, res) => {
 
 };
 exports.addGallery = (req, res) => {
-    var mongoose = require('mongoose');
+    let mongoose = require('mongoose');
     console.log(req.body);
-    var id = mongoose.Types.ObjectId(req.body.gallery._id);
+    let id = mongoose.Types.ObjectId(req.body.gallery._id);
     Gallery.findOne({_id: id}, function (err, gallery) {
         if (err) {
             return res.send({
@@ -111,8 +111,9 @@ exports.addGallery = (req, res) => {
     });
 };
 exports.galleryDetail = (req, res) => {
-    var mongoose = require('mongoose');
-    var id = mongoose.Types.ObjectId(req.params.id);
+    let mongoose = require('mongoose');
+    let id = mongoose.Types.ObjectId(req.params.id);
+    console.log(id);
     Gallery.findOne({_id: id}, function (err, gallery) {
         if (err) {
             return res.send({
@@ -120,6 +121,7 @@ exports.galleryDetail = (req, res) => {
                 message: err
             });
         }
+        console.log(gallery)
         return res.send({
             gallery: gallery,
             status: 200
@@ -127,8 +129,8 @@ exports.galleryDetail = (req, res) => {
     });
 };
 exports.updateGallery = (req, res) => {
-    var mongoose = require('mongoose');
-    var id = mongoose.Types.ObjectId(req.body.gallery._id);
+    let mongoose = require('mongoose');
+    let id = mongoose.Types.ObjectId(req.body.gallery._id);
     Gallery.findOne({_id: id}, function (err, gallery) {
         if (err) {
             return res.send({
@@ -200,7 +202,7 @@ exports.createGallery = (req, res) => {
             gallery.save()
                 .then(() => {
                     userSchema.totalPoint++;
-                    userSchema.save().then(()=>{
+                    userSchema.save().then(() => {
                         Summary.find()
                             .then(summary => {
                                 let sum = summary[0];
@@ -225,7 +227,7 @@ exports.createGallery = (req, res) => {
                                 'message': err.message || 'Some error occurred while finding summary'
                             })
                         })
-                    }).catch(err=>{
+                    }).catch(err => {
                         res.status(500).send({
                             message: err.message || 'Some error occurred while creating the gallery'
                         });
@@ -254,15 +256,15 @@ exports.deleteGallery = (auth.optional,
                         message: "Bộ sưu tập không tồn  tại"
                     });
                 }
-               /* const userId = req.userId;
-                console.log(userId);
-                console.log(data);
-                if (userId !== data.user._id) {
-                    return res.send({
-                         status: 401,
-                        'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
-                    });
-                }*/
+                /* const userId = req.userId;
+                 console.log(userId);
+                 console.log(data);
+                 if (userId !== data.user._id) {
+                     return res.send({
+                          status: 401,
+                         'message': 'Thí chú không có quyền. Vui lòng liên hệ admin nhé!'
+                     });
+                 }*/
                 Gallery.deleteOne({_id: id}, function (err, result) {
                     if (err) {
                         console.log(err);

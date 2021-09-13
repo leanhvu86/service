@@ -9,8 +9,29 @@ const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const facebook = require("./routers/facebook");
 const google = require("./routers/google");
 const passport = require("passport");
-const schedule = require('node-schedule');
 const RateLimit = require('express-rate-limit');
+const multer = require('multer');
+const PATH = './uploads';
+let storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, PATH);
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now() + '.png')
+    }
+});
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === "image/jpg" ||
+        file.mimetype === "image/jpeg" ||
+        file.mimetype === "image/png") {
+
+        cb(null, true);
+    } else {
+        cb(new Error("Image uploaded is not of type jpg/jpeg or png"), false);
+    }
+};
+const upload = multer({storage: storage, fileFilter: fileFilter});
+
 require("./models/User");
 require("./models/Token");
 require("./db/db");
@@ -120,6 +141,68 @@ if (!isProduction) {
     app.use(errorHandler());
 }
 
+app.use(express.static(path.join(__dirname, "public")));
+app.use("upload", function (request, response, next) {
+    next();
+});
+app.get('/api', function (req, res) {
+    res.end('File catcher');
+});
+
+// POST File
+app.post('/api/upload', upload.single('image'), function (req, res) {
+    if (!req.file) {
+        console.log("No file is available!");
+        return res.send({
+            success: false
+        });
+
+    } else {
+        console.log('File is available!', res.req.file.filename);
+        return res.send({
+            success: true,
+            filePath: res.req.file.filename
+        })
+    }
+});
+// delete File
+app.post('/api/deleteImage/:imgName', function (req, res) {
+    let imgName = req.params.imgName;
+    console.log(req.params);
+    let arrDelete = imgName.split(',');
+    try {
+        arrDelete.forEach((path) => {
+            let filePath = `${__dirname}/uploads/` + path;
+            fs.unlinkSync(filePath);
+        })
+    } catch (err) {
+        console.error(err);
+    }
+    return res.send({
+        success: true
+    })
+});
+
+// GET File
+
+let mime = require('mime');
+let fs = require('fs');
+
+app.get('/api/images/:imgName', function (req, res) {
+    let imgName = req.params.imgName;
+    //const file = `${__dirname}/uploads/`+imgName;
+    //res.download(file);
+    let file = `${__dirname}/uploads/` + imgName;
+
+    let filename = path.basename(file);
+    let mimetype = mime.lookup(file);
+    // res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+    res.setHeader('Content-disposition', mimetype);
+    // res.setHeader('Content-type', mimetype);
+
+    let filestream = fs.createReadStream(file);
+    filestream.pipe(res);
+});
 app.use(
     session({
         key: "user",
@@ -211,7 +294,7 @@ app.enable('trust proxy');
 // only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc)
 
 var limiter = new RateLimit({
-    windowMs: 5*60*1000, // 5 minutes
+    windowMs: 5 * 60 * 1000, // 5 minutes
     max: 1000, // limit each IP to 100 requests per windowMs
     delayMs: 0 // disable delaying - full speed until the max limit is reached
 });

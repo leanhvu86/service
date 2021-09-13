@@ -98,7 +98,6 @@ exports.updateUser = async (req, res) => {
                             gallery.user = user;
                             const recipes = gallery.recipe;
                             console.log(gallery.recipe.length);
-                            const arrayConfirm = null;
                             recipes.forEach(recipe => {
                                 console.log(recipe.recipeName + gallery.user.name);
                                 if (recipe.user.email === user.email) {
@@ -285,6 +284,15 @@ exports.createAdminAccount =
                         .then(summary => {
                             let sum = summary[0];
                             console.log(sum);
+                            if (sum === undefined) {
+                                return finalUser.save().then(() =>
+                                    res.status(200).send({
+                                        message: 'Chúc mừng bạn đăng ký tài khoản thành công. Vui lòng check mail',
+                                        status: 200,
+                                        user: finalUser.toAuthJSON()
+                                    })
+                                );
+                            }
                             sum.userCount++;
                             sum.save()
                                 .then(() => {
@@ -396,11 +404,17 @@ exports.testEmail = (req, res) => {
 
 };
 exports.changePassword = (req, res) => {
-    var user = {
+    let user = {
         email: req.body.user.user,
         password: req.body.user.oldPassword,
         newPassword: req.body.user.password,
     };
+    if(!user.user||!user.password||user.password){
+        return res.send({
+            status: 401,
+            message: 'Thông tin không hợp lệ'
+        });
+    }
     Users.findOne({email: user.email}, function (err, userSchema) {
         if (err) {
             return res.send({

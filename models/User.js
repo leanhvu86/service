@@ -14,7 +14,7 @@ const UsersSchema = new Schema({
     signature:String,
     introduction:String,
     gender: { type: Number, default: 1},
-    imageUrl:{type:String,default:'jbiajl3qqdzshdw0z749'},
+    imageUrl:{type:String,default:'avatar.png'},
     hash: String,
     salt: String,
     totalPoint:{ type: Number, default: 3},
