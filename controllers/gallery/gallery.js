@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const auth = require("../../routers/auth");
 const Gallery = mongoose.model('Gallerys');
+const Recipe = mongoose.model('Recipes');
 const Users = mongoose.model("Users");
 const Summary = mongoose.model('Summarys');
 exports.getGallerys = (async (req, res) => {
@@ -23,6 +24,7 @@ exports.getTopGallerys = (async (req, res) => {
         .sort({totalPoint: -1})
         .limit(4)
         .then(gallerys => {
+
             res.status(200).send(gallerys
             )
         }).catch(err => {
@@ -95,6 +97,7 @@ exports.addGallery = (req, res) => {
         });
         if (check === false) {
             recipeArray.push(recipe);
+            console.log(gallery);
             gallery.save()
                 .then(() => {
                     return res.send({
@@ -122,9 +125,20 @@ exports.galleryDetail = (req, res) => {
             });
         }
         console.log(gallery)
-        return res.send({
-            gallery: gallery,
-            status: 200
+        let recId=[]
+        gallery.recipe.forEach(rec=>{
+            recId.push(rec._id)
+        });
+        Recipe.find({
+            '_id': {
+                $in: recId
+            }
+        }, function (err, docs) {
+            gallery.recipe = docs;
+            return res.send({
+                gallery: gallery,
+                status: 200
+            });
         });
     });
 };
