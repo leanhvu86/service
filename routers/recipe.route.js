@@ -7,6 +7,7 @@ module.exports = (app) => {
     app.get('/getAllRecipes', RecipeRouter.getAllRecipes);
     app.get('/findRecipe/:id', RecipeRouter.findRecipe);
     app.post('/createRecipe',VerifyToken, RecipeRouter.createRecipe);
+    app.post('/getNameSpaceRecipe',VerifyToken, RecipeRouter.getNameSpaceRecipe);
     app.post('/acceptRecipe',VerifyRoleByToken,RecipeRouter.acceptRecipe);
     app.get('/getNewRecipes', RecipeRouter.getNewRecipes);
     app.post('/declineRecipe',VerifyRoleByToken, RecipeRouter.declineRecipe);
