@@ -50,9 +50,9 @@ exports.getAllRecipes = (async (req, res) => {
         });
 });
 exports.findRecipe = async (req, res) => {
-   /* const mongoose = require('mongoose');
-    const id = mongoose.Types.ObjectId(req.params.id);*/
-    let nameSpace= req.params.id;
+    /* const mongoose = require('mongoose');
+     const id = mongoose.Types.ObjectId(req.params.id);*/
+    let nameSpace = req.params.id;
     console.log(nameSpace);
     await Recipe.findOne({nameSpace: nameSpace}, function (err, recipe) {
         if (err || recipe === null) {
@@ -93,12 +93,11 @@ exports.findRecipe = async (req, res) => {
                 }
             });
         }
-    })
+    });
 };
 
-
 exports.createRecipe = (req, res) => {
-    const recipe = new Recipe({
+    let recipe = new Recipe({
         recipeName: req.body.recipe.recipeName,
         imageUrl: req.body.recipe.imageUrl,
         content: req.body.recipe.content,
@@ -111,7 +110,7 @@ exports.createRecipe = (req, res) => {
         country: req.body.recipe.country,
         foodType: req.body.recipe.foodType,
         cookWay: req.body.recipe.cookWay,
-        nameSpace:req.body.recipe.nameSpace
+        nameSpace: req.body.recipe.nameSpace
     });
     const user = req.body.recipe.user;
     Users.findOne({email: user}, function (err, userSchema) {
@@ -126,51 +125,72 @@ exports.createRecipe = (req, res) => {
             userSchema.totalPoint = userSchema.totalPoint + 2;
             userSchema.save().then(() => {
                 recipe.user = userSchema;
-                recipe.save()
-                    .then(data => {
-                        const message = new Messages({
-                            user: userSchema.email,
-                            imageUrl: '',
-                            content: 'Chúc mừng bạn đã thêm mới công thức thành công!',
-                            videoUrl: '',
-                        });
-                        message.save().then(() => {
-                            Summarys.find()
-                                .then(summary => {
-                                    let sum = summary[0];
-                                    console.log(sum);
-                                    sum.recipeCount++;
-                                    sum.save()
-                                        .then(() => {
+                Recipe.find({}).distinct('nameSpace', function (err, nameSpaces) {
+                    let checkDuplicate = false;
+                    let nameSpaceNow = recipe.nameSpace;
+                    for (let name of nameSpaces) {
+                        if (name === recipe.nameSpace) {
+                            let count = 0;
+                            nameSpaceNow = recipe.nameSpace + '-' + count.toString();
+                            while (!checkDuplicate) {
+                                if (name === nameSpaceNow) {
+                                    nameSpaceNow = recipe.nameSpace + '-' + count.toString();
+                                    console.log(nameSpaceNow)
+                                    count++;
+                                } else {
+                                    checkDuplicate = true;
+                                }
+                            }
+                        }
+                    }
+                    console.log(nameSpaceNow);
+                    recipe.nameSpace = nameSpaceNow;
+                    recipe.save()
+                        .then(data => {
+                            const message = new Messages({
+                                user: userSchema.email,
+                                imageUrl: '',
+                                content: 'Chúc mừng bạn đã thêm mới công thức thành công!',
+                                videoUrl: '',
+                            });
+                            message.save().then(() => {
+                                Summarys.find()
+                                    .then(summary => {
+                                        let sum = summary[0];
+                                        console.log(sum);
+                                        sum.recipeCount++;
+                                        sum.save()
+                                            .then(() => {
+                                                res.send({
+                                                    status: 200,
+                                                    data: data,
+                                                    message: 'Chúc mừng bạn đã thêm mới công thức thành công!'
+                                                });
+                                            }).catch(() => {
                                             res.send({
-                                                status:200,
-                                                data: data,
-                                                message: 'Chúc mừng bạn đã thêm mới công thức thành công!'
+                                                status: 200,
+                                                message: 'Lỗi khi tổng kết số công thức của trang web'
                                             });
-                                        }).catch(err => {
-                                        res.send({
-                                            status:200,
-                                            message: 'Lỗi khi tổng kết số công thức của trang web'
                                         });
+                                    }).catch(err => {
+                                    console.log(err);
+                                    res.send({
+                                        'status': 404,
+                                        message: 'Lỗi khi tổng kết số công thức của trang web'
                                     });
-                                }).catch(err => {
-                                console.log(err);
+                                });
+
+                            }).catch(err => {
+                                console.log('not found recipe');
                                 res.send({
                                     'status': 404,
-                                    message: 'Lỗi khi tổng kết số công thức của trang web'
+                                    'message': err.message || 'Some error occurred while finding recipe'
                                 });
                             });
-
                         }).catch(err => {
-                            console.log('not found recipe');
-                            res.send({
-                                'status': 404,
-                                'message': err.message || 'Some error occurred while finding recipe'
-                            });
+                        res.status(500).send({
+                            message: err.message || 'Some error occurred while creating the note'
                         });
-                    }).catch(err => {
-                    res.status(500).send({
-                        message: err.message || 'Some error occurred while creating the note'
                     });
                 });
             }).catch(err => {
@@ -178,7 +198,6 @@ exports.createRecipe = (req, res) => {
                     message: err.message || 'Some error occurred while creating the note'
                 });
             });
-
         } else {
             return res.send({
                 status: 403,
@@ -195,8 +214,8 @@ exports.createRecipe = (req, res) => {
 
 };
 exports.acceptRecipe = async (req, res) => {
-    var mongoose = require('mongoose');
-    var id = mongoose.Types.ObjectId(req.body.recipe.recipe._id);
+    const mongoose = require('mongoose');
+    const id = mongoose.Types.ObjectId(req.body.recipe.recipe._id);
     await Recipe.findOne({_id: id}, function (err, recipe) {
         if (err || recipe === null) {
             return res.send({
@@ -253,8 +272,8 @@ exports.acceptRecipe = async (req, res) => {
     });
 };
 exports.declineRecipe = async (req, res) => {
-    var mongoose = require('mongoose');
-    var id = mongoose.Types.ObjectId(req.body.recipe.recipe._id);
+    const mongoose = require('mongoose');
+    const id = mongoose.Types.ObjectId(req.body.recipe.recipe._id);
     await Recipe.findOne({_id: id}, function (err, recipe) {
         if (err || recipe === null) {
             return res.send({
